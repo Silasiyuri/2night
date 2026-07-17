@@ -558,99 +558,111 @@ body::before {
         }
 
 <!-- BLOQUE_18_DE_20 -->
-    window.addEventListener('DOMContentLoaded', function() {
-        const cd = document.getElementById('card-delivero'); 
-        const cp = document.getElementById('card-pickup');
-        if (cd) cd.onclick = function(e) { e.preventDefault(); evaluarFlujoAcceso('delivery'); };
-        if (cp) cp.onclick = function(e) { e.preventDefault(); evaluarFlujoAcceso('szemelyes'); };
-        
-        const bToggle = document.getElementById('btnSupaToggle');
-        if (bToggle) {
-            bToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const msgSupa = document.getElementById('supaStatusMessage'); 
-                if(msgSupa) msgSupa.style.display = "none";
-                if (currentMode === 'login') {
-                    currentMode = 'signup'; 
-                    document.getElementById('supaCardTitle').textContent = "Regisztráció";
-                    document.getElementById('btnSupaPrimary').textContent = "Fiók Létrehozása"; 
-                    document.getElementById('btnSupaToggle').textContent = "Van már fiókod? Lépj be";
-                } else {
-                    currentMode = 'login'; 
-                    document.getElementById('supaCardTitle').textContent = "Vásárlói Belépés";
-                    document.getElementById('btnSupaPrimary').textContent = "Belépés"; 
-                    document.getElementById('btnSupaToggle').textContent = "Nincs még fiókod? Regisztrálj";
-                }
-            });
-        }
-
-        const bPrimary = document.getElementById('btnSupaPrimary');
-        if (bPrimary) {
-            bPrimary.addEventListener('click', async function(e) {
-                e.preventDefault(); 
-                const emailInp = document.getElementById('supaEmail');
-                const passInp = document.getElementById('supaPassword');
-                if (!emailInp || !passInp) return;
-                
-                const email = emailInp.value.trim(); 
-                const password = passInp.value;
-                const msgSupa = document.getElementById('supaStatusMessage'); 
-                const btnPrimary = document.getElementById('btnSupaPrimary');
-                
-                if(!email || !password) { alert('Minden mezőt töltsön ki!'); return; } 
-                if(password.length < 6) { alert('A jelszónak legalább 6 karakterből kell állnia!'); return; }
-                
-                if(msgSupa) msgSupa.style.display = "none"; 
-                btnPrimary.disabled = true; 
-                btnPrimary.textContent = currentMode === 'login' ? "Ellenőrzés..." : "Mentés...";
-                
-                const endpoint = currentMode === 'login' ? '/auth/v1/token?grant_type=password' : '/auth/v1/signup';
-                try {
-                    const response = await fetch(`${SUPABASE_URL}${endpoint}`, { 
-                        method: "POST", 
-                        headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }, 
-                        body: JSON.stringify({ email, password }) 
-                    });
-                    const result = await response.json(); 
-                    if (!response.ok) { throw new Error(result.error_description || result.msg || result.message || "Hiba történt"); }
-                    
+           window.addEventListener('DOMContentLoaded', function() {
+            const cd = document.getElementById('card-delivero'); 
+            const cp = document.getElementById('card-pickup');
+            if (cd) cd.onclick = function(e) { e.preventDefault(); evaluarFlujoAcceso('delivery'); };
+            if (cp) cp.onclick = function(e) { e.preventDefault(); evaluarFlujoAcceso('szemelyes'); };
+            
+            const bToggle = document.getElementById('btnSupaToggle');
+            if (bToggle) {
+                bToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const msgSupa = document.getElementById('supaStatusMessage'); 
+                    if(msgSupa) msgSupa.style.display = "none";
                     if (currentMode === 'login') {
-                        accessToken = result.access_token; 
-                        userEmail = result.user.email; 
-                        const lOut = document.getElementById('lnk-m-logout');
-                        if(lOut) lOut.style.setProperty('display', 'block', 'important'); 
-                        cargarDatosEnCarrito(); 
-                        mostrarTiendaDeProductos();
+                        currentMode = 'signup'; 
+                        document.getElementById('supaCardTitle').textContent = "Regisztráció";
+                        document.getElementById('btnSupaPrimary').textContent = "Fiók Létrehozása"; 
+                        document.getElementById('btnSupaToggle').textContent = "Van már fiókod? Lépj be";
                     } else {
-                        if(msgSupa) { 
-                            msgSupa.innerHTML = "<strong>Sikeres regisztráció!</strong><br>Most már bejelentkezhet."; 
-                            msgSupa.className = "msg-supabase success"; 
-                        }
                         currentMode = 'login'; 
-                        document.getElementById('supaCardTitle').textContent = "Vásárlói Belépés"; 
+                        document.getElementById('supaCardTitle').textContent = "Vásárlói Belépés";
                         document.getElementById('btnSupaPrimary').textContent = "Belépés"; 
                         document.getElementById('btnSupaToggle').textContent = "Nincs még fiókod? Regisztrálj";
                     }
-                } catch (err) { 
-                    if(msgSupa) { 
-                        msgSupa.innerHTML = `<strong>Supabase Hiba:</strong><br>${err.message}`; 
-                        msgSupa.className = "msg-supabase error"; 
-                    }
-                } finally { 
-                    btnPrimary.disabled = false; 
-                    btnPrimary.textContent = currentMode === 'login' ? "Belépés" : "Fiók Létrehozása"; 
-                }
-            });
-        }
-        // DISPARADOR DE LA OFERTA: Espera exactamente 3 segundos tras cargar la web y muestra la promo
-        setTimeout(function() {
-            const promoBox = document.getElementById('box-pizza-gourmet');
-            
-            // CONDICIONAL: Solo muestra la promo si el usuario aún no ha iniciado sesión (está en la portada)
-            if (promoBox && !accessToken) {
-                promoBox.style.setProperty('display', 'block', 'important');
+                });
             }
-        }, 3000); // 3000 milisegundos = 3 segundos
+
+            const bPrimary = document.getElementById('btnSupaPrimary');
+            if (bPrimary) {
+                bPrimary.addEventListener('click', async function(e) {
+                    e.preventDefault(); 
+                    const emailInp = document.getElementById('supaEmail');
+                    const passInp = document.getElementById('supaPassword');
+                    if (!emailInp || !passInp) return;
+                    
+                    const email = emailInp.value.trim(); 
+                    const password = passInp.value;
+                    const msgSupa = document.getElementById('supaStatusMessage'); 
+                    const btnPrimary = document.getElementById('btnSupaPrimary');
+                    
+                    if(!email || !password) { alert('Minden mezőt töltsön ki!'); return; } 
+                    if(password.length < 6) { alert('A jelszónak legalább 6 karakterből kell állnia!'); return; }
+                    
+                    if(msgSupa) msgSupa.style.display = "none"; 
+                    btnPrimary.disabled = true; 
+                    btnPrimary.textContent = currentMode === 'login' ? "Ellenőrzés..." : "Mentés...";
+                    
+                    const urlEndpoint = currentMode === 'login' ? '/auth/v1/token?grant_type=password' : '/auth/v1/signup';
+                    try {
+                        // Conexión HTTP nativa directa inmune a errores de librerías nulas
+                        const response = await fetch(`${SUPABASE_URL}${urlEndpoint}`, { 
+                            method: "POST", 
+                            headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY }, 
+                            body: JSON.stringify({ email, password }) 
+                        });
+                        const result = await response.json(); 
+                        if (!response.ok) { throw new Error(result.error_description || result.msg || result.message || "Hiba történt"); }
+                        
+                        if (currentMode === 'login') {
+                            accessToken = result.access_token; 
+                            userEmail = result.user.email; 
+                            const lOut = document.getElementById('lnk-m-logout');
+                            if(lOut) lOut.style.setProperty('display', 'block', 'important'); 
+                            cargarDatosEnCarrito(); 
+                            mostrarTiendaDeProductos();
+                        } else {
+                            if(msgSupa) { msgSupa.innerHTML = "<strong>Sikeres regisztráció!</strong><br>Most már bejelentkezhet fiókjába."; msgSupa.className = "msg-supabase success"; }
+                            currentMode = 'login'; document.getElementById('supaCardTitle').textContent = "Vásárlói Belépés"; document.getElementById('btnSupaPrimary').textContent = "Belépés"; document.getElementById('btnSupaToggle').textContent = "Nincs még fiókod? Regisztrálj";
+                        }
+                    } catch (err) { 
+                        if(msgSupa) { msgSupa.innerHTML = `<strong>Értesítés:</strong><br>${err.message === "Invalid login credentials" ? "Hibás e-mail cím vagy jelszó!" : err.message}`; msgSupa.className = "msg-supabase error"; }
+                    } finally { 
+                        btnPrimary.disabled = false; btnPrimary.textContent = currentMode === 'login' ? "Belépés" : "Fiók Létrehozása"; 
+                    }
+                });
+            }
+
+            const lLogout = document.getElementById('lnk-m-logout');
+            if (lLogout) {
+                lLogout.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    accessToken = null; userEmail = null; carritoItems = []; 
+                    document.getElementById('lnk-m-logout').style.setProperty('display', 'none', 'important'); 
+                    actualizarRenderCarrito(); ocultarTodasLasSecciones(); 
+                    const vp = document.getElementById('vp'); if(vp) vp.style.setProperty('display', 'flex', 'important'); 
+                    forzarCierreMenu();
+                });
+            }
+
+            setTimeout(function() {
+                const promoBox = document.getElementById('box-pizza-gourmet');
+                if (promoBox && !accessToken) { promoBox.style.setProperty('display', 'block', 'important'); }
+            }, 3000);
+        });
+
+        document.addEventListener('click', function(e) {
+            const ml = document.getElementById('menu-lateral-css'); 
+            const btnMenu = document.querySelector('.btn-tres-rayas-css');
+            if (ml && ml.classList.contains('open') && !ml.contains(e.target) && !btnMenu.contains(e.target)) { forzarCierreMenu(); }
+
+            const promoBox = document.getElementById('box-pizza-gourmet');
+            const closeBtn = document.getElementById('close-promo');
+            if (promoBox && promoBox.style.display === 'block' && !promoBox.contains(e.target) && e.target !== closeBtn) {
+                promoBox.style.setProperty('display', 'none', 'important');
+            }
+        });
 
 <!-- BLOQUE_19_DE_20 -->
         const lLogout = document.getElementById('lnk-m-logout');
@@ -783,7 +795,7 @@ body::before {
         }
     }
 
-    // FUNCIÓN DE ENVÍO ASÍNCRONA REAL EN TIEMPO REAL HACIA LA TABLET DE LA COCINA
+    // 🚀 ENVÍO DIRECTO BLINDADO: Conexión nativa inmune a bloqueos de CORS en GitHub Pages
     async function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
         
@@ -813,23 +825,6 @@ body::before {
             return; 
         }
 
-        // INYECCIÓN DE SEGURIDAD INTERNA PARA EVITAR SECCIONES NULAS EN EL CLICK
-        const INTERNO_URL = "https://supabase.co";
-        const INTERNO_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
-
-        try {
-            if (window.supabase) { 
-                supabase = window.supabase.createClient(INTERNO_URL, INTERNO_KEY); 
-            }
-        } catch(e) {
-            console.error("Inicialización fallida:", e);
-        }
-
-        if (!supabase) { 
-            alert('A hálózati kapcsolat megszakadt! Ellenőrizze az internetkapcsolatot.'); 
-            return; 
-        }
-
         const btnEnviar = document.getElementById('be');
         if (btnEnviar) {
             btnEnviar.disabled = true;
@@ -848,13 +843,22 @@ body::before {
         };
 
         try {
-            // Guardado síncrono directo en la base de datos de comandas
-            const { error } = await supabase.from('orders').insert([orderData]);
-            if (error) throw error;
+            // Canal HTTP puro: Pasa el filtro de red del navegador sin usar variables nulas
+            const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json", 
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            if (!response.ok) throw new Error("Szerver hiba a küldés során.");
 
             alert('Rendelés sikeresen elküldve a konyhára!');
             
-            // Vacat el carrito tras el éxito
+            // Limpieza inmediata del formulario tras el éxito
             carritoItems = []; 
             descuentoAplicado = false; 
             document.getElementById('inpMegjegyzes').value = ""; 
@@ -880,7 +884,7 @@ body::before {
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     
-    // REPARADO: Se eliminó el error de sintaxis textualmente roto para evitar pantallas en blanco
+    // REPARADO: Limpieza total de la función para restablecer el renderizado de la tienda
     function mostrarTiendaDeProductos() { 
         ocultarTodasLasSecciones(); 
         document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
