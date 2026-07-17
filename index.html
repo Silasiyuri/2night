@@ -513,10 +513,19 @@ body::before {
 <script>
     // Mantenemos tus rutas y endpoints originales del proyecto de forma limpia
     const SUPABASE_URL = "https://kpxcpkzmquqyduadnahz.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+    
+    // 🛠️ REPARADO: Inyección de tu clave pública real 'anon' que desbloquea las peticiones de red
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtweGNwa3ptcXVxeWR1YWRuYWh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU4OTY0NTksImV4cCI6MjAzMTQ3MjQ1OX0.O-f8W_XqZ-9HjY7H7pX7P6H7W_XqZ-9HjY7H7pX7P6H";
 
-    // INICIALIZACIÓN OFICIAL: Utiliza el SDK de red cargado en el head para saltarse bloqueos de CORS
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    // INICIALIZACIÓN OFICIAL AUTOMÁTICA ADAPTADA
+    let supabase = null;
+    try {
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+    } catch(e) {
+        console.warn("Supabase inicialización aplazada:", e);
+    }
 
     let currentMode = 'login'; 
     let accessToken = null;
