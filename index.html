@@ -1,5 +1,4 @@
 <!-- BLOQUE_01_DE_20 -->
-<!-- BLOQUE_01_DE_20 -->
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -10,7 +9,44 @@
     <!-- CARGA ASÍNCRONA DE ALTA VELOCIDAD: EVITA CONGELAMIENTOS AL ABRIR LA PÁGINA -->
     <script src="https://jsdelivr.net" async></script>
     
-    <style>
+    <style>/* DISEÑO PREMIUM FLOTANTE PARA EL CUADRO DE PROMOCIÓN */
+#box-pizza-gourmet {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important; /* Lo centra perfectamente en el medio de la pantalla */
+    background: rgba(17, 17, 17, 0.9) !important;
+    border: 2px solid #d6af37 !important; /* Contorno dorado corporativo */
+    border-radius: 16px !important;
+    padding: 30px !important;
+    width: 90% !important;
+    max-width: 380px !important;
+    z-index: 2147483647 !important; /* Se posiciona por encima de todo el proyecto */
+    text-align: center !important;
+    backdrop-filter: blur(12px) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85) !important;
+    box-sizing: border-box !important;
+}
+
+/* BOTÓN DE CIERRE (X) EN LA ESQUINA SUPERIOR DERECHA */
+#close-promo {
+    position: absolute !important;
+    top: 12px !important;
+    right: 18px !important;
+    color: #aaaaaa !important;
+    font-size: 1.8rem !important;
+    cursor: pointer !important;
+    font-weight: bold !important;
+    transition: color 0.2s !important;
+}
+#close-promo:hover { color: #d6af37 !important; }
+
+/* ESTILIZACIÓN INTERNA DE LOS TEXTOS PROMO */
+.txt-gourmet-top { color: #aaaaaa !important; font-size: 12px !important; font-weight: 700 !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin-bottom: 5px !important; }
+.txt-gourmet-num { color: #d6af37 !important; font-size: 3.5rem !important; font-weight: 900 !important; margin: 5px 0 !important; line-height: 1 !important; }
+.txt-gourmet-sub { color: #ffffff !important; font-size: 15px !important; font-weight: 600 !important; margin-bottom: 15px !important; }
+.txt-gourmet-code { display: inline-block !important; background: rgba(214, 175, 55, 0.15) !important; border: 1px dashed #d6af37 !important; color: #d6af37 !important; padding: 8px 20px !important; font-size: 16px !important; font-weight: 800 !important; border-radius: 6px !important; letter-spacing: 1px !important; }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
 /* EFECTO DE DESPLAZAMIENTO INFINITO SEAMLESS */
@@ -29,8 +65,69 @@
     animation-play-state: paused;
 }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: #000000; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
+body { 
+    color: #f8fafc; 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+    position: relative;
+    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
+    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
+}
+
+/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
+body::before {
+    content: "" !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
+    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
+    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
+    background-color: #000000 !important; /* Fondo negro base de seguridad */
+    
+    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
+    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
+}
+
+/* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
+@keyframes aparecerFotosFondo {
+    /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
+    0% {
+        background-image: url('fondo.jpg');
+        opacity: 0;
+        transform: scale(1.06); /* Efecto zoom emergente */
+    }
+    5%, 45% {
+        opacity: 1; /* Se muestra al 100% */
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0; /* Se desvanece suavemente */
+        transform: scale(0.96);
+    }
+
+    /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
+    51% {
+        background-image: url('fondo4.jpg');
+        opacity: 0;
+        transform: scale(1.06);
+    }
+    56%, 95% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.96);
+        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
+    }
+}
+
 <!-- BLOQUE_02_DE_20 -->
         header { 
             display: flex !important; 
@@ -168,9 +265,11 @@
             </div>
         </div>
         
-        <!-- Columna Central: Marca forzada en el Centro Exacto de la línea -->
-        <div style="color: #ffffff; font-weight: 900; font-size: 1.6rem; letter-spacing: 1px; display: flex !important; align-items: center !important; justify-content: center !important; height: 42px !important; line-height: 42px !important; flex-grow: 1 !important; text-align: center !important;">2NIGHT</div>
-        
+                <!-- Columna Central: Foto del Logo en Tamaño Grande y Centrada -->
+        <div style="display: flex !important; align-items: center !important; justify-content: center !important; flex-grow: 1 !important; height: 70px !important; box-sizing: border-box !important; padding: 5px 0 !important;">
+            <img src="logo.png" alt="2NIGHT Logo" style="height: 85px !important; width: auto !important; object-fit: contain !important; display: block !important; max-width: 100% !important; filter: drop-shadow(0px 3px 10px rgba(0, 0, 0, 0.6));">
+        </div>
+
         <!-- Columna Derecha (Ancho Fijo): Redes Sociales pegadas a la Esquina -->
         <div style="display: flex !important; align-items: center !important; justify-content: flex-end !important; width: 100px !important; box-sizing: border-box !important;">
             <div class="redes-sociales" style="display: flex !important; gap: 10px !important; align-items: center !important; justify-content: flex-end !important; width: 100% !important;">
@@ -212,12 +311,12 @@
 
 <!-- BLOQUE_10_DE_20 -->
         <div class="cp" id="vp" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center !important; width: 100% !important;">
-            <h1 style="font-size: 4rem; color: #ffffff; font-weight: 900; letter-spacing: 2px; margin-top: 35px; margin-bottom: 0px; line-height: 1;">2NIGHT</h1>
-            <p class="sub-brand" style="color: #d6af37; font-weight: 700; letter-spacing: 1px; margin-top: 5px; margin-bottom: 25px; font-size: 1.15rem; text-transform: uppercase;">Pizza & Food &bull; Budapest</p>
+            <h1 style="font-size: 4rem; color: #FFD700; font-weight: 900; letter-spacing: 2px; margin-top: 35px; margin-bottom: 0px; line-height: 1;">2NIGHT</h1>
+            <p class="sub-brand" style="color: #FFFFFF; font-weight: 700; letter-spacing: 1px; margin-top: 5px; margin-bottom: 25px; font-size: 1.15rem; text-transform: uppercase;">Pizza & Food &bull; Budapest</p>
             
             <div class="grid-uzletek-top" style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1200px; margin: 0 auto;">
                 <div class="tarjeta-uzlet-top service-info" style="background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><h3>🕒 KISZÁLLÍTÁSI INFÓ</h3><p class="bold-p" style="margin-top: 8px; font-weight: 700;">Nyitvatartás: 18:00 - 04:00</p><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 4px;">Budapest VI, VII, VIII, IX. kerület</p></div>
-                <div class="tarjeta-uzlet-top service-delivero" id="card-delivero" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERO</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
+                <div class="tarjeta-uzlet-top service-delivero" id="card-delivero" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
                 <div class="tarjeta-uzlet-top service-pickup" id="card-pickup" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🏃 SZEMÉLYES ÁTVÉTEL</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Válaszd ki a legközelebbi üzletet.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
             </div>
             
@@ -227,19 +326,27 @@
                 <div class="wrapper-carrusel" style="display: flex; gap: 20px; width: max-content; animation: rotarCarruselInfinito 22s linear infinite;">
                     <!-- GRUPO ORIGINAL: 5 FOTOS CON DETALLES ADAPTADOS -->
                     <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto2.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto4.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto5.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     
                     <!-- GRUPO DUPLICADO: CLONA LOS MISMOS CLICKS PARA EL EFECTO INFINITO -->
-                    <img src="foto1.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto3.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="JMH.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+
                 </div>
             </div>
+ <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
+            <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📞</span><strong>Telefon</strong>(06 1) 781 0538</div>
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">🕒</span><strong>Nyitvatartás</strong>Hétfő - Szombat: 12:00 - 21:00</div>
+            </div>
+        </div> <!-- AQUÍ ENCIERRA EL VP CON ABSOLUTA SEGURIDAD Y LIMPIEZA -->
         </div>
 
         <!-- NUEVA VENTANA DE INFORMACIÓN ELEGANTE EN PANTALLA COMPLETA (MODAL DE FOTOS) -->
@@ -249,6 +356,8 @@
                 <img id="imgModalFotoDinamica" src="" style="width: 100% !important; height: 240px !important; object-fit: cover !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px !important;">
                 <h3 id="txtTituloFotoModal" style="color: #d6af37 !important; font-size: 1.4rem !important; font-weight: 800; text-transform: uppercase; margin-bottom: 10px !important;">Cargando...</h3>
                 <p id="txtDescripcionFotoModal" style="color: #aaaaaa !important; font-size: 0.95rem !important; line-height: 1.5; text-align: justify !important; margin: 0; padding: 0 5px;"></p>
+
+
             </div>
         </div>
 
@@ -345,17 +454,19 @@
                 </div>
             </div>
 
-            <div class="form-kosar" style="margin-top:1.5rem;">
+                        <div class="form-kosar" style="margin-top:1.5rem;">
                 <label>Vásárló:</label>
-                <input type="text" id="inpNev" readonly>
+                <input type="text" id="inpNev" readonly style="background: rgba(255,255,255,0.05); color: #888;">
 
+                <!-- CAMPO LIBERADO: Se eliminó 'readonly' y se agregó un placeholder indicativo -->
                 <label>Cím / Átvételi Mód:</label>
-                <input type="text" id="inpCim" readonly>
+                <input type="text" id="inpCim" placeholder="Írja ide a szállítási címet..." required>
 
-                <!-- NUEVO CAMPO: TELEFONSZÁM ADAPTADO DE FORMA ELEGANTE -->
                 <label style="color: #ffffff; font-weight: 700;">Telefonszám (Kötelező):</label>
-                <input type="tel" id="inpTel" placeholder="+36 30 123 4567" required style="border: 2px solid #d6af37;">
-            </div>
+<!-- input optimizado: solo permite números, signos + y restringe la longitud -->
+<input type="tel" id="inpTel" placeholder="+36301234567" required maxlength="15" oninput="this.value = this.value.replace(/[^0-9+]/g, '');" style="border: 2px solid #d6af37;">
+
+
 
             <div style="margin-top:1rem; text-align:left;">
                 <label style="display:block; margin-bottom:5px; color:#ffffff; font-weight:700;">Megjegyzés a rendeléshez (opcionális):</label>
@@ -370,28 +481,26 @@
 
 </main>
 <!-- BLOQUE_16_DE_20 -->
-    <div class="pesta-footer-transparente">
-        <div class="footer-fila-perfecta">
-            <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
-            <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📞</span><strong>Telefon</strong>(06 1) 781 0538</div>
-            <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">🕒</span><strong>Nyitvatartás</strong>Hétfő - Szombat: 12:00 - 21:00</div>
+    <div class="pesta-footer-transparente" style="padding-top: 20px !important; margin-top: 20px !important;">
+                <!-- PIE DE PÁGINA LEGAL CON LÍNEA SUTIL DEBAJO DEL BOTÓN -->
+        <div class="footer-legal-propio" style="margin-top: 30px !important; padding-top: 5px !important; border-top: none !important; position: relative !important; box-sizing: border-box !important; text-align: center !important; width: 100% !important; padding-bottom: 50px !important;">
+            <p style="margin: 0 0 15px 0 !important; color: #ffffff !important; font-size: 1.15rem !important;">
+                © 2026 Basilico Pizzéria. Minden jog fenntartva. | Impresszum | Adatkezelés
+            </p>
+            
+            <a href="https://google.com" target="_blank" class="btn-velemenyek-fijo-derecha" style="margin-top: 5px !important; display: inline-flex !important; margin-bottom: 20px !important;">★ Vélemények</a>
+            
+            <!-- LÍNEA ULTRA FINA Y SUTIL -->
+            <div style="width: 60px; height: 1px; background: rgba(214, 175, 55, 0.25); margin: 0 auto; border-radius: 1px;"></div>
         </div>
-        <div class="footer-legal-propio">
-            © 2026 Basilico Pizzéria. Minden jog fenntartva. | Impresszum | Adatkezelés<br style="margin-bottom: 10px;">
-            <a href="https://google.com" target="_blank" class="btn-velemenyek-fijo-derecha">★ Vélemények</a>
-        </div>
-    </div>
 
-        <!-- VENTANA MODAL DE EXTRAS RECTIFICADA CON CIERRE DIRECTO EN LÍNEA -->
+
     <div id="pestaModalExtrasIndependiente" class="pesta-modal-extras-independiente" onclick="if(event.target === this) this.style.setProperty('display', 'none', 'important');">
         <div class="caja-extras-dinamica">
-            <!-- BOTÓN X OPTIMIZADO PARA FORZAR EL CIERRE INMEDIATO -->
             <span onclick="event.stopPropagation(); document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'none', 'important');" style="position: absolute !important; top: 10px !important; right: 15px !important; color: #aaa; font-size: 1.8rem; cursor: pointer; font-weight: bold;">&times;</span>
-            
             <h3 id="txtNombrePizzaModal" class="titulo-pizza-modal">Pizza</h3>
             <p style="text-align: center; color: #aaa; font-size: 0.85rem; margin-top: 0; margin-bottom: 20px;">Válasszon extra feltéteket ehhez a termékhez:</p>
             <div id="contenedorListaExtrasDinamicos" style="max-height: 240px; overflow-y: auto; margin-bottom: 20px;"></div>
-            
             <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-size: 1.1rem; font-weight: 700;">Ár: <span id="txtPrecioPizzaModal">0</span> Ft</span>
                 <button onclick="confirmarYAgregarAlCarrito()" style="background: #d6af37; color: #000; border: none; padding: 10px 22px; font-weight: 700; border-radius: 6px; cursor: pointer; text-transform: uppercase;">Kosárba tesz</button>
@@ -535,6 +644,16 @@
                 }
             });
         }
+        // DISPARADOR DE LA OFERTA: Espera exactamente 3 segundos tras cargar la web y muestra la promo
+        setTimeout(function() {
+            const promoBox = document.getElementById('box-pizza-gourmet');
+            
+            // CONDICIONAL: Solo muestra la promo si el usuario aún no ha iniciado sesión (está en la portada)
+            if (promoBox && !accessToken) {
+                promoBox.style.setProperty('display', 'block', 'important');
+            }
+        }, 3000); // 3000 milisegundos = 3 segundos
+
 <!-- BLOQUE_19_DE_20 -->
         const lLogout = document.getElementById('lnk-m-logout');
         if (lLogout) {
@@ -646,19 +765,130 @@
     }
 
     function definirEnvioFinal(t) {
-        tipoDeEnvioSeleccionadoCart = t; const bD = document.getElementById('btnModoDelivery'); const bP = document.getElementById('btnModoPickup'); const inpCim = document.getElementById('inpCim');
-        if (t === 'delivery') { if(bD) { bD.style.background = '#d6af37'; bD.style.color = '#000'; } if(bP) { bP.style.background = 'rgba(255,255,255,0.05)'; bP.style.color = '#fff'; } if(inpCim) inpCim.value = "Kiszállítás a megadott címre"; } 
-        else { if(bP) { bP.style.background = '#d6af37'; bP.style.color = '#000'; } if(bD) { bD.style.background = 'rgba(255,255,255,0.05)'; bD.style.color = '#fff'; } if(inpCim) inpCim.value = "Személyes átvétel a boltban"; }
+        tipoDeEnvioSeleccionadoCart = t; 
+        const bD = document.getElementById('btnModoDelivery'); 
+        const bP = document.getElementById('btnModoPickup'); 
+        const inpCim = document.getElementById('inpCim');
+        
+        if (!inpCim) return;
+
+        if (t === 'delivery') { 
+            if(bD) { bD.style.background = '#d6af37'; bD.style.color = '#000'; } 
+            if(bP) { bP.style.background = 'rgba(255,255,255,0.05)'; bP.style.color = '#fff'; } 
+            inpCim.value = ""; 
+            inpCim.placeholder = "Utca, házszám, emelet, ajtó...";
+            inpCim.focus(); 
+        } else { 
+            if(bP) { bP.style.background = '#d6af37'; bP.style.color = '#000'; } 
+            if(bD) { bD.style.background = 'rgba(255,255,255,0.05)'; bD.style.color = '#fff'; } 
+            inpCim.value = "Személyes átvétel a boltban"; 
+        }
     }
 
-    function ejecutarEnvioFinal() {
+    // FUNCIÓN DE ENVÍO ASÍNCRONA REAL EN TIEMPO REAL HACIA LA TABLET DE LA COCINA
+    async function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
-        alert('Rendelés elküldve!\nMód: ' + (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes') + '\nMegjegyzés: ' + document.getElementById('inpMegjegyzes').value.trim());
-        carritoItems = []; descuentoAplicado = false; document.getElementById('inpMegjegyzes').value = ""; document.getElementById('inpKupon').value = ""; document.getElementById('inpKupon').style.color = "#ffffff"; actualizarRenderCarrito(); ocultarTodasLasSecciones(); const vp = document.getElementById('vp'); if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+        
+        const inpCim = document.getElementById('inpCim');
+        if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
+            alert('Kérjük, adja meg a pontos szállítási címet!');
+            if(inpCim) inpCim.focus();
+            return;
+        }
+        
+        const inpTel = document.getElementById('inpTel'); 
+        if (!inpTel || inpTel.value.trim() === "") { 
+            alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
+            if(inpTel) inpTel.focus(); 
+            return; 
+        }
+
+        const regexTelefonoReal = /^\+?[0-9]{9,13}$/;
+        if (!regexTelefonoReal.test(inpTel.value.trim())) {
+            alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567)');
+            inpTel.focus();
+            return;
+        }
+
+        if (carritoItems.length === 0) { 
+            alert('A kosár üres! Kérjük, adjon hozzá termékeket a rendeléshez.'); 
+            return; 
+        }
+
+        // INYECCIÓN DE SEGURIDAD INTERNA PARA EVITAR SECCIONES NULAS EN EL CLICK
+        const INTERNO_URL = "https://supabase.co";
+        const INTERNO_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+
+        try {
+            if (window.supabase) { 
+                supabase = window.supabase.createClient(INTERNO_URL, INTERNO_KEY); 
+            }
+        } catch(e) {
+            console.error("Inicialización fallida:", e);
+        }
+
+        if (!supabase) { 
+            alert('A hálózati kapcsolat megszakadt! Ellenőrizze az internetkapcsolatot.'); 
+            return; 
+        }
+
+        const btnEnviar = document.getElementById('be');
+        if (btnEnviar) {
+            btnEnviar.disabled = true;
+            btnEnviar.innerText = "KÜLDÉS...";
+        }
+
+        const orderData = {
+            client_email: userEmail || 'Vendég',
+            phone: inpTel.value.trim(),
+            delivery_type: tipoDeEnvioSeleccionadoCart,
+            address: tipoDeEnvioSeleccionadoCart === 'delivery' ? inpCim.value.trim() : 'Személyes átvétel',
+            items: carritoItems, 
+            notes: document.getElementById('inpMegjegyzes').value.trim() || 'Nincs megjegyzés',
+            total_price: parseInt(document.getElementById('tp').innerText),
+            status: 'pendiente'
+        };
+
+        try {
+            // Guardado síncrono directo en la base de datos de comandas
+            const { error } = await supabase.from('orders').insert([orderData]);
+            if (error) throw error;
+
+            alert('Rendelés sikeresen elküldve a konyhára!');
+            
+            // Vacat el carrito tras el éxito
+            carritoItems = []; 
+            descuentoAplicado = false; 
+            document.getElementById('inpMegjegyzes').value = ""; 
+            document.getElementById('inpKupon').value = ""; 
+            document.getElementById('inpKupon').style.color = "#ffffff"; 
+            inpTel.value = ""; 
+            if(inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
+            
+            actualizarRenderCarrito(); 
+            ocultarTodasLasSecciones(); 
+            const vp = document.getElementById('vp'); 
+            if (vp) vp.style.setProperty('display', 'flex', 'important');
+
+        } catch (err) {
+            alert('Hiba történt a rendelés küldése során: ' + err.message);
+        } finally {
+            if (btnEnviar) {
+                btnEnviar.disabled = false;
+                btnEnviar.innerText = "Rendelés elküldése";
+            }
+        }
     }
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
-    function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
+    
+    // REPARADO: Se eliminó el error de sintaxis textualmente roto para evitar pantallas en blanco
+    function mostrarTiendaDeProductos() { 
+        ocultarTodasLasSecciones(); 
+        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
+        ordenarContadorBoton(); 
+        configurarBotonesTienda(); 
+    }
     
     function ocultarTodasLasSecciones() { 
         const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('display', 'none', 'important'); 
@@ -677,7 +907,7 @@
         carritoItems.forEach((item, index) => { html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; suma += item.precio; });
         if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
     }
-    // FUNCIÓN DE APERTURA: Inserta los datos dinámicos y fuerza la visualización del cristal templado
+
     function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
         const modalFoto = document.getElementById('pestaModalFotoGrande');
         const imgTarget = document.getElementById('imgModalFotoDinamica');
@@ -691,7 +921,6 @@
             modalFoto.style.setProperty('display', 'flex', 'important');
         }
     }
-
 </script>
 </body>
 </html>
