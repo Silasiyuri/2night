@@ -510,63 +510,52 @@ body::before {
 
 <!-- BLOQUE_17_DE_20 -->
 <!-- BLOQUE_17_DE_20 -->
-<script>
-    // Mantenemos tus rutas y endpoints originales del proyecto de forma limpia
-    const SUPABASE_URL = "https://supabase.co";
-    
-    // 🛠️ REPARADO: Inyección de tu clave pública real 'anon' que desbloquea las peticiones de red
-    const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+    <!-- MOTOR LOGICO AUTOMÁTICO INMUNE A ERRORES DE LIBRERÍAS -->
+    <script>
+        const SUPABASE_URL = "https://supabase.co";
+        // Al usar peticiones nativas, esta API key actúa de pasaporte de red sin conflictos
+        const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // INICIALIZACIÓN OFICIAL AUTOMÁTICA ADAPTADA
-    let supabase = null;
-    try {
-        if (window.supabase) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let currentMode = 'login'; 
+        let accessToken = null;
+        let userEmail = null;
+
+        let carritoItems = []; 
+        let modoSoloVer = false; 
+        let descuentoAplicado = false;
+        let tipoDeEnvioSeleccionadoCart = '';
+        let OBJETO_PRODUCTO_ACTIVO = { nombre: "", precioBase: 0, precioAcumulado: 0, extras: {} };
+
+        const CONFIG_EXTRAS_POR_PRODUCTO = {
+            "I. Pesta Gourmet": [{ id: "saj", nombre: "Bivalymozzarella", precio: 500, max: 3 }, { id: "bazs", nombre: "Bazsalikom Krém", precio: 300, max: 2 }],
+            "II. Margherita": [{ id: "saj", nombre: "Extra Sajt", precio: 400, max: 5 }, { id: "gomba", nombre: "Gomba", precio: 300, max: 3 }],
+            "III. Prosciutto": [{ id: "sonka", nombre: "Prémium Sonka", precio: 450, max: 3 }],
+            "IV. Diavola": [{ id: "szalami", nombre: "Csípős Szalámi", precio: 450, max: 3 }],
+            "Coca-Cola 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
+            "Coca-Cola Zero 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
+            "Fanta Narancs 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
+            "Lasagne": [{ id: "saj_l", nombre: "Extra Reszelt Sajt", precio: 350, max: 3 }],
+            "Spaghetti Carbonara": [{ id: "saj_s", nombre: "Extra Parmezán", precio: 450, max: 3 }],
+            "Tiramisu": [{ id: "tejszin", nombre: "Tejszínhab", precio: 250, max: 2 }],
+            "Panna Cotta": [{ id: "ontet", nombre: "Extra Erdei Gyümölcs Öntet", precio: 300, max: 2 }]
+        };
+
+        function forzarCierreMenu() { 
+            const ml = document.getElementById('menu-lateral-css');
+            if (ml) ml.classList.remove('open');
         }
-    } catch(e) {
-        console.warn("Supabase inicialización aplazada:", e);
-    }
 
-    let currentMode = 'login'; 
-    let accessToken = null;
-    let userEmail = null;
-
-    let carritoItems = []; 
-    let modoSoloVer = false; 
-    let descuentoAplicado = false;
-    let tipoDeEnvioSeleccionadoCart = '';
-    let OBJETO_PRODUCTO_ACTIVO = { nombre: "", precioBase: 0, precioAcumulado: 0, extras: {} };
-
-    const CONFIG_EXTRAS_POR_PRODUCTO = {
-        "I. Pesta Gourmet": [{ id: "saj", nombre: "Bivalymozzarella", precio: 500, max: 3 }, { id: "bazs", nombre: "Bazsalikom Krém", precio: 300, max: 2 }],
-        "II. Margherita": [{ id: "saj", nombre: "Extra Sajt", precio: 400, max: 5 }, { id: "gomba", nombre: "Gomba", precio: 300, max: 3 }],
-        "III. Prosciutto": [{ id: "sonka", nombre: "Prémium Sonka", precio: 450, max: 3 }],
-        "IV. Diavola": [{ id: "szalami", nombre: "Csípős Szalámi", precio: 450, max: 3 }],
-        "Coca-Cola 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
-        "Coca-Cola Zero 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
-        "Fanta Narancs 0.5L": [{ id: "jeg", nombre: "Extra Jég", precio: 50, max: 2 }],
-        "Lasagne": [{ id: "saj_l", nombre: "Extra Reszelt Sajt", precio: 350, max: 3 }],
-        "Spaghetti Carbonara": [{ id: "saj_s", nombre: "Extra Parmezán", precio: 450, max: 3 }],
-        "Tiramisu": [{ id: "tejszin", nombre: "Tejszínhab", precio: 250, max: 2 }],
-        "Panna Cotta": [{ id: "ontet", nombre: "Extra Erdei Gyümölcs Öntet", precio: 300, max: 2 }]
-    };
-
-    function forzarCierreMenu() { 
-        const ml = document.getElementById('menu-lateral-css');
-        if (ml) ml.classList.remove('open');
-    }
-
-    function evaluarFlujoAcceso(seccionOrigen) {
-        modoSoloVer = false; 
-        ocultarTodasLasSecciones();
-        if (seccionOrigen === 'delivery' || seccionOrigen === 'szemelyes') { tipoDeEnvioSeleccionadoCart = seccionOrigen; }
-        if (accessToken) { 
-            mostrarTiendaDeProductos(); 
-        } else { 
-            const sLogin = document.getElementById('s-login');
-            if (sLogin) sLogin.style.setProperty('display', 'block', 'important'); 
+        function evaluarFlujoAcceso(seccionOrigen) {
+            modoSoloVer = false; 
+            ocultarTodasLasSecciones();
+            if (seccionOrigen === 'delivery' || seccionOrigen === 'szemelyes') { tipoDeEnvioSeleccionadoCart = seccionOrigen; }
+            if (accessToken) { 
+                mostrarTiendaDeProductos(); 
+            } else { 
+                const sLogin = document.getElementById('s-login');
+                if (sLogin) sLogin.style.setProperty('display', 'block', 'important'); 
+            }
         }
-    }
 
 <!-- BLOQUE_18_DE_20 -->
     window.addEventListener('DOMContentLoaded', function() {
