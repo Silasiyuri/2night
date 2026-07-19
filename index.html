@@ -200,15 +200,17 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
+/* EFECTO DE DESPLAZAMIENTO INFINITO SEAMLESS REPARADO SIN SALTOS */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplazamiento exacto del 50% del total más el desfase del gap */
-        transform: translateX(calc(-50% - 10px));
+        /* Desplaza exactamente los 1600px del primer grupo para enganchar con el clon */
+        transform: translateX(-1600px);
     }
 }
+
 
     </style>
 </head>
