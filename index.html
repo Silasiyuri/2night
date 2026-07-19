@@ -983,7 +983,6 @@ body::before {
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
         var telefonoTextoLocal = inpTel.value.trim();
-        
         var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
         var tokenActivoDeRed = localStorage.getItem('pesta_token') || accessToken;
         
@@ -1007,56 +1006,60 @@ body::before {
             }
         }
 
-        // CANAL ULTRAESTABLE CORREGIDO: Conectado a tu URL privada y firmado con token de portador
-        try {
-            var urlTablaDirecta = "https://supabase.co";
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", urlTablaDirecta, true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            if (tokenActivoDeRed) {
-                xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
-            } else {
-                xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
+        // CONTROL DE RED CON DIAGNÓSTICO EN TIEMPO REAL
+        var urlTablaDirecta = "https://supabase.co";
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", urlTablaDirecta, true);
+        xhr.setRequestHeader("apikey", SUPABASE_KEY);
+        if (tokenActivoDeRed) {
+            xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
+        } else {
+            xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
+        }
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Prefer", "return=representation");
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+                    
+                    carritoItems = []; 
+                    localStorage.removeItem('pesta_carrito_temporal');
+                    descuentoAplicado = false; 
+                    if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                    if (document.getElementById('inpKupon')) {
+                        document.getElementById('inpKupon').value = ""; 
+                        document.getElementById('inpKupon').style.color = "#ffffff"; 
+                    }
+                    if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
+                    if (inpTel) inpTel.value = "";
+                    
+                    actualizarRenderCarrito(); 
+                    ocultarTodasLasSecciones(); 
+                    const vp = document.getElementById('vp'); 
+                    if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+                } else {
+                    // SI DA ERROR, SALTARÁ ESTE CARTEL CON LA RESPUESTA EN CRUDO DEL SERVIDOR
+                    alert("⚠️ ERROR DE SUPABASE (La orden NO se guardó):\n" +
+                          "Código HTTP: " + xhr.status + "\n" +
+                          "Motivo técnico: " + xhr.responseText);
+                }
             }
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Prefer", "return=minimal");
-            
-            var datosComandaCompletos = {
-                client_email: emailParaGuardar,             
-                phone: telefonoTextoLocal,            
-                delivery_type: modoTextoLocal,         
-                address: direccionTextoLocal,         
-                items: carritoItems,       
-                notes: notaTextoLocal,                
-                total_price: totalPrecioLocal,        
-                status: 'pendiente'                   
-            };
+        };
 
-            xhr.send(JSON.stringify(datosComandaCompletos)); 
-        } catch(e) {
-            console.error("Error secundario de red:", e);
-        }
+        var datosComandaCompletos = {
+            client_email: emailParaGuardar,             
+            phone: telefonoTextoLocal,            
+            delivery_type: modoTextoLocal,         
+            address: direccionTextoLocal,         
+            items: carritoItems,       
+            notes: notaTextoLocal,                
+            total_price: totalPrecioLocal,        
+            status: 'pendiente'                   
+        };
 
-        // CONTROL VISUAL ORIGINAL
-        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-        
-        carritoItems = []; 
-        localStorage.removeItem('pesta_carrito_temporal');
-        descuentoAplicado = false; 
-        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-        if (document.getElementById('inpKupon')) {
-            document.getElementById('inpKupon').value = ""; 
-            document.getElementById('inpKupon').style.color = "#ffffff"; 
-        }
-        if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
-        if (inpTel) inpTel.value = "";
-        
-        actualizarRenderCarrito(); 
-        ocultarTodasLasSecciones(); 
-        const vp = document.getElementById('vp'); 
-        if (vp) { 
-            vp.style.setProperty('display', 'flex', 'important'); 
-        }
+        xhr.send(JSON.stringify(datosComandaCompletos)); 
     }
 
     function cargarDatosEnCarrito() { 
@@ -1068,7 +1071,6 @@ body::before {
             if(inpNev) inpNev.value = emailLocal || ''; 
             if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
             
-            // SINCRO COMPLETA: Restauramos las pizzas guardadas del disco para que el carrito no aparezca vacío tras loguearse
             var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
             if (carritoGuardado) {
                 carritoItems = JSON.parse(carritoGuardado);
