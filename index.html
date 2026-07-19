@@ -76,7 +76,8 @@ body {
 }
 
 /* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
-body::before {
+/* Modifica únicamente la primera línea de tu bloque CSS agregando esto: */
+body.animado::before {
     content: "" !important;
     position: fixed !important;
     top: 0 !important;
@@ -93,6 +94,7 @@ body::before {
     background-repeat: no-repeat !important;
     display: block !important;
 }
+
 
 /* FOTOGRAMAS CLAVE PARA TRANSICIÓN INFINITA SIN CORTES A NEGRO */
 @keyframes aparecerFotosFondo {
@@ -897,5 +899,23 @@ body::before {
     }
 
 </script>
+        <script>
+    // Aseguramos que la animación se ejecute al cargar la página por primera vez
+    document.body.classList.add('animado');
+
+    // Escuchamos cuando el usuario sale o regresa a la pestaña (API de Visibilidad)
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            // ¡El usuario ha regresado! Removemos y reaplicamos la clase para forzar al navegador a renderizar la animación
+            document.body.classList.remove('animado');
+            
+            // Usamos un retraso mínimo de un milisegundo para romper el bloqueo de caché visual del navegador
+            setTimeout(function() {
+                document.body.classList.add('animado');
+            }, 10);
+        }
+    });
+</script>
+
 </body>
 </html>
