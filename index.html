@@ -857,42 +857,51 @@ body::before {
             return;
         }
 
-                                       // 1. CAPTURAMOS LOS VALORES REALES DEL CARRITO Y LA INTERFAZ
+                                               // 1. CAPTURAMOS LOS VALORES DE LA TIENDA
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo@pesta.hu";
         
-        // Calculamos el total (reemplaza 'calcularTotalCarrito()' por tu variable de total si es diferente)
+        // Sumamos el total del carrito de compras
         var totalPrecioLocal = typeof carritoItems !== 'undefined' ? carritoItems.reduce((sum, item) => sum + (item.precioAcumulado || item.precioBase || 0), 0) : 0;
 
-        // 2. ENVIAMOS LA COMANDA CON TODAS LAS COLUMNAS DE TU TABLA SQL
-        if (window.supabase) {
-            var clienteSupabaseTemporal = window.supabase.createClient(
-                "https://supabase.co", 
-                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
-            );
-            
-            clienteSupabaseTemporal.from('orders').insert([
+        // 2. EXTRAEMOS EL EMAIL DEL USUARIO AUTENTICADO DE TU VARIABLE GLOBAL
+        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : null;
+
+        // FRENADO DE SEGURIDAD LOCAL: Si el cliente no está logueado, lo mandamos al login
+        if (!emailParaGuardar) {
+            alert("Hiba! A rendeléshez be kell jelentkeznie.\n(¡Error! Debe iniciar sesión para realizar un pedido).");
+            var sLogin = document.getElementById('s-login');
+            if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
+            return; // Bloquea el vaciado del carrito
+        }
+
+        // 3. ENVIAMOS LA COMANDA USANDO EL CLIENTE GLOBAL 'supabase' (MINÚSCULAS)
+        // Usamos el objeto nativo que ya tiene la sesión guardada tras hacer login
+        if (typeof supabase !== 'undefined' && supabase) {
+            supabase.from('orders').insert([
                 { 
                     client_email: emailParaGuardar, 
-                    phone: "00000000",                     // Teléfono del cliente
+                    phone: "00000000",                     // Campo obligatorio en tu tabla SQL
                     delivery_type: modoTextoLocal,         // 'Kiszállítás' o 'Személyes'
-                    address: modoTextoLocal === 'Kiszállítás' ? "Direccion Cliente de prueba" : "Takeaway",
-                    items: carritoItems,                   // Guarda tu array de pizzas y extras en el JSONB
-                    notes: notaTextoLocal,                 // Mapeado a tu columna 'notes'
-                    total_price: totalPrecioLocal,         // Mapeado a tu columna 'total_price'
-                    status: 'pendiente'                    // Estado inicial
+                    address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
+                    items: carritoItems,                   // Guarda el array en tu columna JSONB
+                    notes: notaTextoLocal,                 // Mapeado a tu columna notes
+                    total_price: totalPrecioLocal,         // Envía el precio total numérico
+                    status: 'pendiente'                    // Estado inicial del ticket
                 }
             ]).then(function(res) {
                 if (res.error) {
-                    console.error("Error al insertar en la tabla orders:", res.error.message);
+                    // Si el filtro RLS de Supabase rechaza al usuario, te dirá el motivo exacto en la consola (F12)
+                    console.error("Supabase rechazó guardar la orden autenticada:", res.error.message);
                 } else {
-                    console.log("¡Pedido guardado con éxito en Supabase!");
+                    console.log("¡Pedido registrado con éxito en tu tabla orders!");
                 }
             });
+        } else {
+            console.error("Error crítico: El objeto global 'supabase' no está definido al principio de tu script.");
         }
 
-        // 3. EJECUTAMOS TU INTERFAZ VISUAL ORIGINAL AL INSTANTE
+        // 4. EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA DE INTERFAZ AL INSTANTE
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
