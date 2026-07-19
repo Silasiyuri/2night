@@ -886,7 +886,7 @@ body::before {
         }
     }
 
-        function ejecutarEnvioFinal() {
+            function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { 
             alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
             return; 
@@ -930,22 +930,11 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
-        // CORRECCIÓN DEL BUCLE: Formateamos el carrito de forma segura para la columna jsonb de Postgres
-        var itemsFormateadosParaJSONB = [];
-        if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
-            for (var k = 0; k < carritoItems.length; k++) {
-                itemsFormateadosParaJSONB.push({
-                    producto_nombre: carritoItems[k].nombre,
-                    producto_precio: (carritoItems[k].precioAcumulado || carritoItems[k].precioBase || carritoItems[k].precio || 0)
-                });
-            }
-        }
-
-        // ENVÍO DE RED ULTRAESTABLE (Pasa la apikey por URL para saltarse bloqueos CORS locales)
+        // ENVÍO DIRECTO FORZADO POR RED (Ignora el bucle del RLS de Supabase para que no se congele)
         try {
-            var urlTablaDirecta = "https://supabase.co" + SUPABASE_KEY;
+            var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", urlTablaDirecta, true);
+            xhr.open("POST", urlTablaDirecta + "?apikey=" + SUPABASE_KEY, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
@@ -954,7 +943,7 @@ body::before {
                 phone: telefonoTextoLocal,            
                 delivery_type: modoTextoLocal,         
                 address: direccionTextoLocal,         
-                items: itemsFormateadosParaJSONB,       
+                items: carritoItems,       
                 notes: notaTextoLocal,                
                 total_price: totalPrecioLocal,        
                 status: 'pendiente'                   
@@ -984,6 +973,7 @@ body::before {
             vp.style.setProperty('display', 'flex', 'important'); 
         }
     }
+
 
 </script>
 </body>
