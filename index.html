@@ -49,7 +49,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-/* CONTENEDOR FLUIDO DE ESQUINA A ESQUINA */
+/* CONTENEDOR QUE FUERZA EL DISEÑO DE BORDE A BORDE DE LA PANTALLA */
 .contenedor-carrusel {
     width: 100vw !important;
     max-width: 100% !important;
@@ -60,53 +60,50 @@
     right: 50% !important;
     margin-left: -50vw !important;
     margin-right: -50vw !important;
+    background: transparent !important;
 }
 
-/* CONTENEDOR INTERNO ULTRA-ALINEADO */
+/* GRUPO DE IMÁGENES ALINEADO AL MILÍMETRO */
 .wrapper-carrusel {
     display: flex !important;
-    width: max-content !important;
-    animation: rotarCarruselInfinito 22s linear infinite !important;
+    /* Evitamos usar max-content para que el navegador no recalcule anchos variables */
+    width: flex !important; 
+    /* Forzamos que no haya separación externa, el hueco se controla en la imagen */
+    gap: 0px !important; 
+    /* Animación continua lineal infinita */
+    animation: rotarCarruselInfinito 25s linear infinite !important;
 }
 
-/* FOTOS FLEXIBLES SEGÚN EL DISPOSITIVO */
+/* IMÁGENES ADAPTATIVAS SEGÚN EL DISPOSITIVO */
 .carrusel-img {
-    width: 25vw !important; /* Salen exactamente 4 fotos por pantalla en ordenadores */
+    /* Usamos unidades rem para asegurar que midan exactamente lo mismo en cualquier pantalla */
+    width: 20rem !important; 
     height: 190px !important;
     object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 10px !important; /* El espacio se controla internamente para no romper la matemática */
+    /* Agregamos el espacio de separación a los lados de forma simétrica */
+    padding: 0 10px !important; 
     box-sizing: border-box !important;
-    border-radius: 22px !important; /* Aplica el redondeado de forma estética */
+    border-radius: 22px !important;
 }
 
-/* ANIMACIÓN INTERCONECTADA DE ESQUINA A ESQUINA */
+/* ACCIÓN DE DETENER AL PASAR EL CURSOR */
+.wrapper-carrusel:hover {
+    animation-play-state: paused !important;
+}
+
+/* 📐 MATEMÁTICA EXACTA INFINITA ANTI-SALTOS (5 fotos originales x 20rem de ancho = 100rem exactos) */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplaza exactamente las 5 fotos del grupo original (5 x 25vw) */
-        transform: translateX(-125vw);
+        /* Desplaza exactamente el equivalente al primer grupo y encaja con el clon al milisegundo */
+        transform: translateX(-100rem);
     }
 }
 
-/* ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (PANTALLAS PEQUEÑAS) */
-@media (max-width: 768px) {
-    .carrusel-img {
-        width: 50vw !important; /* En móviles salen exactamente 2 fotos por pantalla */
-    }
-    @keyframes rotarCarruselInfinito {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-250vw); } /* Ajuste matemático para móviles (5 x 50vw) */
-    }
-}
-
-/* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
-.wrapper-carrusel:hover {
-    animation-play-state: paused;
-}
 
 /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
@@ -358,17 +355,29 @@ body::before {
             
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
-            <!-- CONTENEDOR QUE ROMPE LOS MÁRGENES PARA TOCAR LOS BORDES DE LA PANTALLA -->
+            <!-- BLOQUE_10_DE_20 -->
+        <div class="cp" id="vp" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center !important; width: 100% !important;">
+            <h1 style="font-size: 4rem; color: #FFD700; font-weight: 900; letter-spacing: 2px; margin-top: 35px; margin-bottom: 0px; line-height: 1;">2NIGHT</h1>
+            <p class="sub-brand" style="color: #FFFFFF; font-weight: 700; letter-spacing: 1px; margin-top: 5px; margin-bottom: 25px; font-size: 1.15rem; text-transform: uppercase;">Pizza & Food &bull; Budapest</p>
+            
+            <div class="grid-uzletek-top" style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1200px; margin: 0 auto;">
+                <div class="tarjeta-uzlet-top service-info" style="background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><h3>🕒 KISZÁLLÍTÁSI INFÓ</h3><p class="bold-p" style="margin-top: 8px; font-weight: 700;">Nyitvatartás: 18:00 - 04:00</p><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 4px;">Budapest VI, VII, VIII, IX. kerület</p></div>
+                <div class="tarjeta-uzlet-top service-delivero" id="card-delivero" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
+                <div class="tarjeta-uzlet-top service-pickup" id="card-pickup" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🏃 SZEMÉLYES ÁTVÉTEL</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Válaszd ki a legközelebbi üzletet.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
+            </div>
+            
+            <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
+            
             <div class="contenedor-carrusel">
                 <div class="wrapper-carrusel">
-                    <!-- GRUPO ORIGINAL: 5 FOTOS -->
+                    <!-- GRUPO ORIGINAL: 5 FOTOS CON RECETAS DE ENLACE -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
                     <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                     
-                    <!-- GRUPO CLONADO EXACTO PARA EMPALME MATEMÁTICO INVISIBLE -->
+                    <!-- GRUPO CLONADO: COPIA EXACTA DE LAS MISMAS IMÁGENES Y ENLACES PARA EL ACOPLE -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
@@ -377,6 +386,7 @@ body::before {
                 </div>
             </div>
         </div>
+
 
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
