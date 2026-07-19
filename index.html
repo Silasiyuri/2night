@@ -857,65 +857,61 @@ body::before {
             return;
         }
 
-         function procesarEnvioPedido() { 
-    // 1. INTERFÉSZ ÉRTÉKEINEK KIMENTÉSE
-    const notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
-    const tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-    const telefonoCliente = "00000000"; 
-    const emailParaGuardar = typeof userEmail !== 'undefined' && userEmail ? userEmail : "anonimo_test@pesta.hu"; 
+        function procesarEnvioPedido() { 
+    // 1. CAPTURAMOS LOS VALORES DE TU PÁGINA
+    var notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
+    var tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
+    var telefonoCliente = "00000000"; 
+    
+    // Usamos el email del usuario logueado en tu variable de la página
+    var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu"; 
 
-    // 2. A TE SAJÁT PROJEKTEDHEZ TARTOZÓ PONTOS ELÉRÉSI ÚT (JAVÍTVA)
-    const urlTabla = "https://supabase.co";
-    const apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+    // 2. CONFIGURAMOS LAS CREDENCIALES DIRECTAS
+    var urlTabla = "https://supabase.co";
+    var apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // 3. ADATOK ELKÜLDÉSE HÁLÓZATI KÉRÉSSEL
-    fetch(urlTabla, {
-        method: 'POST',
-        headers: {
-            'apikey': apiKey,
-            'Authorization': 'Bearer ' + apiKey,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-            client_email: emailParaGuardar,
-            phone: telefonoCliente,
-            delivery_type: tipoEnvioTexto
-        })
-    })
-    .then(function(response) {
-        if (!response.ok) {
-            return response.json().then(function(errorData) {
-                alert("SUPABASE HIBA:\n" + (errorData.message || "Kérés elutasítva"));
-                throw new Error(errorData.message);
-            }).catch(function() {
-                alert("HÁLÓZATI HIBA: Státuszkód " + response.status);
-                throw new Error("HTTP " + response.status);
-            });
-        }
+    // 3. ENVIAMOS LOS DATOS (Formato correcto para claves sb_publishable_)
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", urlTabla, true);
+    
+    // Configuración obligatoria: La clave va en apikey, nunca en Authorization como Bearer
+    xhr.setRequestHeader("apikey", apiKey);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Prefer", "return=minimal");
 
-        // 4. SIKERES MENTÉS UTÁNI EREDETI LOGIKA ÉS KOCSI KIÜRÍTÉS
-        alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
-        
-        carritoItems = []; 
-        descuentoAplicado = false; 
-        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-        if (document.getElementById('inpKupon')) {
-            document.getElementById('inpKupon').value = ""; 
-            document.getElementById('inpKupon').style.color = "#ffffff"; 
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                // ¡ÉXITO! SE GUARDÓ EN SUPABASE. EJECUTAMOS TU INTERFAZ ORIGINAL
+                alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
+                
+                carritoItems = []; 
+                descuentoAplicado = false; 
+                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                if (document.getElementById('inpKupon')) {
+                    document.getElementById('inpKupon').value = ""; 
+                    document.getElementById('inpKupon').style.color = "#ffffff"; 
+                }
+                actualizarRenderCarrito(); 
+                ocultarTodasLasSecciones(); 
+                var vp = document.getElementById('vp'); 
+                if (vp) { 
+                    vp.style.setProperty('display', 'flex', 'important'); 
+                }
+            } else {
+                // Si la base de datos rechaza la orden, nos avisará sin congelar la web
+                alert("Supabase rechazó el pedido (Código " + xhr.status + "). Revisa que el usuario haya iniciado sesión.");
+            }
         }
-        actualizarRenderCarrito(); 
-        ocultarTodasLasSecciones(); 
-        var vp = document.getElementById('vp'); 
-        if (vp) { 
-            vp.style.setProperty('display', 'flex', 'important'); 
-        }
-    })
-    .catch(function(err) {
-        console.error("Hiba a kapcsolatban:", err);
-    });
+    };
+
+    // Enviamos el objeto JSON con las columnas exactas de tu tabla orders
+    xhr.send(JSON.stringify({
+        client_email: emailParaGuardar,
+        phone: telefonoCliente,
+        delivery_type: tipoEnvioTexto
+    }));
 }
-
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
