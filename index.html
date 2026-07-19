@@ -857,9 +857,53 @@ body::before {
             return;
         }
 
-        alert('Rendelés elküldve!\nMód: ' + (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes') + '\nMegjegyzés: ' + document.getElementById('inpMegjegyzes').value.trim());
-        carritoItems = []; descuentoAplicado = false; document.getElementById('inpMegjegyzes').value = ""; document.getElementById('inpKupon').value = ""; document.getElementById('inpKupon').style.color = "#ffffff"; actualizarRenderCarrito(); ocultarTodasLasSecciones(); const vp = document.getElementById('vp'); if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+           // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
+    const notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
+    const tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
+    const telefonoCliente = "00000000"; // Reemplaza esto con la variable o ID del input de tu teléfono si lo tienes
+
+    // 2. ENVIAMOS LOS DATOS A SUPABASE (Con los nombres exactos de tus columnas en inglés)
+    if (supabase) {
+        supabase
+            .from('orders')
+            .insert([
+                { 
+                    client_email: userEmail || "anonim@pesta.hu", // Email del usuario logueado o uno por defecto
+                    phone: telefonoCliente,                     // Campo obligatorio en tu tabla orders
+                    delivery_type: tipoEnvioTexto               // Envía 'Kiszállítás' o 'Személyes'
+                    // Nota: Si quieres guardar la nota/megjegyzés, debes crear una columna llamada 'comment' o 'megjegyzes' en tu Supabase.
+                }
+            ])
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error("Error al guardar en Supabase:", error.message);
+                    alert("Hiba történt a mentés során: " + error.message);
+                } else {
+                    console.log("Pedido guardado con éxito en Supabase:", data);
+                }
+            });
+    } else {
+        console.error("El cliente de Supabase no está inicializado. Revisa tu SUPABASE_KEY.");
     }
+
+    // 3. CONTINUAMOS CON EL FLUJO ORIGINAL DE TU INTERFAZ (Tu alerta y limpieza)
+    alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
+    
+    carritoItems = []; 
+    descuentoAplicado = false; 
+    if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+    if (document.getElementById('inpKupon')) {
+        document.getElementById('inpKupon').value = ""; 
+        document.getElementById('inpKupon').style.color = "#ffffff"; 
+    }
+    actualizarRenderCarrito(); 
+    ocultarTodasLasSecciones(); 
+    const vp = document.getElementById('vp'); 
+    if (vp) { 
+        vp.style.setProperty('display', 'flex', 'important'); 
+    }
+}
+
 
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
