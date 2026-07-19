@@ -857,59 +857,61 @@ body::before {
             return;
         }
 
-          function enviarPedidoFormulario() { // Asegúrate de que mantenga el nombre de tu función original
+         function procesarEnvioPedido() { 
     // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
     const notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
     const tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-    const telefonoCliente = "00000000"; // Cambia esto por la variable de teléfono de tu cliente si la tienes
+    const telefonoCliente = "00000000"; // Campo requerido en tu tabla orders
 
-    // 2. OBTENEMOS EL USUARIO REGISTRADO QUE INICIÓ SESIÓN
-    supabase.auth.getUser().then(({ data: { user }, error: authError }) => {
-        if (authError || !user) {
-            alert("Hiba! A rendeléshez be kell jelentkeznie.\n(¡Error! Debe iniciar sesión para realizar un pedido).");
-            const sLogin = document.getElementById('s-login');
-            if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
-            return; // Bloquea el envío si el cliente no está registrado/autenticado
-        }
+    // Intentamos recuperar el email del usuario logueado en tu sistema
+    // Usamos 'userEmail' que es la variable global que declaraste al principio de tu script
+    const emailParaGuardar = userEmail || "anonimo_test@pesta.hu"; 
 
-        // 3. SI ESTÁ LOGUEADO, ENVIAMOS LA COMANDA A SUPABASE (Pasará el filtro RLS Autenticado)
-        supabase
-            .from('orders')
-            .insert([
-                { 
-                    client_email: user.email,       // Correo real del cliente autenticado
-                    phone: telefonoCliente,         // Teléfono requerido por tu base de datos
-                    delivery_type: tipoEnvioTexto   // Envía 'Kiszállítás' o 'Személyes'
-                }
-            ])
-            .then(({ data, error: insertError }) => {
-                if (insertError) {
-                    console.error("Error al guardar en Supabase:", insertError.message);
-                    alert("Hiba történt a mentés során (Error al guardar): " + insertError.message);
-                } else {
-                    console.log("¡Pedido registrado con éxito en la base de datos!");
-                    
-                    // 4. ALERTA ORIGINAL Y LIMPIEZA DE TU INTERFAZ (Solo si se guardó con éxito)
-                    alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
-                    
-                    carritoItems = []; 
-                    descuentoAplicado = false; 
-                    if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-                    if (document.getElementById('inpKupon')) {
-                        document.getElementById('inpKupon').value = ""; 
-                        document.getElementById('inpKupon').style.color = "#ffffff"; 
-                    }
-                    actualizarRenderCarrito(); 
-                    ocultarTodasLasSecciones(); 
-                    const vp = document.getElementById('vp'); 
-                    if (vp) { 
-                        vp.style.setProperty('display', 'flex', 'important'); 
-                    }
-                }
-            });
-    });
-} // Esta es la llave de cierre que corresponde al inicio de la función
+    if (!supabase) {
+        alert("CRÍTICO: El objeto 'supabase' no está cargado en la página.");
+        return;
+    }
 
+    // 2. ENVIAMOS DIRECTAMENTE A LA BASE DE DATOS FORZANDO LA RESPUESTA
+    supabase
+        .from('orders')
+        .insert([
+            { 
+                client_email: emailParaGuardar, 
+                phone: telefonoCliente,         
+                delivery_type: tipoEnvioTexto   
+            }
+        ])
+        .select() // Forzamos a Supabase a devolver una respuesta
+        .then(function(resultado) {
+            // SI SUPABASE DEVUELVE UN ERROR, LO MOSTRAMOS EN PANTALLA
+            if (resultado.error) {
+                alert("ERROR DE SUPABASE:\nCódigo: " + resultado.error.code + "\nMensaje: " + resultado.error.message);
+                console.error("Detalle completo del error:", resultado.error);
+                return; // Detiene el código para que no borre el carrito si falló
+            }
+
+            // 3. SI SE GUARDÓ CON ÉXITO, CONTINUAMOS CON TU FLUJO ORIGINAL
+            alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
+            
+            carritoItems = []; 
+            descuentoAplicado = false; 
+            if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+            if (document.getElementById('inpKupon')) {
+                document.getElementById('inpKupon').value = ""; 
+                document.getElementById('inpKupon').style.color = "#ffffff"; 
+            }
+            actualizarRenderCarrito(); 
+            ocultarTodasLasSecciones(); 
+            var vp = document.getElementById('vp'); 
+            if (vp) { 
+                vp.style.setProperty('display', 'flex', 'important'); 
+            }
+        })
+        .catch(function(err) {
+            alert("ERROR CRÍTICO DE RED / CONEXIÓN:\n" + err.message);
+        });
+}
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
