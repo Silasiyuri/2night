@@ -857,65 +857,80 @@ body::before {
             return;
         }
 
-                                               // 1. CAPTURAMOS LOS VALORES DE LA TIENDA
+                                                      // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         
-        // Sumamos el total del carrito de compras
-        var totalPrecioLocal = typeof carritoItems !== 'undefined' ? carritoItems.reduce((sum, item) => sum + (item.precioAcumulado || item.precioBase || 0), 0) : 0;
+        // Calculamos el precio total del carrito
+        var totalPrecioLocal = 0;
+        if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
+            for (var i = 0; i < carritoItems.length; i++) {
+                totalPrecioLocal += (carritoItems[i].precioAcumulado || carritoItems[i].precioBase || 0);
+            }
+        }
 
-        // 2. EXTRAEMOS EL EMAIL DEL USUARIO AUTENTICADO DE TU VARIABLE GLOBAL
+        // Recuperamos el email de tu inicio de sesión
         var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : null;
 
-        // FRENADO DE SEGURIDAD LOCAL: Si el cliente no está logueado, lo mandamos al login
+        // FRENADO DE SEGURIDAD LOCAL: Si no ha iniciado sesión, detenemos el flujo
         if (!emailParaGuardar) {
-            alert("Hiba! A rendeléshez be kell jelentkeznie.\n(¡Error! Debe iniciar sesión para realizar un pedido).");
+            alert("HIBA: A rendeléshez be kell jelentkeznie!\n(¡ERROR! Debe iniciar sesión con un correo registrado para poder pedir).");
             var sLogin = document.getElementById('s-login');
             if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
-            return; // Bloquea el vaciado del carrito
+            return; 
         }
 
-        // 3. ENVIAMOS LA COMANDA USANDO EL CLIENTE GLOBAL 'supabase' (MINÚSCULAS)
-        // Usamos el objeto nativo que ya tiene la sesión guardada tras hacer login
-        if (typeof supabase !== 'undefined' && supabase) {
-            supabase.from('orders').insert([
+        // 2. CONEXIÓN EXPRESA AL PROYECTO
+        if (window.supabase) {
+            var clienteSupabaseTemporal = window.supabase.createClient(
+                "https://supabase.co", 
+                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
+            );
+
+            // Intentamos la inserción forzando la respuesta del servidor
+            clienteSupabaseTemporal.from('orders').insert([
                 { 
                     client_email: emailParaGuardar, 
-                    phone: "00000000",                     // Campo obligatorio en tu tabla SQL
-                    delivery_type: modoTextoLocal,         // 'Kiszállítás' o 'Személyes'
+                    phone: "00000000",                         // Evita errores de campos requeridos
+                    delivery_type: modoTextoLocal,             // 'Kiszállítás' o 'Személyes'
                     address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
-                    items: carritoItems,                   // Guarda el array en tu columna JSONB
-                    notes: notaTextoLocal,                 // Mapeado a tu columna notes
-                    total_price: totalPrecioLocal,         // Envía el precio total numérico
-                    status: 'pendiente'                    // Estado inicial del ticket
+                    items: carritoItems,                       // Enviamos el array al campo JSONB
+                    notes: notaTextoLocal,                     // Tu columna 'notes'
+                    total_price: totalPrecioLocal,             // Tu columna 'total_price'
+                    status: 'pendiente'                        // Tu columna 'status'
                 }
-            ]).then(function(res) {
+            ])
+            .select()
+            .then(function(res) {
+                // SI LA BASE DE DATOS RECHAZA EL PEDIDO, TE SALTARÁ ESTE CARTEL CON EL MOTIVO REAL
                 if (res.error) {
-                    // Si el filtro RLS de Supabase rechaza al usuario, te dirá el motivo exacto en la consola (F12)
-                    console.error("Supabase rechazó guardar la orden autenticada:", res.error.message);
-                } else {
-                    console.log("¡Pedido registrado con éxito en tu tabla orders!");
+                    alert("⚠️ SUPABASE BLOQUEÓ EL PEDIDO:\nMensaje: " + res.error.message + "\nCódigo: " + res.error.code);
+                    console.error("Detalle técnico:", res.error);
+                    return; // Detiene el código aquí para que no borre tu carrito
                 }
+
+                // 3. SIKER! SÓLO SI SE GUARDÓ CON ÉXITO EN INTERNET SE MUESTRA TU INTERFAZ ORIGINAL
+                alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+                
+                carritoItems = []; 
+                descuentoAplicado = false; 
+                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                if (document.getElementById('inpKupon')) {
+                    document.getElementById('inpKupon').value = ""; 
+                    document.getElementById('inpKupon').style.color = "#ffffff"; 
+                }
+                actualizarRenderCarrito(); 
+                ocultarTodasLasSecciones(); 
+                const vp = document.getElementById('vp'); 
+                if (vp) { 
+                    vp.style.setProperty('display', 'flex', 'important'); 
+                }
+            })
+            .catch(function(err) {
+                alert("❌ ERROR CRÍTICO DE CONEXIÓN:\n" + err.message);
             });
         } else {
-            console.error("Error crítico: El objeto global 'supabase' no está definido al principio de tu script.");
-        }
-
-        // 4. EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA DE INTERFAZ AL INSTANTE
-        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-        
-        carritoItems = []; 
-        descuentoAplicado = false; 
-        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-        if (document.getElementById('inpKupon')) {
-            document.getElementById('inpKupon').value = ""; 
-            document.getElementById('inpKupon').style.color = "#ffffff"; 
-        }
-        actualizarRenderCarrito(); 
-        ocultarTodasLasSecciones(); 
-        const vp = document.getElementById('vp'); 
-        if (vp) { 
-            vp.style.setProperty('display', 'flex', 'important'); 
+            alert("❌ ERROR: El archivo de Supabase no está cargado en la página web.");
         }
     }
 
