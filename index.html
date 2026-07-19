@@ -857,43 +857,43 @@ body::before {
             return;
         }
 
-                        // 1. CAPTURAMOS LOS VALORES LOCALES DE TU PANEL
+                                // 1. CAPTURAMOS LOS VALORES LOCALES DE TU INTERFAZ
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        
-        // Usamos la variable 'userEmail' que tu login asigna cuando el cliente entra a su cuenta
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : null;
+        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu";
 
-        // VALIDACIÓN EXTRA: Si quieres que solo compren usuarios registrados, frenamos aquí si está vacío
-        if (!emailParaGuardar) {
-            alert("Hiba! A rendeléshez be kell jelentkeznie.\n(¡Error! Debe iniciar sesión para realizar un pedido).");
-            var sLogin = document.getElementById('s-login');
-            if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
-            return; // Detiene la ejecución para que no borre el carrito si no está logueado
-        }
+        // 2. CONFIGURAMOS LAS CREDENCIALES DE TU PROYECTO ACTUAL
+        var urlTabla = "https://supabase.co";
+        var apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-        // 2. ENVIAMOS LA COMANDA USANDO EL CLIENTE GLOBAL OFICIAL DE TU WEB
-        // Usamos 'supabase' (en minúsculas), que es el objeto que declaraste al inicio de tu script
-        if (typeof supabase !== 'undefined' && supabase) {
-            supabase.from('orders').insert([
-                { 
-                    client_email: emailParaGuardar, 
-                    phone: "00000000", // Modifica si tienes una variable con el teléfono del cliente
-                    delivery_type: modoTextoLocal   
-                }
-            ]).then(function(res) {
-                if (res.error) {
-                    // Si el panel de Supabase rechaza el pedido, te saldrá un aviso explicativo en la consola
-                    console.error("Supabase rechazó guardar la orden:", res.error.message);
+        // 3. ENVIAMOS LOS DATOS UTILIZANDO APYKEY EN LUGAR DE AUTHORIZATION BEARER
+        if (window.supabase) {
+            fetch(urlTabla, {
+                method: 'POST',
+                headers: {
+                    'apikey': apiKey,                  // Requisito estricto para llaves sb_publishable_
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    client_email: emailParaGuardar,
+                    phone: "00000000",                 // Campo requerido por tu tabla orders
+                    delivery_type: modoTextoLocal
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    console.error("La base de datos rechazó la comanda. Código de estado: " + response.status);
                 } else {
-                    console.log("¡Pedido guardado con éxito en la tabla 'orders'!");
+                    console.log("¡Pedido registrado exitosamente en Supabase!");
                 }
+            })
+            .catch(function(err) {
+                console.error("Error en el canal de comunicación de red:", err);
             });
-        } else {
-            console.error("El objeto global de Supabase no está disponible en este punto.");
         }
 
-        // 3. SE EJECUTA TU INTERFAZ ORIGINAL INMEDIATAMENTE
+        // 4. TU INTERFAZ VISUAL ORIGINAL CORRE SIN INTERRUPCIONES
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
@@ -910,6 +910,7 @@ body::before {
             vp.style.setProperty('display', 'flex', 'important'); 
         }
     }
+
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
