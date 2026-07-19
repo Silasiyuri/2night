@@ -983,6 +983,7 @@ body::before {
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
         var telefonoTextoLocal = inpTel.value.trim();
+        
         var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
         
         var totalPrecioLocal = 0;
@@ -1005,50 +1006,48 @@ body::before {
             }
         }
 
-        // CONTROL DE RED UTILIZANDO TECNOLOGÍA NATIVA ANTI-BLOQUEO LOCAL
-        var urlTablaDirecta = "https://supabase.co";
-        
-        var datosComandaCompletos = {
-            client_email: emailParaGuardar,             
-            phone: telefonoTextoLocal,            
-            delivery_type: modoTextoLocal,         
-            address: direccionTextoLocal,         
-            items: carritoItems,       
-            notes: notaTextoLocal,                
-            total_price: totalPrecioLocal,        
-            status: 'pendiente'                   
-        };
+        // CONECTOR OFICIAL NATIVO: Evita el error de bloqueo local CORS HTTP 0
+        if (typeof supabase !== 'undefined' && supabase) {
+            
+            supabase.from('orders').insert([
+                { 
+                    client_email: emailParaGuardar,             
+                    phone: telefonoTextoLocal,            
+                    delivery_type: modoTextoLocal,         
+                    address: direccionTextoLocal,         
+                    items: carritoItems,       
+                    notes: notaTextoLocal,                
+                    total_price: totalPrecioLocal,        
+                    status: 'pendiente'                   
+                }
+            ]).then(function(resultado) {
+                if (resultado.error) {
+                    alert("⚠️ Error de base de datos:\n" + resultado.error.message);
+                    return;
+                }
 
-        // Pasamos la clave 'apikey' directo en la URL para esquivar las restricciones estrictas del navegador de archivos locales (CORS HTTP 0)
-        if (navigator.sendBeacon) {
-            var blob = new Blob([JSON.stringify(datosComandaCompletos)], { type: 'application/json' });
-            navigator.sendBeacon(urlTablaDirecta + "?apikey=" + SUPABASE_KEY, blob);
+                // SIKER: Solo si Supabase confirma el guardado, se limpia la interfaz
+                alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+                
+                carritoItems = []; 
+                localStorage.removeItem('pesta_carrito_temporal');
+                descuentoAplicado = false; 
+                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                if (document.getElementById('inpKupon')) {
+                    document.getElementById('inpKupon').value = ""; 
+                    document.getElementById('inpKupon').style.color = "#ffffff"; 
+                }
+                if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
+                if (inpTel) inpTel.value = "";
+                
+                actualizarRenderCarrito(); 
+                ocultarTodasLasSecciones(); 
+                const vp = document.getElementById('vp'); 
+                if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+            });
+
         } else {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", urlTablaDirecta + "?apikey=" + SUPABASE_KEY, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify(datosComandaCompletos));
-        }
-
-        // CONTROL VISUAL ORIGINAL
-        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-        
-        carritoItems = []; 
-        localStorage.removeItem('pesta_carrito_temporal');
-        descuentoAplicado = false; 
-        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-        if (document.getElementById('inpKupon')) {
-            document.getElementById('inpKupon').value = ""; 
-            document.getElementById('inpKupon').style.color = "#ffffff"; 
-        }
-        if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
-        if (inpTel) inpTel.value = "";
-        
-        actualizarRenderCarrito(); 
-        ocultarTodasLasSecciones(); 
-        const vp = document.getElementById('vp'); 
-        if (vp) { 
-            vp.style.setProperty('display', 'flex', 'important'); 
+            alert("Error: El conector de Supabase no está disponible en la página web.");
         }
     }
 
