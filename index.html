@@ -858,31 +858,35 @@ body::before {
         }
 
         function procesarEnvioPedido() { 
-    // 1. CAPTURAMOS LOS VALORES DE TU PÁGINA
+    // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
     var notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
     var tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
     var telefonoCliente = "00000000"; 
-    
-    // Usamos el email del usuario logueado en tu variable de la página
     var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu"; 
 
-    // 2. CONFIGURAMOS LAS CREDENCIALES DIRECTAS
-    var urlTabla = "https://supabase.co";
-    var apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+    // 2. CREAMOS LA CONEXIÓN EXCLUSIVAMENTE AQUÍ, SOLO AL HACER CLIC
+    if (!supabase && window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
 
-    // 3. ENVIAMOS LOS DATOS (Formato correcto para claves sb_publishable_)
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", urlTabla, true);
-    
-    // Configuración obligatoria: La clave va en apikey, nunca en Authorization como Bearer
-    xhr.setRequestHeader("apikey", apiKey);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("Prefer", "return=minimal");
+    // 3. MANDAMOS LA ORDEN USANDO EL CLIENTE INICIALIZADO EN CALIENTE
+    if (supabase) {
+        supabase
+            .from('orders')
+            .insert([
+                { 
+                    client_email: emailParaGuardar, 
+                    phone: telefonoCliente,         
+                    delivery_type: tipoEnvioTexto   
+                }
+            ])
+            .then(function(resultado) {
+                if (resultado.error) {
+                    alert("Supabase rechazó la orden: " + resultado.error.message);
+                    return;
+                }
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                // ¡ÉXITO! SE GUARDÓ EN SUPABASE. EJECUTAMOS TU INTERFAZ ORIGINAL
+                // 4. SI LLEGÓ CON ÉXITO, EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA
                 alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
                 
                 carritoItems = []; 
@@ -898,20 +902,15 @@ body::before {
                 if (vp) { 
                     vp.style.setProperty('display', 'flex', 'important'); 
                 }
-            } else {
-                // Si la base de datos rechaza la orden, nos avisará sin congelar la web
-                alert("Supabase rechazó el pedido (Código " + xhr.status + "). Revisa que el usuario haya iniciado sesión.");
-            }
-        }
-    };
-
-    // Enviamos el objeto JSON con las columnas exactas de tu tabla orders
-    xhr.send(JSON.stringify({
-        client_email: emailParaGuardar,
-        phone: telefonoCliente,
-        delivery_type: tipoEnvioTexto
-    }));
+            })
+            .catch(function(err) {
+                alert("Error de conexión de red: " + err.message);
+            });
+    } else {
+        alert("Error crítico: No se pudo cargar el SDK de Supabase.");
+    }
 }
+
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
