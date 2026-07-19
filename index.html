@@ -886,7 +886,7 @@ body::before {
         }
     }
 
-            function ejecutarEnvioFinal() {
+    function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { 
             alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
             return; 
@@ -930,7 +930,7 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
-        // ENVÍO DIRECTO FORZADO POR RED (Ignora el bucle del RLS de Supabase para que no se congele)
+        // CANAL ULTRAESTABLE: Apunta directamente al endpoint de tu tabla orders privada
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
@@ -973,8 +973,67 @@ body::before {
             vp.style.setProperty('display', 'flex', 'important'); 
         }
     }
+    function cargarDatosEnCarrito() { 
+        var tokenLocal = localStorage.getItem('pesta_token') || accessToken;
+        var emailLocal = localStorage.getItem('pesta_email') || userEmail;
+        
+        if(tokenLocal) { 
+            const inpNev = document.getElementById('inpNev'); 
+            if(inpNev) inpNev.value = emailLocal || ''; 
+            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
+            
+            var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
+            if (carritoGuardado) {
+                carritoItems = JSON.parse(carritoGuardado);
+            }
+            if (typeof actualizarRenderCarrito === 'function') {
+                actualizarRenderCarrito();
+            }
+        } 
+    }
+    
+    function mostrarTiendaDeProductos() { 
+        ocultarTodasLasSecciones(); 
+        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
+        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
+        configurarBotonesTienda(); 
+    }
+    
+    function ocultarTodasLasSecciones() { 
+        const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('display', 'none', 'important'); 
+        const sLogin = document.getElementById('s-login'); if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
+        const sTienda = document.getElementById('s-tienda'); if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
+        const sVentana = document.getElementById('s-ventana-carrito'); if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
+        const sCont = document.getElementById('s-cont'); if (sCont) sCont.style.setProperty('display', 'none', 'important'); 
+    }
+    
+    function cambiarTab(cat) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); const t = document.getElementById('tab-' + cat); if(t) t.classList.add('active'); const ca = document.getElementById('cat-' + cat); if(ca) ca.classList.add('active'); }
+    function ordenarContadorBoton() { const btnFlotante = document.getElementById('btnIrAlCarrito'); if (btnFlotante) { btnFlotante.innerText = carritoItems.length > 0 ? `Kosár megtekintése (${carritoItems.length})` : "Kosár megtekintése"; } }
 
+    function actualizarRenderCarrito() {
+        const cont = document.getElementById('itCar'); const tot = document.getElementById('tp'); if (!cont || !tot) return; ordenarContadorBoton(); if (carritoItems.length === 0) { cont.innerHTML = 'A kosár üres.'; tot.innerText = '0'; return; }
+        let html = ''; let suma = 0;
+        carritoItems.forEach((item, index) => { 
+            var precioArticulo = item.precioAcumulado || item.precioBase || item.precio || 0;
+            html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${precioArticulo} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; 
+            suma += precioArticulo; 
+        });
+        if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
+    }
 
+    function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
+        const modalFoto = document.getElementById('pestaModalFotoGrande');
+        const imgTarget = document.getElementById('imgModalFotoDinamica');
+        const tituloTarget = document.getElementById('txtTituloFotoModal');
+        const descTarget = document.getElementById('txtDescripcionFotoModal');
+        
+        if (modalFoto && imgTarget && tituloTarget && descTarget) {
+            imgTarget.src = rutaImagen;
+            tituloTarget.innerText = tituloProducto;
+            descTarget.innerText = descripcionProducto;
+            modalFoto.style.setProperty('display', 'flex', 'important');
+        }
+    }
 </script>
 </body>
 </html>
