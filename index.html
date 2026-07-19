@@ -1069,12 +1069,35 @@ body::before {
         configurarBotonesTienda(); 
     }
     
+       function cargarDatosEnCarrito() { 
+        if(accessToken) { 
+            const inpNev = document.getElementById('inpNev'); 
+            if(inpNev) inpNev.value = userEmail || ''; 
+            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
+        } 
+    }
+    
+    function mostrarTiendaDeProductos() { 
+        ocultarTodasLasSecciones(); 
+        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
+        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
+        configurarBotonesTienda(); 
+    }
+    
     function ocultarTodasLasSecciones() { 
-        const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('none', 'important'); 
-        const sLogin = document.getElementById('s-login'); if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
-        const sTienda = document.getElementById('s-tienda'); if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
-        const sVentana = document.getElementById('s-ventana-carrito'); if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
+        const vp = document.getElementById('vp'); 
+        if (vp) vp.style.setProperty('display', 'none', 'important'); 
+        
+        const sLogin = document.getElementById('s-login'); 
+        if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
+        
+        const sTienda = document.getElementById('s-tienda'); 
+        if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
+        
+        const sVentana = document.getElementById('s-ventana-carrito'); 
+        if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
     }
 </script>
+
 </body>
 </html>
