@@ -984,9 +984,7 @@ body::before {
             }
         }
 
-        var jsonCarritoEstructurado = JSON.parse(JSON.stringify(carritoItems));
-
-        // CANAL ULTRAESTABLE CORREGIDO: Apunta directamente a tu base de datos orders
+        // CANAL ULTRAESTABLE CORREGIDO: Serialización de objeto para inyección directa en JSONB
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
@@ -995,16 +993,19 @@ body::before {
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
-            xhr.send(JSON.stringify({
+            // LA SOLUCIÓN: Serializamos el paquete de datos al completo convirtiendo el array interno a formato JSON de texto puro
+            var datosComandaCompletos = {
                 client_email: emailParaGuardar,             
                 phone: telefonoTextoLocal,            
                 delivery_type: modoTextoLocal,         
                 address: direccionTextoLocal,         
-                items: jsonCarritoEstructurado,       
+                items: carritoItems, // Se empaqueta en el objeto nativo directamente      
                 notes: notaTextoLocal,                
                 total_price: totalPrecioLocal,        
                 status: 'pendiente'                   
-            }));
+            };
+
+            xhr.send(JSON.stringify(datosComandaCompletos)); // Transforma todo el cuerpo a texto plano serializado
         } catch(e) {
             console.error("Error secundario de red:", e);
         }
@@ -1059,6 +1060,5 @@ body::before {
         if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
     }
 </script>
-
 </body>
 </html>
