@@ -857,11 +857,11 @@ body::before {
             return;
         }
 
-                                                      // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
+                                                              // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         
-        // Calculamos el precio total del carrito
+        // Calculamos el precio total sumando los productos del carrito
         var totalPrecioLocal = 0;
         if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
             for (var i = 0; i < carritoItems.length; i++) {
@@ -869,70 +869,65 @@ body::before {
             }
         }
 
-        // Recuperamos el email de tu inicio de sesión
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : null;
+        // 2. FORZAMOS A SUPABASE A BUSCAR EL USUARIO REGISTRADO QUE INICIÓ SESIÓN
+        if (typeof supabase !== 'undefined' && supabase) {
+            
+            supabase.auth.getUser().then(function(respuestaAuth) {
+                var usuarioActivo = respuestaAuth.data ? respuestaAuth.data.user : null;
 
-        // FRENADO DE SEGURIDAD LOCAL: Si no ha iniciado sesión, detenemos el flujo
-        if (!emailParaGuardar) {
-            alert("HIBA: A rendeléshez be kell jelentkeznie!\n(¡ERROR! Debe iniciar sesión con un correo registrado para poder pedir).");
-            var sLogin = document.getElementById('s-login');
-            if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
-            return; 
-        }
-
-        // 2. CONEXIÓN EXPRESA AL PROYECTO
-        if (window.supabase) {
-            var clienteSupabaseTemporal = window.supabase.createClient(
-                "https://supabase.co", 
-                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
-            );
-
-            // Intentamos la inserción forzando la respuesta del servidor
-            clienteSupabaseTemporal.from('orders').insert([
-                { 
-                    client_email: emailParaGuardar, 
-                    phone: "00000000",                         // Evita errores de campos requeridos
-                    delivery_type: modoTextoLocal,             // 'Kiszállítás' o 'Személyes'
-                    address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
-                    items: carritoItems,                       // Enviamos el array al campo JSONB
-                    notes: notaTextoLocal,                     // Tu columna 'notes'
-                    total_price: totalPrecioLocal,             // Tu columna 'total_price'
-                    status: 'pendiente'                        // Tu columna 'status'
-                }
-            ])
-            .select()
-            .then(function(res) {
-                // SI LA BASE DE DATOS RECHAZA EL PEDIDO, TE SALTARÁ ESTE CARTEL CON EL MOTIVO REAL
-                if (res.error) {
-                    alert("⚠️ SUPABASE BLOQUEÓ EL PEDIDO:\nMensaje: " + res.error.message + "\nCódigo: " + res.error.code);
-                    console.error("Detalle técnico:", res.error);
-                    return; // Detiene el código aquí para que no borre tu carrito
+                // SI EL USUARIO NO TIENE LA SESIÓN ACTIVA EN EL NAVEGADOR, DETENEMOS EL PEDIDO
+                if (!usuarioActivo) {
+                    alert("HIBA: A rendeléshez be kell jelentkeznie!\n(¡ERROR! Tu sesión expiró o no has iniciado sesión en la web).");
+                    var sLogin = document.getElementById('s-login');
+                    if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
+                    return; // Frena el borrado del carrito
                 }
 
-                // 3. SIKER! SÓLO SI SE GUARDÓ CON ÉXITO EN INTERNET SE MUESTRA TU INTERFAZ ORIGINAL
-                alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-                
-                carritoItems = []; 
-                descuentoAplicado = false; 
-                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-                if (document.getElementById('inpKupon')) {
-                    document.getElementById('inpKupon').value = ""; 
-                    document.getElementById('inpKupon').style.color = "#ffffff"; 
-                }
-                actualizarRenderCarrito(); 
-                ocultarTodasLasSecciones(); 
-                const vp = document.getElementById('vp'); 
-                if (vp) { 
-                    vp.style.setProperty('display', 'flex', 'important'); 
-                }
-            })
-            .catch(function(err) {
-                alert("❌ ERROR CRÍTICO DE CONEXIÓN:\n" + err.message);
+                // 3. ENVIAMOS LA COMANDA USANDO LA SESIÓN VERIFICADA (Pasará el RLS de usuarios registrados)
+                supabase.from('orders').insert([
+                    { 
+                        client_email: usuarioActivo.email,             // Correo oficial verificado por el Auth de Supabase
+                        phone: "00000000",                             // Campo requerido en tu SQL
+                        delivery_type: modoTextoLocal,                 // 'Kiszállítás' o 'Személyes'
+                        address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
+                        items: carritoItems,                           // Array compatible con tu columna jsonb
+                        notes: notaTextoLocal,                         // Mapeado a tu columna notes
+                        total_price: totalPrecioLocal,                 // Precio total numérico
+                        status: 'pendiente'                            // Estado inicial en cocina
+                    }
+                ]).then(function(res) {
+                    if (res.error) {
+                        // Si hay un error con el RLS o las columnas, saldrá en un cartel en lugar de fallar en silencio
+                        alert("⚠️ SUPABASE RECHAZÓ EL PEDIDO:\nMensaje: " + res.error.message);
+                        console.error("Detalle:", res.error);
+                    } else {
+                        console.log("¡Comanda registrada exitosamente en el Table Editor!");
+                        
+                        // 4. EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA SÓLO SI SE GUARDÓ CORRECTAMENTE
+                        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+                        
+                        carritoItems = []; 
+                        descuentoAplicado = false; 
+                        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                        if (document.getElementById('inpKupon')) {
+                            document.getElementById('inpKupon').value = ""; 
+                            document.getElementById('inpKupon').style.color = "#ffffff"; 
+                        }
+                        actualizarRenderCarrito(); 
+                        ocultarTodasLasSecciones(); 
+                        const vp = document.getElementById('vp'); 
+                        if (vp) { 
+                            vp.style.setProperty('display', 'flex', 'important'); 
+                        }
+                    }
+                });
             });
+
         } else {
-            alert("❌ ERROR: El archivo de Supabase no está cargado en la página web.");
+            alert("Error: El cliente global 'supabase' no está listo.");
         }
     }
+
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
