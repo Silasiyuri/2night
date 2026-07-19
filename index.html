@@ -858,17 +858,17 @@ body::before {
         }
 
          function procesarEnvioPedido() { 
-    // 1. CAPTURAMOS LOS VALORES DE LA INTERFAZ
+    // 1. INTERFÉSZ ÉRTÉKEINEK KIMENTÉSE
     const notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
     const tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-    const telefonoCliente = "00000000"; // Modifica si tienes un input de teléfono
+    const telefonoCliente = "00000000"; 
     const emailParaGuardar = typeof userEmail !== 'undefined' && userEmail ? userEmail : "anonimo_test@pesta.hu"; 
 
-    // 2. CONFIGURAMOS LAS CREDENCIALES DIRECTAS DE TU PROYECTO
+    // 2. A TE SAJÁT PROJEKTEDHEZ TARTOZÓ PONTOS ELÉRÉSI ÚT (JAVÍTVA)
     const urlTabla = "https://supabase.co";
     const apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // 3. ENVIAMOS LOS DATOS POR RED (FETCH API NATIVA)
+    // 3. ADATOK ELKÜLDÉSE HÁLÓZATI KÉRÉSSEL
     fetch(urlTabla, {
         method: 'POST',
         headers: {
@@ -885,17 +885,16 @@ body::before {
     })
     .then(function(response) {
         if (!response.ok) {
-            // Si la base de datos rechaza la petición, capturamos el motivo
             return response.json().then(function(errorData) {
-                alert("SUPABASE ERROR:\n" + (errorData.message || "Petición rechazada"));
+                alert("SUPABASE HIBA:\n" + (errorData.message || "Kérés elutasítva"));
                 throw new Error(errorData.message);
             }).catch(function() {
-                alert("ERROR DE RED: Código de estado " + response.status);
+                alert("HÁLÓZATI HIBA: Státuszkód " + response.status);
                 throw new Error("HTTP " + response.status);
             });
         }
 
-        // 4. SI LLEGÓ A SUPABASE CON ÉXITO, EJECUTAMOS TU INTERFAZ ORIGINAL
+        // 4. SIKERES MENTÉS UTÁNI EREDETI LOGIKA ÉS KOCSI KIÜRÍTÉS
         alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
         
         carritoItems = []; 
@@ -913,9 +912,10 @@ body::before {
         }
     })
     .catch(function(err) {
-        console.error("Error en la conexión:", err);
+        console.error("Hiba a kapcsolatban:", err);
     });
 }
+
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
