@@ -952,7 +952,7 @@ body::before {
         }
     }
 
-       async function ejecutarEnvioFinal() {
+    async function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { 
             alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
             return; 
@@ -996,9 +996,8 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
-        // SOLUCIÓN DEFINITIVA: Carga de librería en caliente si el objeto de red local falla
+        // Carga de la librería oficial de Supabase directamente en caliente
         if (!window.supabase) {
-            console.log("Cargando SDK de Supabase en caliente...");
             await new Promise((resolve) => {
                 var scriptCarga = document.createElement('script');
                 scriptCarga.src = "https://jsdelivr.net";
@@ -1007,14 +1006,17 @@ body::before {
             });
         }
 
-        // Si la constante global 'supabase' no se había inicializado por el orden de carga, la creamos aquí mismo
+        // Inicializamos el cliente de forma directa con textos para evitar fallos de variables ausentes
         var conectorBaseDatos = (typeof supabase !== 'undefined' && supabase) ? supabase : null;
         if (!conectorBaseDatos && window.supabase) {
-            conectorBaseDatos = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            conectorBaseDatos = window.supabase.createClient(
+                "https://supabase.co", 
+                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
+            );
         }
 
         if (conectorBaseDatos) {
-            // Mandamos los datos usando el SDK oficial cargado para forzar la inyección directa en JSONB
+            // Inserción directa mapeando las columnas exactas de tu tabla SQL orders
             conectorBaseDatos.from('orders').insert([
                 { 
                     client_email: emailParaGuardar,             
@@ -1028,11 +1030,11 @@ body::before {
                 }
             ]).then(function(resultado) {
                 if (resultado.error) {
-                    alert("⚠️ Error en tu base de datos de Supabase:\n" + resultado.error.message);
+                    alert("⚠️ Supabase error de base de datos:\n" + resultado.error.message);
                     return;
                 }
 
-                // SIKER: Vaciamos la interfaz localmente solo si Postgres confirma el guardado correcto
+                // ÉXITO: Vaciamos el carro solo si el servidor de Postgres confirma el guardado correcto
                 alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
                 
                 carritoItems = []; 
@@ -1053,10 +1055,49 @@ body::before {
             });
 
         } else {
-            alert("Error crítico: No se pudo inyectar el motor de Supabase en tu navegador web.");
+            alert("Error crítico: El motor de Supabase no se pudo iniciar.");
         }
     }
 
+    function cargarDatosEnCarrito() { 
+        var tokenLocal = localStorage.getItem('pesta_token') || accessToken;
+        var emailLocal = localStorage.getItem('pesta_email') || userEmail;
+        
+        if(tokenLocal) { 
+            const inpNev = document.getElementById('inpNev'); 
+            if(inpNev) inpNev.value = emailLocal || ''; 
+            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
+            
+            var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
+            if (carritoGuardado) {
+                carritoItems = JSON.parse(carritoGuardado);
+            }
+            if (typeof actualizarRenderCarrito === 'function') {
+                actualizarRenderCarrito();
+            }
+        } 
+    }
+    
+    function mostrarTiendaDeProductos() { 
+        ocultarTodasLasSecciones(); 
+        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
+        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
+        configurarBotonesTienda(); 
+    }
+    
+    function ocultarTodasLasSecciones() { 
+        const vp = document.getElementById('vp'); 
+        if (vp) vp.style.setProperty('display', 'none', 'important'); 
+        
+        const sLogin = document.getElementById('s-login'); 
+        if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
+        
+        const sTienda = document.getElementById('s-tienda'); 
+        if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
+        
+        const sVentana = document.getElementById('s-ventana-carrito'); 
+        if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
+    }
 </script>
 </body>
 </html>
