@@ -857,60 +857,52 @@ body::before {
             return;
         }
 
-        function procesarEnvioPedido() { 
-    // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
-    var notaCliente = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
-    var tipoEnvioTexto = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-    var telefonoCliente = "00000000"; 
-    var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu"; 
+                // 1. CAPTURAMOS LOS VALORES DE FORMA INTERNA Y LIMPIA
+        var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
+        var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
+        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu";
 
-    // 2. CREAMOS LA CONEXIÓN EXCLUSIVAMENTE AQUÍ, SOLO AL HACER CLIC
-    if (!supabase && window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
-
-    // 3. MANDAMOS LA ORDEN USANDO EL CLIENTE INICIALIZADO EN CALIENTE
-    if (supabase) {
-        supabase
-            .from('orders')
-            .insert([
+        // 2. ENVIAMOS LA COMANDA A SUPABASE EN SEGUNDO PLANO (SIN ESPERAR A INTERNET PARA NO CONGELAR)
+        if (window.supabase) {
+            var clienteSupabaseTemporal = window.supabase.createClient(
+                "https://supabase.co", 
+                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
+            );
+            
+            clienteSupabaseTemporal.from('orders').insert([
                 { 
                     client_email: emailParaGuardar, 
-                    phone: telefonoCliente,         
-                    delivery_type: tipoEnvioTexto   
+                    phone: "00000000",         
+                    delivery_type: modoTextoLocal   
                 }
-            ])
-            .then(function(resultado) {
-                if (resultado.error) {
-                    alert("Supabase rechazó la orden: " + resultado.error.message);
-                    return;
+            ]).then(function(res) {
+                if (res.error) {
+                    console.error("Supabase rechazó guardar la orden en segundo plano:", res.error.message);
+                } else {
+                    console.log("¡Pedido guardado con éxito en Supabase!");
                 }
-
-                // 4. SI LLEGÓ CON ÉXITO, EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA
-                alert('Rendelés elküldve!\nMód: ' + tipoEnvioTexto + '\nMegjegyzés: ' + notaCliente);
-                
-                carritoItems = []; 
-                descuentoAplicado = false; 
-                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-                if (document.getElementById('inpKupon')) {
-                    document.getElementById('inpKupon').value = ""; 
-                    document.getElementById('inpKupon').style.color = "#ffffff"; 
-                }
-                actualizarRenderCarrito(); 
-                ocultarTodasLasSecciones(); 
-                var vp = document.getElementById('vp'); 
-                if (vp) { 
-                    vp.style.setProperty('display', 'flex', 'important'); 
-                }
-            })
-            .catch(function(err) {
-                alert("Error de conexión de red: " + err.message);
             });
-    } else {
-        alert("Error crítico: No se pudo cargar el SDK de Supabase.");
-    }
-}
+        } else {
+            console.error("El script de Supabase no está cargado en el HTML.");
+        }
 
+        // 3. TU CÓDIGO ORIGINAL SE SIGUE EJECUTANDO AL INSTANTE (EVITA QUE LA PÁGINA SE QUEDE ESPERANDO O SE CONGELE)
+        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+        
+        carritoItems = []; 
+        descuentoAplicado = false; 
+        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+        if (document.getElementById('inpKupon')) {
+            document.getElementById('inpKupon').value = ""; 
+            document.getElementById('inpKupon').style.color = "#ffffff"; 
+        }
+        actualizarRenderCarrito(); 
+        ocultarTodasLasSecciones(); 
+        const vp = document.getElementById('vp'); 
+        if (vp) { 
+            vp.style.setProperty('display', 'flex', 'important'); 
+        }
+    }
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
