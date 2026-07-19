@@ -918,7 +918,6 @@ body::before {
         var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
         var telefonoTextoLocal = inpTel.value.trim();
         var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
-        var tokenActivoDeRed = localStorage.getItem('pesta_token') || accessToken;
         
         var totalPrecioLocal = 0;
         if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
@@ -931,16 +930,13 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
+        // CANAL ULTRAESTABLE CON CONTROL ANTI-BLOQUEO DE ARCHIVOS LOCALES (CORS)
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", urlTablaDirecta, true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            if (tokenActivoDeRed) {
-                xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
-            } else {
-                xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            }
+            
+            // Inyectamos la apikey directo en la cabecera URL para evitar que el navegador tumbe el paquete local
+            xhr.open("POST", urlTablaDirecta + "?apikey=" + SUPABASE_KEY, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
@@ -955,9 +951,10 @@ body::before {
                 status: 'pendiente'                   
             }));
         } catch(e) {
-            console.error("Error en canal secundario:", e);
+            console.error("Error secundario de red:", e);
         }
 
+        // CONTROL VISUAL ORIGINAL INSTANTÁNEO
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
@@ -987,6 +984,7 @@ body::before {
             if(inpNev) inpNev.value = emailLocal || ''; 
             if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
             
+            // RESTAURACIÓN DEL CARRO: Rescata las pizzas de la memoria para que no se borren tras iniciar sesión
             var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
             if (carritoGuardado) {
                 carritoItems = JSON.parse(carritoGuardado);
