@@ -557,8 +557,13 @@ body::before {
     const SUPABASE_URL = "https://kpxcpkzmquqyduadnahz.supabase.co";
     const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // INICIALIZACIÓN OFICIAL: Utiliza el SDK de red cargado en el head para saltarse bloqueos de CORS
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    // INICIALIZACIÓN CONFIGURADA: Con persistencia de sesión activa para usuarios registrados
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: {
+            persistSession: true,
+            autoRefreshToken: true
+        }
+    }) : null;
 
     let currentMode = 'login'; 
     let accessToken = null;
@@ -583,6 +588,7 @@ body::before {
         "Tiramisu": [{ id: "tejszin", nombre: "Tejszínhab", precio: 250, max: 2 }],
         "Panna Cotta": [{ id: "ontet", nombre: "Extra Erdei Gyümölcs Öntet", precio: 300, max: 2 }]
     };
+
 
     function forzarCierreMenu() { 
         const ml = document.getElementById('menu-lateral-css');
