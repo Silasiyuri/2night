@@ -986,7 +986,7 @@ body::before {
 
         var jsonCarritoEstructurado = JSON.parse(JSON.stringify(carritoItems));
 
-        // CANAL ULTRAESTABLE: Envío en segundo plano inmediato (Evita bloqueos y pantallas congeladas)
+        // CANAL ULTRAESTABLE CORREGIDO: Apunta directamente a tu base de datos orders
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
@@ -1009,7 +1009,7 @@ body::before {
             console.error("Error secundario de red:", e);
         }
 
-        // CONTROL VISUAL ORIGINAL: Limpieza instantánea del menú de cara al comprador
+        // CONTROL VISUAL ORIGINAL
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
@@ -1059,5 +1059,6 @@ body::before {
         if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
     }
 </script>
+
 </body>
 </html>
