@@ -849,6 +849,7 @@ body::before {
 </script>
 
 <!-- BLOQUE_20_PARTE_1_DE_2 -->
+<script>
     function configurarBotonesTienda() {
         const btnFlotante = document.getElementById('btnIrAlCarrito');
         if(modoSoloVer) { 
@@ -859,7 +860,7 @@ body::before {
         document.querySelectorAll('.btn-nyito-extras-basilico').forEach(btn => {
             btn.innerText = "+"; 
             if (modoSoloVer) { 
-                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivery vagy Személyes átvétel opciót a főoldalon.'); }; 
+                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); }; 
             } else { 
                 btn.onclick = function(e) { e.preventDefault(); const name = this.getAttribute('data-name'); const price = this.getAttribute('data-price'); inicializarVentanaExtras(name, price); }; 
             }
@@ -880,7 +881,11 @@ body::before {
         document.getElementById('contenedorListaExtrasDinamicos').innerHTML = htmlLista; document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'flex', 'important');
     }
 
-    function cerrarVentanaExtras() { document.getElementById('pestaModalExtrasIndependiente').style.setProperty('none', 'important'); }
+    function cerrarVentanaExtras() { 
+        const modalExtras = document.getElementById('pestaModalExtrasIndependiente');
+        if (modalExtras) { modalExtras.style.setProperty('display', 'none', 'important'); } 
+    }
+    
     function operarExtra(idItem, c) {
         let ing = OBJETO_PRODUCTO_ACTIVO.extras[idItem]; if (!ing) return; if (c === -1 && ing.quantity === 0) return; if (c === 1 && ing.quantity >= ing.max) { alert(`Maximális mennyiség elérve ehhez a feltéthez (${ing.max}x)!`); return; }
         ing.quantity += c; document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; if(document.getElementById('btn-sumar-nuevo-' + idItem)) { document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; }
@@ -890,19 +895,39 @@ body::before {
     function confirmarYAgregarAlCarrito() {
         let ex = []; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { let item = OBJETO_PRODUCTO_ACTIVO.extras[k]; if (item.quantity > 0) ex.push(`${item.nombre} (x${item.quantity})`); });
         let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
-        carritoItems.push({ nombre: finalName, precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado }); cerrarVentanaExtras(); actualizarRenderCarrito();
+        
+        // Estructuramos el objeto del producto añadiendo 'precioAcumulado' para el cálculo matemático del total final
+        carritoItems.push({ 
+            nombre: finalName, 
+            precioBase: OBJETO_PRODUCTO_ACTIVO.precioBase,
+            precioAcumulado: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
+        }); 
+        cerrarVentanaExtras(); 
+        actualizarRenderCarrito();
     }
 
     function eliminarDelCarrito(index) { carritoItems.splice(index, 1); actualizarRenderCarrito(); }
+</script>
+
 <!-- BLOQUE_20_PARTE_2_DE_2 -->
+<script>
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
-            e.preventDefault(); if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { if (descuentoAplicado) { alert('A kupon már aktív!'); return; } descuentoAplicado = true; document.getElementById('inpKupon').style.color = '#2ecc71'; actualizarRenderCarrito(); alert('Sikeres kupon!'); } else { alert('Érvénytelen kupon!'); }
+            e.preventDefault(); 
+            if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { 
+                if (descuentoAplicado) { alert('A kupon már aktív!'); return; } 
+                descuentoAplicado = true; 
+                document.getElementById('inpKupon').style.color = '#2ecc71'; 
+                actualizarRenderCarrito(); 
+                alert('Sikeres kupon!'); 
+            } else { 
+                alert('Érvénytelen kupon!'); 
+            }
         });
     }
 
-        function definirEnvioFinal(t) {
+    function definirEnvioFinal(t) {
         tipoDeEnvioSeleccionadoCart = t; 
         const bD = document.getElementById('btnModoDelivery'); 
         const bP = document.getElementById('btnModoPickup'); 
@@ -913,31 +938,29 @@ body::before {
         if (t === 'delivery') { 
             if(bD) { bD.style.background = '#d6af37'; bD.style.color = '#000'; } 
             if(bP) { bP.style.background = 'rgba(255,255,255,0.05)'; bP.style.color = '#fff'; } 
-            
-            // Deja el campo vacío y listo para escribir de forma elegante
             inpCim.value = ""; 
             inpCim.placeholder = "Utca, házszám, emelet, ajtó...";
             inpCim.focus(); 
         } else { 
             if(bP) { bP.style.background = '#d6af37'; bP.style.color = '#000'; } 
             if(bD) { bD.style.background = 'rgba(255,255,255,0.05)'; bD.style.color = '#fff'; } 
-            
-            // Bloquea con texto fijo si es recogida en tienda física
             inpCim.value = "Személyes átvétel a boltban"; 
         }
     }
 
-
-    function ejecutarEnvioFinal() {
-        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
-        // VALIDACIÓN DE DIRECCIÓN ACTIVA
+    async function ejecutarEnvioFinal() {
+        if (!tipoDeEnvioSeleccionadoCart) { 
+            alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
+            return; 
+        }
+        
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
             alert('Kérjük, adja meg a pontos szállítási címet!');
             if(inpCim) inpCim.focus();
             return;
         }
-        // VALIDACIÓN DE TELÉFONO REAL Y OBLIGATORIO
+        
         const inpTel = document.getElementById('inpTel'); 
         if (!inpTel || inpTel.value.trim() === "") { 
             alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
@@ -945,7 +968,6 @@ body::before {
             return; 
         }
 
-        // Expresión regular: Valida números reales con o sin prefijo + (mínimo 9, máximo 13 dígitos)
         const regexTelefonoReal = /^\+?[0-9]{9,13}$/;
         if (!regexTelefonoReal.test(inpTel.value.trim())) {
             alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567 vagy 06301234567)');
@@ -953,114 +975,106 @@ body::before {
             return;
         }
 
-                                                              // 1. CAPTURAMOS LOS VALORES DE LA PÁGINA
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
+        var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
+        var telefonoTextoLocal = inpTel.value.trim();
         
-        // Calculamos el precio total sumando los productos del carrito
         var totalPrecioLocal = 0;
         if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
             for (var i = 0; i < carritoItems.length; i++) {
                 totalPrecioLocal += (carritoItems[i].precioAcumulado || carritoItems[i].precioBase || 0);
             }
         }
+        
+        // Aplicamos la reducción del 10% si el cupón está activo antes de subirlo a tu columna numeric
+        if (descuentoAplicado) {
+            totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
+        }
 
-        // 2. FORZAMOS A SUPABASE A BUSCAR EL USUARIO REGISTRADO QUE INICIÓ SESIÓN
         if (typeof supabase !== 'undefined' && supabase) {
-            
-            supabase.auth.getUser().then(function(respuestaAuth) {
-                var usuarioActivo = respuestaAuth.data ? respuestaAuth.data.user : null;
+            try {
+                // Recuperamos de forma segura la sesión del cliente oficial
+                const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-                // SI EL USUARIO NO TIENE LA SESIÓN ACTIVA EN EL NAVEGADOR, DETENEMOS EL PEDIDO
-                if (!usuarioActivo) {
-                    alert("HIBA: A rendeléshez be kell jelentkeznie!\n(¡ERROR! Tu sesión expiró o no has iniciado sesión en la web).");
+                if (authError || !user) {
+                    alert("HIBA: A rendeléshez be kell jelentkeznie!\n(¡ERROR! Tu sesión expiró o debe iniciar sesión nuevamente).");
                     var sLogin = document.getElementById('s-login');
                     if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
-                    return; // Frena el borrado del carrito
+                    return; 
                 }
 
-                // 3. ENVIAMOS LA COMANDA USANDO LA SESIÓN VERIFICADA (Pasará el RLS de usuarios registrados)
-                supabase.from('orders').insert([
-                    { 
-                        client_email: usuarioActivo.email,             // Correo oficial verificado por el Auth de Supabase
-                        phone: "00000000",                             // Campo requerido en tu SQL
-                        delivery_type: modoTextoLocal,                 // 'Kiszállítás' o 'Személyes'
-                        address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
-                        items: carritoItems,                           // Array compatible con tu columna jsonb
-                        notes: notaTextoLocal,                         // Mapeado a tu columna notes
-                        total_price: totalPrecioLocal,                 // Precio total numérico
-                        status: 'pendiente'                            // Estado inicial en cocina
-                    }
-                ]).then(function(res) {
-                    if (res.error) {
-                        // Si hay un error con el RLS o las columnas, saldrá en un cartel en lugar de fallar en silencio
-                        alert("⚠️ SUPABASE RECHAZÓ EL PEDIDO:\nMensaje: " + res.error.message);
-                        console.error("Detalle:", res.error);
-                    } else {
-                        console.log("¡Comanda registrada exitosamente en el Table Editor!");
-                        
-                        // 4. EJECUTAMOS TU ALERTA ORIGINAL Y LIMPIEZA SÓLO SI SE GUARDÓ CORRECTAMENTE
-                        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-                        
-                        carritoItems = []; 
-                        descuentoAplicado = false; 
-                        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-                        if (document.getElementById('inpKupon')) {
-                            document.getElementById('inpKupon').value = ""; 
-                            document.getElementById('inpKupon').style.color = "#ffffff"; 
-                        }
-                        actualizarRenderCarrito(); 
-                        ocultarTodasLasSecciones(); 
-                        const vp = document.getElementById('vp'); 
-                        if (vp) { 
-                            vp.style.setProperty('display', 'flex', 'important'); 
-                        }
-                    }
-                });
-            });
+                var jsonCarritoEstructurado = JSON.parse(JSON.stringify(carritoItems));
 
+                // Guardado limpio con las variables dinámicas reales de tus inputs
+                const { error: insertError } = await supabase.from('orders').insert([
+                    { 
+                        client_email: user.email,             
+                        phone: telefonoTextoLocal,            // Almacena el celular real validado por el regex
+                        delivery_type: modoTextoLocal,         
+                        address: direccionTextoLocal,         // Almacena la dirección real escrita por el usuario
+                        items: jsonCarritoEstructurado,       
+                        notes: notaTextoLocal,                
+                        total_price: totalPrecioLocal,        
+                        status: 'pendiente'                   
+                    }
+                ]);
+
+                if (insertError) {
+                    alert("⚠️ SUPABASE RECHAZÓ EL PEDIDO:\nMensaje: " + insertError.message);
+                    console.error("Detalle:", insertError);
+                    return;
+                }
+
+                // SIKER! Se ejecuta la limpieza y animación solo tras confirmación de la red
+                alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
+                
+                carritoItems = []; 
+                descuentoAplicado = false; 
+                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
+                if (document.getElementById('inpKupon')) {
+                    document.getElementById('inpKupon').value = ""; 
+                    document.getElementById('inpKupon').style.color = "#ffffff"; 
+                }
+                if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
+                if (inpTel) inpTel.value = "";
+                
+                actualizarRenderCarrito(); 
+                ocultarTodasLasSecciones(); 
+                const vp = document.getElementById('vp'); 
+                if (vp) { 
+                    vp.style.setProperty('display', 'flex', 'important'); 
+                }
+
+            } catch (err) {
+                console.error("Fallo general:", err);
+            }
         } else {
             alert("Error: El cliente global 'supabase' no está listo.");
         }
     }
 
-
-    function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
-    function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
+    function cargarDatosEnCarrito() { 
+        if(accessToken) { 
+            const inpNev = document.getElementById('inpNev'); 
+            if(inpNev) inpNev.value = userEmail || ''; 
+            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
+        } 
+    }
+    
+    function mostrarTiendaDeProductos() { 
+        ocultarTodasLasSecciones(); 
+        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
+        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
+        configurarBotonesTienda(); 
+    }
     
     function ocultarTodasLasSecciones() { 
-        const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('display', 'none', 'important'); 
+        const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('none', 'important'); 
         const sLogin = document.getElementById('s-login'); if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
         const sTienda = document.getElementById('s-tienda'); if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
         const sVentana = document.getElementById('s-ventana-carrito'); if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
-        const sCont = document.getElementById('s-cont'); if (sCont) sCont.style.setProperty('display', 'none', 'important'); 
     }
-    
-    function cambiarTab(cat) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); const t = document.getElementById('tab-' + cat); if(t) t.classList.add('active'); const ca = document.getElementById('cat-' + cat); if(ca) ca.classList.add('active'); }
-    function ordenarContadorBoton() { const btnFlotante = document.getElementById('btnIrAlCarrito'); if (btnFlotante) { btnFlotante.innerText = carritoItems.length > 0 ? `Kosár megtekintése (${carritoItems.length})` : "Kosár megtekintése"; } }
-
-    function actualizarRenderCarrito() {
-        const cont = document.getElementById('itCar'); const tot = document.getElementById('tp'); if (!cont || !tot) return; ordenarContadorBoton(); if (carritoItems.length === 0) { cont.innerHTML = 'A kosár üres.'; tot.innerText = '0'; return; }
-        let html = ''; let suma = 0;
-        carritoItems.forEach((item, index) => { html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; suma += item.precio; });
-        if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
-    }
-    // FUNCIÓN DE APERTURA: Inserta los datos dinámicos y fuerza la visualización del cristal templado
-    function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
-        const modalFoto = document.getElementById('pestaModalFotoGrande');
-        const imgTarget = document.getElementById('imgModalFotoDinamica');
-        const tituloTarget = document.getElementById('txtTituloFotoModal');
-        const descTarget = document.getElementById('txtDescripcionFotoModal');
-        
-        if (modalFoto && imgTarget && tituloTarget && descTarget) {
-            imgTarget.src = rutaImagen;
-            tituloTarget.innerText = tituloProducto;
-            descTarget.innerText = descripcionProducto;
-            modalFoto.style.setProperty('display', 'flex', 'important');
-        }
-
-    }
-
 </script>
 </body>
 </html>
