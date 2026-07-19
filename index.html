@@ -857,43 +857,42 @@ body::before {
             return;
         }
 
-                                // 1. CAPTURAMOS LOS VALORES LOCALES DE TU INTERFAZ
+                                       // 1. CAPTURAMOS LOS VALORES REALES DEL CARRITO Y LA INTERFAZ
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu";
+        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo@pesta.hu";
+        
+        // Calculamos el total (reemplaza 'calcularTotalCarrito()' por tu variable de total si es diferente)
+        var totalPrecioLocal = typeof carritoItems !== 'undefined' ? carritoItems.reduce((sum, item) => sum + (item.precioAcumulado || item.precioBase || 0), 0) : 0;
 
-        // 2. CONFIGURAMOS LAS CREDENCIALES DE TU PROYECTO ACTUAL
-        var urlTabla = "https://supabase.co";
-        var apiKey = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
-
-        // 3. ENVIAMOS LOS DATOS UTILIZANDO APYKEY EN LUGAR DE AUTHORIZATION BEARER
+        // 2. ENVIAMOS LA COMANDA CON TODAS LAS COLUMNAS DE TU TABLA SQL
         if (window.supabase) {
-            fetch(urlTabla, {
-                method: 'POST',
-                headers: {
-                    'apikey': apiKey,                  // Requisito estricto para llaves sb_publishable_
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify({
-                    client_email: emailParaGuardar,
-                    phone: "00000000",                 // Campo requerido por tu tabla orders
-                    delivery_type: modoTextoLocal
-                })
-            })
-            .then(function(response) {
-                if (!response.ok) {
-                    console.error("La base de datos rechazó la comanda. Código de estado: " + response.status);
-                } else {
-                    console.log("¡Pedido registrado exitosamente en Supabase!");
+            var clienteSupabaseTemporal = window.supabase.createClient(
+                "https://supabase.co", 
+                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
+            );
+            
+            clienteSupabaseTemporal.from('orders').insert([
+                { 
+                    client_email: emailParaGuardar, 
+                    phone: "00000000",                     // Teléfono del cliente
+                    delivery_type: modoTextoLocal,         // 'Kiszállítás' o 'Személyes'
+                    address: modoTextoLocal === 'Kiszállítás' ? "Direccion Cliente de prueba" : "Takeaway",
+                    items: carritoItems,                   // Guarda tu array de pizzas y extras en el JSONB
+                    notes: notaTextoLocal,                 // Mapeado a tu columna 'notes'
+                    total_price: totalPrecioLocal,         // Mapeado a tu columna 'total_price'
+                    status: 'pendiente'                    // Estado inicial
                 }
-            })
-            .catch(function(err) {
-                console.error("Error en el canal de comunicación de red:", err);
+            ]).then(function(res) {
+                if (res.error) {
+                    console.error("Error al insertar en la tabla orders:", res.error.message);
+                } else {
+                    console.log("¡Pedido guardado con éxito en Supabase!");
+                }
             });
         }
 
-        // 4. TU INTERFAZ VISUAL ORIGINAL CORRE SIN INTERRUPCIONES
+        // 3. EJECUTAMOS TU INTERFAZ VISUAL ORIGINAL AL INSTANTE
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
@@ -910,7 +909,6 @@ body::before {
             vp.style.setProperty('display', 'flex', 'important'); 
         }
     }
-
 
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
