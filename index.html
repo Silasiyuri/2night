@@ -65,7 +65,7 @@
     animation-play-state: paused;
 }
 
-        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
+/* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
@@ -75,9 +75,8 @@ body {
     background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
 }
 
-/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
-/* Modifica únicamente la primera línea de tu bloque CSS agregando esto: */
-body.animado::before {
+/* 🚀 AQUÍ PONES LA CAPA AISLADA CONECTADA A JAVASCRIPT: */
+body::before {
     content: "" !important;
     position: fixed !important;
     top: 0 !important;
@@ -86,46 +85,15 @@ body.animado::before {
     height: 100vh !important;
     z-index: -2 !important;
     background-color: #000000 !important;
-    
-    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
-    animation: aparecerFotosFondo 20s linear infinite !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
-}
-
-
-/* FOTOGRAMAS CLAVE PARA TRANSICIÓN INFINITA SIN CORTES A NEGRO */
-@keyframes aparecerFotosFondo {
-    /* --- FOTO 1: fondo.jpg (0% a 50%) --- */
-    0% {
-        background-image: url('imagen/fondo.jpg');
-        opacity: 1;
-        transform: scale(1.06);
-    }
-    45% {
-        opacity: 1;
-        transform: scale(1.01);
-    }
-    /* Transición fluida a la Foto 2 sin pasar por opacidad cero absoluta */
-    50% {
-        background-image: url('imagen/fondo4.jpg');
-        opacity: 1;
-        transform: scale(1.06);
-    }
-
-    /* --- FOTO 2: fondo4.jpg (50% a 100%) --- */
-    95% {
-        opacity: 1;
-        transform: scale(1.01);
-    }
-    /* Cierra el ciclo e interconecta con el inicio de la Foto 1 */
-    100% {
-        background-image: url('imagen/fondo.jpg');
-        opacity: 1;
-        transform: scale(1.06);
-    }
+    /* Transición suave para que la foto no cambie de golpe */
+    transition: background-image 1.5s ease-in-out !important;
+    
+    /* ESTA ES LA LÍNEA CRÍTICA CONECTADA AL SCRIPT: */
+    background-image: var(--fondo-dinamico) !important;
 }
 
 <!-- BLOQUE_02_DE_20 -->
@@ -900,22 +868,42 @@ body.animado::before {
 
 </script>
         <script>
-    // Aseguramos que la animación se ejecute al cargar la página por primera vez
-    document.body.classList.add('animado');
+    // Lista de tus imágenes de fondo locales
+    var imagenesFondo = ['imagen/fondo.jpg', 'imagen/fondo4.jpg'];
+    var indiceFondoActual = 0;
+    var intervaloFondoDinamico;
 
-    // Escuchamos cuando el usuario sale o regresa a la pestaña (API de Visibilidad)
+    // FUNCIÓN: Cambia físicamente la propiedad del CSS inyectando la foto que toca
+    function alternarImagenDeFondo() {
+        // Buscamos la regla CSS del body::before usando una variable inyectada al documento
+        document.documentElement.style.setProperty('--fondo-dinamico', "url('" + imagenesFondo[indiceFondoActual] + "')");
+        
+        // Pasamos a la siguiente foto del array
+        indiceFondoActual = (indiceFondoActual + 1) % imagenesFondo.length;
+    }
+
+    // FUNCIÓN: Arranca el temporizador de cambio de imágenes (Cada 8000 milisegundos = 8 segundos)
+    function iniciarBucleDeFondo() {
+        clearInterval(intervaloFondoDinamico);
+        alternarImagenDeFondo(); // Pone la primera foto de inmediato
+        intervaloFondoDinamico = setInterval(alternarImagenDeFondo, 8000);
+    }
+
+    // SINCRO DE RED: Escuchamos de forma obligatoria cuando el cliente sale o regresa a la pestaña
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
-            // ¡El usuario ha regresado! Removemos y reaplicamos la clase para forzar al navegador a renderizar la animación
-            document.body.classList.remove('animado');
-            
-            // Usamos un retraso mínimo de un milisegundo para romper el bloqueo de caché visual del navegador
-            setTimeout(function() {
-                document.body.classList.add('animado');
-            }, 10);
+            // ¡El usuario regresó! Despertamos el bucle a la fuerza para que la pantalla no se quede en negro
+            iniciarBucleDeFondo();
+        } else {
+            // Si el usuario se va, pausamos el bucle para no consumir batería en la tablet/móvil
+            clearInterval(intervaloFondoDinamico);
         }
     });
+
+    // Arrancamos el sistema automáticamente al cargar la página por primera vez
+    iniciarBucleDeFondo();
 </script>
+
 
 </body>
 </html>
