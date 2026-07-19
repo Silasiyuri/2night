@@ -668,6 +668,10 @@ body::before {
                         accessToken = result.access_token; 
                         userEmail = result.user.email; 
 
+                        // MEMORIA PERSISTENTE: Guardamos el token y correo para evitar que el carrito se limpie solo
+                        localStorage.setItem('pesta_token', result.access_token);
+                        localStorage.setItem('pesta_email', result.user.email);
+
                         // SINCRO CRÍTICA: Le inyectamos la sesión de red obtenida directamente al cliente oficial de Supabase
                         if (supabase && window.supabase) {
                             await supabase.auth.setSession({
@@ -724,12 +728,15 @@ body::before {
                 accessToken = null; 
                 userEmail = null; 
                 carritoItems = []; 
+                localStorage.removeItem('pesta_token');
+                localStorage.removeItem('pesta_email');
+                localStorage.removeItem('pesta_carrito_temporal');
                 document.getElementById('lnk-m-logout').style.setProperty('display', 'none', 'important'); 
                 actualizarRenderCarrito(); 
                 ocultarTodasLasSecciones(); 
                 const vp = document.getElementById('vp'); 
                 if(vp) vp.style.setProperty('display', 'flex', 'important'); 
-                forrarCierreMenu(); 
+                forzarCierreMenu(); 
             }
         });
     }
@@ -778,7 +785,8 @@ body::before {
             }
         }
 
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo@pesta.hu";
+        var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
+        var tokenActivoDeRed = localStorage.getItem('pesta_token') || accessToken;
 
         if (supabase) {
             try {
@@ -791,12 +799,17 @@ body::before {
             }
         }
 
-        // CANAL ULTRAESTABLE REPARADO: Envío directo hacia la API URL de tu tabla orders
+        // CANAL ULTRAESTABLE REPARADO: Envío directo hacia la API URL de tu tabla orders de tu base de datos privada
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
             xhr.open("POST", urlTablaDirecta, true);
             xhr.setRequestHeader("apikey", SUPABASE_KEY);
+            if (tokenActivoDeRed) {
+                xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
+            } else {
+                xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
+            }
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
@@ -818,6 +831,7 @@ body::before {
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
+        localStorage.removeItem('pesta_carrito_temporal');
         descuentoAplicado = false; 
         if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
         if (document.getElementById('inpKupon')) {
@@ -884,11 +898,21 @@ body::before {
             precioBase: OBJETO_PRODUCTO_ACTIVO.precioBase,
             precioAcumulado: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
         }); 
+
+        // MEMORIA LOCAL DE RESPALDO: Guardamos una copia en el disco local para que el Login no lo limpie
+        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
+
         cerrarVentanaExtras(); 
         actualizarRenderCarrito();
     }
 
-    function eliminarDelCarrito(index) { carritoItems.splice(index, 1); actualizarRenderCarrito(); }
+    function eliminarDelCarrito(index) { 
+        carritoItems.splice(index, 1); 
+        // Actualizamos la copia local tras borrar un producto
+        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
+        actualizarRenderCarrito(); 
+    }
+
 
 <!-- BLOQUE_20_PARTE_2_DE_2 -->
     const bKupon = document.getElementById('btnAplicarKupon');
@@ -959,7 +983,9 @@ body::before {
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
         var telefonoTextoLocal = inpTel.value.trim();
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo@pesta.hu";
+        
+        var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
+        var tokenActivoDeRed = localStorage.getItem('pesta_token') || accessToken;
         
         var totalPrecioLocal = 0;
         if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
@@ -981,12 +1007,17 @@ body::before {
             }
         }
 
-        // CANAL ULTRAESTABLE CORREGIDO: Apunta a tu dirección privada de base de datos orders
+        // CANAL ULTRAESTABLE CORREGIDO: Conectado a tu URL privada y firmado con token de portador
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
             xhr.open("POST", urlTablaDirecta, true);
             xhr.setRequestHeader("apikey", SUPABASE_KEY);
+            if (tokenActivoDeRed) {
+                xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
+            } else {
+                xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
+            }
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
@@ -1010,6 +1041,7 @@ body::before {
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
+        localStorage.removeItem('pesta_carrito_temporal');
         descuentoAplicado = false; 
         if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
         if (document.getElementById('inpKupon')) {
@@ -1028,10 +1060,22 @@ body::before {
     }
 
     function cargarDatosEnCarrito() { 
-        if(accessToken) { 
+        var tokenLocal = localStorage.getItem('pesta_token') || accessToken;
+        var emailLocal = localStorage.getItem('pesta_email') || userEmail;
+        
+        if(tokenLocal) { 
             const inpNev = document.getElementById('inpNev'); 
-            if(inpNev) inpNev.value = userEmail || ''; 
+            if(inpNev) inpNev.value = emailLocal || ''; 
             if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
+            
+            // SINCRO COMPLETA: Restauramos las pizzas guardadas del disco para que el carrito no aparezca vacío tras loguearse
+            var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
+            if (carritoGuardado) {
+                carritoItems = JSON.parse(carritoGuardado);
+            }
+            if (typeof actualizarRenderCarrito === 'function') {
+                actualizarRenderCarrito();
+            }
         } 
     }
     
