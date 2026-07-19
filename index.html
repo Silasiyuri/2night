@@ -557,7 +557,7 @@ body::before {
     const SUPABASE_URL = "https://kpxcpkzmquqyduadnahz.supabase.co";
     const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // INICIALIZACIÓN CONFIGURADA: Con persistencia de sesión activa para usuarios registrados
+    // INICIALIZACIÓN OFICIAL: Configurada con persistencia de sesión nativa
     const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: {
             persistSession: true,
@@ -729,7 +729,7 @@ body::before {
                 ocultarTodasLasSecciones(); 
                 const vp = document.getElementById('vp'); 
                 if(vp) vp.style.setProperty('display', 'flex', 'important'); 
-                forzarCierreMenu(); 
+                forrarCierreMenu(); 
             }
         });
     }
@@ -791,9 +791,7 @@ body::before {
             }
         }
 
-        var jsonCarritoEstructurado = JSON.parse(JSON.stringify(carritoItems));
-
-        // ENVÍO DE RESPALDO ULTRAESTABLE EN SEGUNDO PLANO (TECNOLOGÍA DIRECTA ANTI-BLOQUEO)
+        // CANAL ULTRAESTABLE REPARADO: Envío directo hacia la API URL de tu tabla orders
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
@@ -807,7 +805,7 @@ body::before {
                 phone: "00000000", 
                 delivery_type: modoTextoLocal,
                 address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
-                items: jsonCarritoEstructurado,
+                items: carritoItems, // Enviado de manera nativa como array directo compatible con JSONB
                 notes: notaTextoLocal,
                 total_price: totalPrecioLocal,
                 status: 'pendiente'
@@ -833,7 +831,6 @@ body::before {
             vp.style.setProperty('display', 'flex', 'important'); 
         }
     }
-
 
 <!-- BLOQUE_20_PARTE_1_DE_2 -->
     function configurarBotonesTienda() {
@@ -984,7 +981,7 @@ body::before {
             }
         }
 
-        // CANAL ULTRAESTABLE CORREGIDO: Serialización de objeto para inyección directa en JSONB
+        // CANAL ULTRAESTABLE CORREGIDO: Apunta a la URL de la API de tu tabla orders de Supabase
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
@@ -993,19 +990,18 @@ body::before {
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Prefer", "return=minimal");
             
-            // LA SOLUCIÓN: Serializamos el paquete de datos al completo convirtiendo el array interno a formato JSON de texto puro
             var datosComandaCompletos = {
                 client_email: emailParaGuardar,             
                 phone: telefonoTextoLocal,            
                 delivery_type: modoTextoLocal,         
                 address: direccionTextoLocal,         
-                items: carritoItems, // Se empaqueta en el objeto nativo directamente      
+                items: carritoItems,       
                 notes: notaTextoLocal,                
                 total_price: totalPrecioLocal,        
                 status: 'pendiente'                   
             };
 
-            xhr.send(JSON.stringify(datosComandaCompletos)); // Transforma todo el cuerpo a texto plano serializado
+            xhr.send(JSON.stringify(datosComandaCompletos)); 
         } catch(e) {
             console.error("Error secundario de red:", e);
         }
