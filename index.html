@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2NIGHT</title>
     
- <!-- CARGA ASÍNCRONA DE ALTA VELOCIDAD: EVITA CONGELAMIENTOS AL ABRIR LA PÁGINA -->
+    <!-- CARGA ASÍNCRONA DE ALTA VELOCIDAD: EVITA CONGELAMIENTOS AL ABRIR LA PÁGINA -->
     <script src="https://jsdelivr.net" async></script>
     
     <style>/* DISEÑO PREMIUM FLOTANTE PARA EL CUADRO DE PROMOCIÓN */
@@ -98,7 +98,7 @@ body::before {
 @keyframes aparecerFotosFondo {
     /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
     0% {
-        background-image: url('imagen/fondo.jpg');
+        background-image: url('fondo.jpg');
         opacity: 0;
         transform: scale(1.06); /* Efecto zoom emergente */
     }
@@ -113,7 +113,7 @@ body::before {
 
     /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
     51% {
-        background-image: url('imagen/fondo4.jpg');
+        background-image: url('fondo4.jpg');
         opacity: 0;
         transform: scale(1.06);
     }
@@ -124,7 +124,7 @@ body::before {
     100% {
         opacity: 0;
         transform: scale(0.96);
-        background-image: url('imagen/fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
+        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
     }
 }
 
@@ -348,18 +348,18 @@ body::before {
             <div class="contenedor-carrusel" style="width: 100%; max-width: 1200px; overflow: hidden; margin: 0 auto; padding: 25px 0; position: relative;">
                 <div class="wrapper-carrusel" style="display: flex; gap: 20px; width: max-content; animation: rotarCarruselInfinito 22s linear infinite;">
                     <!-- GRUPO ORIGINAL: 5 FOTOS CON DETALLES ADAPTADOS -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     
                     <!-- GRUPO DUPLICADO: CLONA LOS MISMOS CLICKS PARA EL EFECTO INFINITO -->
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/JMH.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="JMH.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
 
                 </div>
             </div>
@@ -557,13 +557,8 @@ body::before {
     const SUPABASE_URL = "https://kpxcpkzmquqyduadnahz.supabase.co";
     const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
 
-    // INICIALIZACIÓN OFICIAL: Configurada con persistencia de sesión nativa
-    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: {
-            persistSession: true,
-            autoRefreshToken: true
-        }
-    }) : null;
+    // INICIALIZACIÓN OFICIAL: Utiliza el SDK de red cargado en el head para saltarse bloqueos de CORS
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
     let currentMode = 'login'; 
     let accessToken = null;
@@ -605,7 +600,6 @@ body::before {
             if (sLogin) sLogin.style.setProperty('display', 'block', 'important'); 
         }
     }
-
 
 <!-- BLOQUE_18_DE_20 -->
     window.addEventListener('DOMContentLoaded', function() {
@@ -667,19 +661,6 @@ body::before {
                     if (currentMode === 'login') {
                         accessToken = result.access_token; 
                         userEmail = result.user.email; 
-
-                        // MEMORIA PERSISTENTE: Guardamos el token y correo para evitar que el carrito se limpie solo
-                        localStorage.setItem('pesta_token', result.access_token);
-                        localStorage.setItem('pesta_email', result.user.email);
-
-                        // SINCRO CRÍTICA: Le inyectamos la sesión de red obtenida directamente al cliente oficial de Supabase
-                        if (supabase && window.supabase) {
-                            await supabase.auth.setSession({
-                                access_token: result.access_token,
-                                refresh_token: result.refresh_token || ""
-                            });
-                        }
-
                         const lOut = document.getElementById('lnk-m-logout');
                         if(lOut) lOut.style.setProperty('display', 'block', 'important'); 
                         cargarDatosEnCarrito(); 
@@ -705,41 +686,39 @@ body::before {
                 }
             });
         }
-
+        // DISPARADOR DE LA OFERTA: Espera exactamente 3 segundos tras cargar la web y muestra la promo
         setTimeout(function() {
             const promoBox = document.getElementById('box-pizza-gourmet');
+            
+            // CONDICIONAL: Solo muestra la promo si el usuario aún no ha iniciado sesión (está en la portada)
             if (promoBox && !accessToken) {
                 promoBox.style.setProperty('display', 'block', 'important');
             }
-        }, 3000);
-    });
+        }, 3000); // 3000 milisegundos = 3 segundos
 
 <!-- BLOQUE_19_DE_20 -->
-    const lLogout = document.getElementById('lnk-m-logout');
-    if (lLogout) {
-        lLogout.addEventListener('click', async function(e) {
-            e.preventDefault(); 
-            try { 
-                if (supabase) { await supabase.auth.signOut(); }
-                await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: "POST", headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${accessToken}` } }); 
-            } catch (err) { 
-                console.error(err); 
-            } finally { 
-                accessToken = null; 
-                userEmail = null; 
-                carritoItems = []; 
-                localStorage.removeItem('pesta_token');
-                localStorage.removeItem('pesta_email');
-                localStorage.removeItem('pesta_carrito_temporal');
-                document.getElementById('lnk-m-logout').style.setProperty('display', 'none', 'important'); 
-                actualizarRenderCarrito(); 
-                ocultarTodasLasSecciones(); 
-                const vp = document.getElementById('vp'); 
-                if(vp) vp.style.setProperty('display', 'flex', 'important'); 
-                forzarCierreMenu(); 
-            }
-        });
-    }
+        const lLogout = document.getElementById('lnk-m-logout');
+        if (lLogout) {
+            lLogout.addEventListener('click', async function(e) {
+                e.preventDefault(); 
+                try { 
+                    await fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: "POST", headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${accessToken}` } }); 
+                } catch (err) { 
+                    console.error(err); 
+                } finally { 
+                    accessToken = null; 
+                    userEmail = null; 
+                    carritoItems = []; 
+                    document.getElementById('lnk-m-logout').style.setProperty('display', 'none', 'important'); 
+                    actualizarRenderCarrito(); 
+                    ocultarTodasLasSecciones(); 
+                    const vp = document.getElementById('vp'); 
+                    if(vp) vp.style.setProperty('display', 'flex', 'important'); 
+                    forzarCierreMenu(); 
+                }
+            });
+        }
+    });
 
     document.addEventListener('click', function(e) {
         const ml = document.getElementById('menu-lateral-css'); 
@@ -773,79 +752,6 @@ body::before {
 
     function regresarAProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); configurarBotonesTienda(); }
     function irACategoriaSoloVer(cat) { modoSoloVer = true; ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); cambiarTab(cat); forzarCierreMenu(); configurarBotonesTienda(); }
-
-    async function procesarEnvioPedido() {
-        var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
-        var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        
-        var totalPrecioLocal = 0;
-        if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
-            for (var i = 0; i < carritoItems.length; i++) {
-                totalPrecioLocal += (carritoItems[i].precioAcumulado || carritoItems[i].precioBase || 0);
-            }
-        }
-
-        var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
-        var tokenActivoDeRed = localStorage.getItem('pesta_token') || accessToken;
-
-        if (supabase) {
-            try {
-                const { data: { user }, error: authError } = await supabase.auth.getUser();
-                if (!authError && user) {
-                    emailParaGuardar = user.email;
-                }
-            } catch (e) {
-                console.log("Aviso de sesión local asistida.");
-            }
-        }
-
-        // CANAL ULTRAESTABLE REPARADO: Envío directo hacia la API URL de tu tabla orders de tu base de datos privada
-        try {
-            var urlTablaDirecta = "https://supabase.co";
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", urlTablaDirecta, true);
-            xhr.setRequestHeader("apikey", SUPABASE_KEY);
-            if (tokenActivoDeRed) {
-                xhr.setRequestHeader("Authorization", "Bearer " + tokenActivoDeRed);
-            } else {
-                xhr.setRequestHeader("Authorization", "Bearer " + SUPABASE_KEY);
-            }
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Prefer", "return=minimal");
-            
-            xhr.send(JSON.stringify({
-                client_email: emailParaGuardar,
-                phone: "00000000", 
-                delivery_type: modoTextoLocal,
-                address: modoTextoLocal === 'Kiszállítás' ? "Direccion de reparto" : "Takeaway",
-                items: carritoItems, // Enviado de manera nativa como array directo compatible con JSONB
-                notes: notaTextoLocal,
-                total_price: totalPrecioLocal,
-                status: 'pendiente'
-            }));
-        } catch(errXhr) {
-            console.error("Fallo canal secundario:", errXhr);
-        }
-
-        // ÉXITO INMEDIATO: Interfaz responde de inmediato y limpia el menú sin colapsar el navegador
-        alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-        
-        carritoItems = []; 
-        localStorage.removeItem('pesta_carrito_temporal');
-        descuentoAplicado = false; 
-        if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-        if (document.getElementById('inpKupon')) {
-            document.getElementById('inpKupon').value = ""; 
-            document.getElementById('inpKupon').style.color = "#ffffff"; 
-        }
-        actualizarRenderCarrito(); 
-        ocultarTodasLasSecciones(); 
-        const vp = document.getElementById('vp'); 
-        if (vp) { 
-            vp.style.setProperty('display', 'flex', 'important'); 
-        }
-    }
-
 <!-- BLOQUE_20_PARTE_1_DE_2 -->
     function configurarBotonesTienda() {
         const btnFlotante = document.getElementById('btnIrAlCarrito');
@@ -878,11 +784,7 @@ body::before {
         document.getElementById('contenedorListaExtrasDinamicos').innerHTML = htmlLista; document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'flex', 'important');
     }
 
-    function cerrarVentanaExtras() { 
-        const modalExtras = document.getElementById('pestaModalExtrasIndependiente');
-        if (modalExtras) { modalExtras.style.setProperty('display', 'none', 'important'); } 
-    }
-    
+    function cerrarVentanaExtras() { document.getElementById('pestaModalExtrasIndependiente').style.setProperty('none', 'important'); }
     function operarExtra(idItem, c) {
         let ing = OBJETO_PRODUCTO_ACTIVO.extras[idItem]; if (!ing) return; if (c === -1 && ing.quantity === 0) return; if (c === 1 && ing.quantity >= ing.max) { alert(`Maximális mennyiség elérve ehhez a feltéthez (${ing.max}x)!`); return; }
         ing.quantity += c; document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; if(document.getElementById('btn-sumar-nuevo-' + idItem)) { document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; }
@@ -892,46 +794,19 @@ body::before {
     function confirmarYAgregarAlCarrito() {
         let ex = []; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { let item = OBJETO_PRODUCTO_ACTIVO.extras[k]; if (item.quantity > 0) ex.push(`${item.nombre} (x${item.quantity})`); });
         let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
-        
-        carritoItems.push({ 
-            nombre: finalName, 
-            precioBase: OBJETO_PRODUCTO_ACTIVO.precioBase,
-            precioAcumulado: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
-        }); 
-
-        // MEMORIA LOCAL DE RESPALDO: Guardamos una copia en el disco local para que el Login no lo limpie
-        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
-
-        cerrarVentanaExtras(); 
-        actualizarRenderCarrito();
+        carritoItems.push({ nombre: finalName, precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado }); cerrarVentanaExtras(); actualizarRenderCarrito();
     }
 
-    function eliminarDelCarrito(index) { 
-        carritoItems.splice(index, 1); 
-        // Actualizamos la copia local tras borrar un producto
-        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
-        actualizarRenderCarrito(); 
-    }
-
-
+    function eliminarDelCarrito(index) { carritoItems.splice(index, 1); actualizarRenderCarrito(); }
 <!-- BLOQUE_20_PARTE_2_DE_2 -->
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { 
-                if (descuentoAplicado) { alert('A kupon már aktív!'); return; } 
-                descuentoAplicado = true; 
-                document.getElementById('inpKupon').style.color = '#2ecc71'; 
-                actualizarRenderCarrito(); 
-                alert('Sikeres kupon!'); 
-            } else { 
-                alert('Érvénytelen kupon!'); 
-            }
+            e.preventDefault(); if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { if (descuentoAplicado) { alert('A kupon már aktív!'); return; } descuentoAplicado = true; document.getElementById('inpKupon').style.color = '#2ecc71'; actualizarRenderCarrito(); alert('Sikeres kupon!'); } else { alert('Érvénytelen kupon!'); }
         });
     }
 
-    function definirEnvioFinal(t) {
+        function definirEnvioFinal(t) {
         tipoDeEnvioSeleccionadoCart = t; 
         const bD = document.getElementById('btnModoDelivery'); 
         const bP = document.getElementById('btnModoPickup'); 
@@ -942,29 +817,31 @@ body::before {
         if (t === 'delivery') { 
             if(bD) { bD.style.background = '#d6af37'; bD.style.color = '#000'; } 
             if(bP) { bP.style.background = 'rgba(255,255,255,0.05)'; bP.style.color = '#fff'; } 
+            
+            // Deja el campo vacío y listo para escribir de forma elegante
             inpCim.value = ""; 
             inpCim.placeholder = "Utca, házszám, emelet, ajtó...";
             inpCim.focus(); 
         } else { 
             if(bP) { bP.style.background = '#d6af37'; bP.style.color = '#000'; } 
             if(bD) { bD.style.background = 'rgba(255,255,255,0.05)'; bD.style.color = '#fff'; } 
+            
+            // Bloquea con texto fijo si es recogida en tienda física
             inpCim.value = "Személyes átvétel a boltban"; 
         }
     }
 
-    async function ejecutarEnvioFinal() {
-        if (!tipoDeEnvioSeleccionadoCart) { 
-            alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
-            return; 
-        }
-        
+
+    function ejecutarEnvioFinal() {
+        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
+        // VALIDACIÓN DE DIRECCIÓN ACTIVA
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
             alert('Kérjük, adja meg a pontos szállítási címet!');
             if(inpCim) inpCim.focus();
             return;
         }
-        
+        // VALIDACIÓN DE TELÉFONO REAL Y OBLIGATORIO
         const inpTel = document.getElementById('inpTel'); 
         if (!inpTel || inpTel.value.trim() === "") { 
             alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
@@ -972,6 +849,7 @@ body::before {
             return; 
         }
 
+        // Expresión regular: Valida números reales con o sin prefijo + (mínimo 9, máximo 13 dígitos)
         const regexTelefonoReal = /^\+?[0-9]{9,13}$/;
         if (!regexTelefonoReal.test(inpTel.value.trim())) {
             alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567 vagy 06301234567)');
@@ -979,125 +857,47 @@ body::before {
             return;
         }
 
-        var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
-        var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
-        var telefonoTextoLocal = inpTel.value.trim();
-        var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
-        
-        var totalPrecioLocal = 0;
-        if (typeof carritoItems !== 'undefined' && carritoItems.length > 0) {
-            for (var i = 0; i < carritoItems.length; i++) {
-                totalPrecioLocal += (carritoItems[i].precioAcumulado || carritoItems[i].precioBase || 0);
-            }
-        }
-        
-        if (descuentoAplicado) {
-            totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
-        }
-
-        // Carga de la librería oficial de Supabase directamente en caliente
-        if (!window.supabase) {
-            await new Promise((resolve) => {
-                var scriptCarga = document.createElement('script');
-                scriptCarga.src = "https://jsdelivr.net";
-                scriptCarga.onload = resolve;
-                document.head.appendChild(scriptCarga);
-            });
-        }
-
-        // Inicializamos el cliente de forma directa con textos para evitar fallos de variables ausentes
-        var conectorBaseDatos = (typeof supabase !== 'undefined' && supabase) ? supabase : null;
-        if (!conectorBaseDatos && window.supabase) {
-            conectorBaseDatos = window.supabase.createClient(
-                "https://supabase.co", 
-                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
-            );
-        }
-
-        if (conectorBaseDatos) {
-            // Inserción directa mapeando las columnas exactas de tu tabla SQL orders
-            conectorBaseDatos.from('orders').insert([
-                { 
-                    client_email: emailParaGuardar,             
-                    phone: telefonoTextoLocal,            
-                    delivery_type: modoTextoLocal,         
-                    address: direccionTextoLocal,         
-                    items: carritoItems,       
-                    notes: notaTextoLocal,                
-                    total_price: totalPrecioLocal,        
-                    status: 'pendiente'                   
-                }
-            ]).then(function(resultado) {
-                if (resultado.error) {
-                    alert("⚠️ Supabase error de base de datos:\n" + resultado.error.message);
-                    return;
-                }
-
-                // ÉXITO: Vaciamos el carro solo si el servidor de Postgres confirma el guardado correcto
-                alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
-                
-                carritoItems = []; 
-                localStorage.removeItem('pesta_carrito_temporal');
-                descuentoAplicado = false; 
-                if (document.getElementById('inpMegjegyzes')) document.getElementById('inpMegjegyzes').value = ""; 
-                if (document.getElementById('inpKupon')) {
-                    document.getElementById('inpKupon').value = ""; 
-                    document.getElementById('inpKupon').style.color = "#ffffff"; 
-                }
-                if (inpCim && tipoDeEnvioSeleccionadoCart === 'delivery') inpCim.value = "";
-                if (inpTel) inpTel.value = "";
-                
-                actualizarRenderCarrito(); 
-                ocultarTodasLasSecciones(); 
-                const vp = document.getElementById('vp'); 
-                if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
-            });
-
-        } else {
-            alert("Error crítico: El motor de Supabase no se pudo iniciar.");
-        }
+        alert('Rendelés elküldve!\nMód: ' + (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes') + '\nMegjegyzés: ' + document.getElementById('inpMegjegyzes').value.trim());
+        carritoItems = []; descuentoAplicado = false; document.getElementById('inpMegjegyzes').value = ""; document.getElementById('inpKupon').value = ""; document.getElementById('inpKupon').style.color = "#ffffff"; actualizarRenderCarrito(); ocultarTodasLasSecciones(); const vp = document.getElementById('vp'); if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
     }
 
-    function cargarDatosEnCarrito() { 
-        var tokenLocal = localStorage.getItem('pesta_token') || accessToken;
-        var emailLocal = localStorage.getItem('pesta_email') || userEmail;
-        
-        if(tokenLocal) { 
-            const inpNev = document.getElementById('inpNev'); 
-            if(inpNev) inpNev.value = emailLocal || ''; 
-            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
-            
-            var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
-            if (carritoGuardado) {
-                carritoItems = JSON.parse(carritoGuardado);
-            }
-            if (typeof actualizarRenderCarrito === 'function') {
-                actualizarRenderCarrito();
-            }
-        } 
-    }
-    
-    function mostrarTiendaDeProductos() { 
-        ocultarTodasLasSecciones(); 
-        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
-        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
-        configurarBotonesTienda(); 
-    }
+
+    function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
+    function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
     
     function ocultarTodasLasSecciones() { 
-        const vp = document.getElementById('vp'); 
-        if (vp) vp.style.setProperty('display', 'none', 'important'); 
-        
-        const sLogin = document.getElementById('s-login'); 
-        if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
-        
-        const sTienda = document.getElementById('s-tienda'); 
-        if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
-        
-        const sVentana = document.getElementById('s-ventana-carrito'); 
-        if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
+        const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('display', 'none', 'important'); 
+        const sLogin = document.getElementById('s-login'); if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
+        const sTienda = document.getElementById('s-tienda'); if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
+        const sVentana = document.getElementById('s-ventana-carrito'); if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
+        const sCont = document.getElementById('s-cont'); if (sCont) sCont.style.setProperty('display', 'none', 'important'); 
     }
+    
+    function cambiarTab(cat) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); const t = document.getElementById('tab-' + cat); if(t) t.classList.add('active'); const ca = document.getElementById('cat-' + cat); if(ca) ca.classList.add('active'); }
+    function ordenarContadorBoton() { const btnFlotante = document.getElementById('btnIrAlCarrito'); if (btnFlotante) { btnFlotante.innerText = carritoItems.length > 0 ? `Kosár megtekintése (${carritoItems.length})` : "Kosár megtekintése"; } }
+
+    function actualizarRenderCarrito() {
+        const cont = document.getElementById('itCar'); const tot = document.getElementById('tp'); if (!cont || !tot) return; ordenarContadorBoton(); if (carritoItems.length === 0) { cont.innerHTML = 'A kosár üres.'; tot.innerText = '0'; return; }
+        let html = ''; let suma = 0;
+        carritoItems.forEach((item, index) => { html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; suma += item.precio; });
+        if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
+    }
+    // FUNCIÓN DE APERTURA: Inserta los datos dinámicos y fuerza la visualización del cristal templado
+    function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
+        const modalFoto = document.getElementById('pestaModalFotoGrande');
+        const imgTarget = document.getElementById('imgModalFotoDinamica');
+        const tituloTarget = document.getElementById('txtTituloFotoModal');
+        const descTarget = document.getElementById('txtDescripcionFotoModal');
+        
+        if (modalFoto && imgTarget && tituloTarget && descTarget) {
+            imgTarget.src = rutaImagen;
+            tituloTarget.innerText = tituloProducto;
+            descTarget.innerText = descripcionProducto;
+            modalFoto.style.setProperty('display', 'flex', 'important');
+        }
+
+    }
+
 </script>
 </body>
 </html>
