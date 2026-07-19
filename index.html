@@ -782,73 +782,6 @@ body::before {
     function irACategoriaSoloVer(cat) { modoSoloVer = true; ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); cambiarTab(cat); forzarCierreMenu(); configurarBotonesTienda(); }
 
 <!-- BLOQUE_20_PARTE_1_DE_2 -->
-    function configurarBotonesTienda() {
-        const btnFlotante = document.getElementById('btnIrAlCarrito');
-        if(modoSoloVer) { 
-            if(btnFlotante) btnFlotante.style.setProperty('display', 'none', 'important'); 
-        } else { 
-            if(btnFlotante) btnFlotante.style.setProperty('display', 'block', 'important'); 
-        }
-        document.querySelectorAll('.btn-nyito-extras-basilico').forEach(btn => {
-            btn.innerText = "+"; 
-            if (modoSoloVer) { 
-                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); }; 
-            } else { 
-                btn.onclick = function(e) { e.preventDefault(); const name = this.getAttribute('data-name'); const price = this.getAttribute('data-price'); inicializarVentanaExtras(name, price); }; 
-            }
-        });
-    }
-
-    function inicializarVentanaExtras(nombreProducto, precioProducto) {
-        OBJETO_PRODUCTO_ACTIVO.nombre = nombreProducto; OBJETO_PRODUCTO_ACTIVO.precioBase = parseInt(precioProducto); OBJETO_PRODUCTO_ACTIVO.precioAcumulado = parseInt(precioProducto); OBJETO_PRODUCTO_ACTIVO.extras = {};
-        document.getElementById('txtNombrePizzaModal').innerText = nombreProducto; document.getElementById('txtPrecioPizzaModal').innerText = precioProducto + " Ft";
-        let listaSeleccionada = CONFIG_EXTRAS_POR_PRODUCTO[nombreProducto] || []; let htmlLista = "";
-        if (listaSeleccionada.length === 0) { htmlLista = `<p style="text-align:center; color:#888; font-size:0.9rem; padding:10px 0;">Ehhez a termékhez nincsenek választható extra feltétek.</p>`; } 
-        else {
-            listaSeleccionada.forEach(item => {
-                OBJETO_PRODUCTO_ACTIVO.extras[item.id] = { nombre: item.nombre, precio: item.precio, quantity: 0, max: item.max };
-                htmlLista += `<div class="item-extra-linea"><span>${item.nombre} (+${item.precio} Ft) <span id="badge-nuevo-${item.id}" style="display:none; background:#2ecc71; color:white; padding:2px 6px; border-radius:10px; font-size:0.8rem; margin-left:5px;">0</span></span><div><button id="btn-restar-nuevo-${item.id}" onclick="event.stopPropagation(); operarExtra('${item.id}', -1)" disabled style="width:30px; height:30px;">-</button><button id="btn-sumar-nuevo-${item.id}" onclick="event.stopPropagation(); operarExtra('${item.id}', 1)" style="width:30px; height:30px;">+</button></div></div>`;
-            });
-        }
-        document.getElementById('contenedorListaExtrasDinamicos').innerHTML = htmlLista; document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'flex', 'important');
-    }
-
-    function cerrarVentanaExtras() { 
-        const modalExtras = document.getElementById('pestaModalExtrasIndependiente');
-        if (modalExtras) { modalExtras.style.setProperty('display', 'none', 'important'); } 
-    }
-    
-    function operarExtra(idItem, c) {
-        let ing = OBJETO_PRODUCTO_ACTIVO.extras[idItem]; if (!ing) return; if (c === -1 && ing.quantity === 0) return; if (c === 1 && ing.quantity >= ing.max) { alert(`Maximális mennyiség elérve ehhez a feltéthez (${ing.max}x)!`); return; }
-        ing.quantity += c; document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; if(document.getElementById('btn-sumar-nuevo-' + idItem)) { document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; }
-        let total = OBJETO_PRODUCTO_ACTIVO.precioBase; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { total += (OBJETO_PRODUCTO_ACTIVO.extras[k].precio * OBJETO_PRODUCTO_ACTIVO.extras[k].quantity); }); OBJETO_PRODUCTO_ACTIVO.precioAcumulado = total; document.getElementById('txtPrecioPizzaModal').innerText = total + " Ft";
-    }
-
-    function confirmarYAgregarAlCarrito() {
-        let ex = []; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { let item = OBJETO_PRODUCTO_ACTIVO.extras[k]; if (item.quantity > 0) ex.push(`${item.nombre} (x${item.quantity})`); });
-        let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
-        
-        carritoItems.push({ 
-            nombre: finalName, 
-            precioBase: OBJETO_PRODUCTO_ACTIVO.precioBase,
-            precioAcumulado: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
-        }); 
-
-        // GUARDADO DE SEGURIDAD EN EL DISCO LOCAL
-        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
-        
-        cerrarVentanaExtras(); 
-        actualizarRenderCarrito();
-    }
-
-    function eliminarDelCarrito(index) { 
-        carritoItems.splice(index, 1); 
-        // Actualizamos la copia local tras eliminar para mantener sincronía
-        localStorage.setItem('pesta_carrito_temporal', JSON.stringify(carritoItems));
-        actualizarRenderCarrito(); 
-    }
-
-<!-- BLOQUE_20_PARTE_1_DE_2 -->
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
@@ -930,7 +863,7 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
-        // CANAL ULTRAESTABLE: Apunta directamente al endpoint de tu tabla orders privada
+        // CANAL ULTRAESTABLE: Conectado a la ruta correcta de tu tabla orders privada de Supabase
         try {
             var urlTablaDirecta = "https://supabase.co";
             var xhr = new XMLHttpRequest();
