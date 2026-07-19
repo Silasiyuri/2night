@@ -49,14 +49,57 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-/* EFECTO DE DESPLAZAMIENTO INFINITO SEAMLESS */
+/* CONTENEDOR FLUIDO DE ESQUINA A ESQUINA */
+.contenedor-carrusel {
+    width: 100vw !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    padding: 25px 0 !important;
+    position: relative !important;
+    left: 50% !important;
+    right: 50% !important;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+}
+
+/* CONTENEDOR INTERNO ULTRA-ALINEADO */
+.wrapper-carrusel {
+    display: flex !important;
+    width: max-content !important;
+    animation: rotarCarruselInfinito 22s linear infinite !important;
+}
+
+/* FOTOS FLEXIBLES SEGÚN EL DISPOSITIVO */
+.carrusel-img {
+    width: 25vw !important; /* Salen exactamente 4 fotos por pantalla en ordenadores */
+    height: 190px !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    padding: 0 10px !important; /* El espacio se controla internamente para no romper la matemática */
+    box-sizing: border-box !important;
+    border-radius: 22px !important; /* Aplica el redondeado de forma estética */
+}
+
+/* ANIMACIÓN INTERCONECTADA DE ESQUINA A ESQUINA */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplaza exactamente la mitad del contenedor (el grupo original) */
-        transform: translateX(calc(-50% - 7.5px));
+        /* Desplaza exactamente las 5 fotos del grupo original (5 x 25vw) */
+        transform: translateX(-125vw);
+    }
+}
+
+/* ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (PANTALLAS PEQUEÑAS) */
+@media (max-width: 768px) {
+    .carrusel-img {
+        width: 50vw !important; /* En móviles salen exactamente 2 fotos por pantalla */
+    }
+    @keyframes rotarCarruselInfinito {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-250vw); } /* Ajuste matemático para móviles (5 x 50vw) */
     }
 }
 
@@ -315,24 +358,26 @@ body::before {
             
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
-            <div class="contenedor-carrusel" style="width: 100%; max-width: 1200px; overflow: hidden; margin: 0 auto; padding: 25px 0; position: relative;">
-                <div class="wrapper-carrusel" style="display: flex; gap: 20px; width: max-content; animation: rotarCarruselInfinito 22s linear infinite;">
-                    <!-- GRUPO ORIGINAL: 5 FOTOS CON DETALLES ADAPTADOS -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+            <!-- CONTENEDOR QUE ROMPE LOS MÁRGENES PARA TOCAR LOS BORDES DE LA PANTALLA -->
+            <div class="contenedor-carrusel">
+                <div class="wrapper-carrusel">
+                    <!-- GRUPO ORIGINAL: 5 FOTOS -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                     
-                    <!-- GRUPO DUPLICADO: CLONA LOS MISMOS CLICKS PARA EL EFECTO INFINITO -->
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/JMH.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-
+                    <!-- GRUPO CLONADO EXACTO PARA EMPALME MATEMÁTICO INVISIBLE -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                 </div>
             </div>
+        </div>
+
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
                 <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
