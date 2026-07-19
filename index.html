@@ -857,36 +857,43 @@ body::before {
             return;
         }
 
-                // 1. CAPTURAMOS LOS VALORES DE FORMA INTERNA Y LIMPIA
+                        // 1. CAPTURAMOS LOS VALORES LOCALES DE TU PANEL
         var notaTextoLocal = document.getElementById('inpMegjegyzes') ? document.getElementById('inpMegjegyzes').value.trim() : "";
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
-        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : "anonimo_test@pesta.hu";
+        
+        // Usamos la variable 'userEmail' que tu login asigna cuando el cliente entra a su cuenta
+        var emailParaGuardar = (typeof userEmail !== 'undefined' && userEmail) ? userEmail : null;
 
-        // 2. ENVIAMOS LA COMANDA A SUPABASE EN SEGUNDO PLANO (SIN ESPERAR A INTERNET PARA NO CONGELAR)
-        if (window.supabase) {
-            var clienteSupabaseTemporal = window.supabase.createClient(
-                "https://supabase.co", 
-                "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3"
-            );
-            
-            clienteSupabaseTemporal.from('orders').insert([
+        // VALIDACIÓN EXTRA: Si quieres que solo compren usuarios registrados, frenamos aquí si está vacío
+        if (!emailParaGuardar) {
+            alert("Hiba! A rendeléshez be kell jelentkeznie.\n(¡Error! Debe iniciar sesión para realizar un pedido).");
+            var sLogin = document.getElementById('s-login');
+            if (sLogin) sLogin.style.setProperty('display', 'block', 'important');
+            return; // Detiene la ejecución para que no borre el carrito si no está logueado
+        }
+
+        // 2. ENVIAMOS LA COMANDA USANDO EL CLIENTE GLOBAL OFICIAL DE TU WEB
+        // Usamos 'supabase' (en minúsculas), que es el objeto que declaraste al inicio de tu script
+        if (typeof supabase !== 'undefined' && supabase) {
+            supabase.from('orders').insert([
                 { 
                     client_email: emailParaGuardar, 
-                    phone: "00000000",         
+                    phone: "00000000", // Modifica si tienes una variable con el teléfono del cliente
                     delivery_type: modoTextoLocal   
                 }
             ]).then(function(res) {
                 if (res.error) {
-                    console.error("Supabase rechazó guardar la orden en segundo plano:", res.error.message);
+                    // Si el panel de Supabase rechaza el pedido, te saldrá un aviso explicativo en la consola
+                    console.error("Supabase rechazó guardar la orden:", res.error.message);
                 } else {
-                    console.log("¡Pedido guardado con éxito en Supabase!");
+                    console.log("¡Pedido guardado con éxito en la tabla 'orders'!");
                 }
             });
         } else {
-            console.error("El script de Supabase no está cargado en el HTML.");
+            console.error("El objeto global de Supabase no está disponible en este punto.");
         }
 
-        // 3. TU CÓDIGO ORIGINAL SE SIGUE EJECUTANDO AL INSTANTE (EVITA QUE LA PÁGINA SE QUEDE ESPERANDO O SE CONGELE)
+        // 3. SE EJECUTA TU INTERFAZ ORIGINAL INMEDIATAMENTE
         alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
         
         carritoItems = []; 
