@@ -952,7 +952,7 @@ body::before {
         }
     }
 
-    async function ejecutarEnvioFinal() {
+       async function ejecutarEnvioFinal() {
         if (!tipoDeEnvioSeleccionadoCart) { 
             alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); 
             return; 
@@ -983,7 +983,6 @@ body::before {
         var modoTextoLocal = (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes');
         var direccionTextoLocal = inpCim ? inpCim.value.trim() : "";
         var telefonoTextoLocal = inpTel.value.trim();
-        
         var emailParaGuardar = localStorage.getItem('pesta_email') || userEmail || "anonimo@pesta.hu";
         
         var totalPrecioLocal = 0;
@@ -997,19 +996,26 @@ body::before {
             totalPrecioLocal = Math.round(totalPrecioLocal * 0.9);
         }
 
-        if (typeof supabase !== 'undefined' && supabase) {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) { emailParaGuardar = user.email; }
-            } catch (err) {
-                console.log("Asistencia de canal de red local.");
-            }
+        // SOLUCIÓN DEFINITIVA: Carga de librería en caliente si el objeto de red local falla
+        if (!window.supabase) {
+            console.log("Cargando SDK de Supabase en caliente...");
+            await new Promise((resolve) => {
+                var scriptCarga = document.createElement('script');
+                scriptCarga.src = "https://jsdelivr.net";
+                scriptCarga.onload = resolve;
+                document.head.appendChild(scriptCarga);
+            });
         }
 
-        // CONECTOR OFICIAL NATIVO: Evita el error de bloqueo local CORS HTTP 0
-        if (typeof supabase !== 'undefined' && supabase) {
-            
-            supabase.from('orders').insert([
+        // Si la constante global 'supabase' no se había inicializado por el orden de carga, la creamos aquí mismo
+        var conectorBaseDatos = (typeof supabase !== 'undefined' && supabase) ? supabase : null;
+        if (!conectorBaseDatos && window.supabase) {
+            conectorBaseDatos = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        if (conectorBaseDatos) {
+            // Mandamos los datos usando el SDK oficial cargado para forzar la inyección directa en JSONB
+            conectorBaseDatos.from('orders').insert([
                 { 
                     client_email: emailParaGuardar,             
                     phone: telefonoTextoLocal,            
@@ -1022,11 +1028,11 @@ body::before {
                 }
             ]).then(function(resultado) {
                 if (resultado.error) {
-                    alert("⚠️ Error de base de datos:\n" + resultado.error.message);
+                    alert("⚠️ Error en tu base de datos de Supabase:\n" + resultado.error.message);
                     return;
                 }
 
-                // SIKER: Solo si Supabase confirma el guardado, se limpia la interfaz
+                // SIKER: Vaciamos la interfaz localmente solo si Postgres confirma el guardado correcto
                 alert('Rendelés elküldve!\nMód: ' + modoTextoLocal + '\nMegjegyzés: ' + notaTextoLocal);
                 
                 carritoItems = []; 
@@ -1047,49 +1053,10 @@ body::before {
             });
 
         } else {
-            alert("Error: El conector de Supabase no está disponible en la página web.");
+            alert("Error crítico: No se pudo inyectar el motor de Supabase en tu navegador web.");
         }
     }
 
-    function cargarDatosEnCarrito() { 
-        var tokenLocal = localStorage.getItem('pesta_token') || accessToken;
-        var emailLocal = localStorage.getItem('pesta_email') || userEmail;
-        
-        if(tokenLocal) { 
-            const inpNev = document.getElementById('inpNev'); 
-            if(inpNev) inpNev.value = emailLocal || ''; 
-            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
-            
-            var carritoGuardado = localStorage.getItem('pesta_carrito_temporal');
-            if (carritoGuardado) {
-                carritoItems = JSON.parse(carritoGuardado);
-            }
-            if (typeof actualizarRenderCarrito === 'function') {
-                actualizarRenderCarrito();
-            }
-        } 
-    }
-    
-    function mostrarTiendaDeProductos() { 
-        ocultarTodasLasSecciones(); 
-        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
-        if (typeof ordenarContadorBoton === 'function') ordenarContadorBoton(); 
-        configurarBotonesTienda(); 
-    }
-    
-    function ocultarTodasLasSecciones() { 
-        const vp = document.getElementById('vp'); 
-        if (vp) vp.style.setProperty('display', 'none', 'important'); 
-        
-        const sLogin = document.getElementById('s-login'); 
-        if (sLogin) sLogin.style.setProperty('display', 'none', 'important'); 
-        
-        const sTienda = document.getElementById('s-tienda'); 
-        if (sTienda) sTienda.style.setProperty('display', 'none', 'important'); 
-        
-        const sVentana = document.getElementById('s-ventana-carrito'); 
-        if (sVentana) sVentana.style.setProperty('display', 'none', 'important'); 
-    }
 </script>
 </body>
 </html>
