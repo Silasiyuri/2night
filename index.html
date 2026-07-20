@@ -65,13 +65,13 @@
     animation-play-state: paused;
 }
 
-       /* 1. VACIADO DEL BODY PARA PERMITIR VER LAS FOTOS DETRÁS */
+       /* 1. VACIADO DEL BODY PARA ENMARCAR EL FONDO GOURMET */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    background: transparent !important; /* Totalmente transparente */
+    background: transparent !important; /* Totalmente transparente para descubrir las fotos */
 }
 
 /* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS */
@@ -86,45 +86,53 @@ body::before, body::after {
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
-    background-color: #0c0c0c !important; /* Fondo negro de seguridad interno */
+    background-color: #0c0c0c !important; /* Fondo negro base de seguridad interno */
 }
 
-/* 🛋️ 3. CAPA TRASERA: Sostiene la primera pizza (Siempre visible de fondo) */
+/* 🛋️ 3. CAPA TRASERA: Sostiene la primera pizza de alta resolución en la red */
 body::before {
     z-index: -3 !important;
-    background-image: url('imagen/fondo.jpg') !important;
+    background-image: url('https://unsplash.com') !important;
 }
 
-/* 🎭 4. CAPA DELANTERA: Sostiene la segunda pizza (Aparece/desaparece encima) */
+/* 🎭 4. CAPA DELANTERA: Sostiene la segunda pizza premium en la red */
 body::after {
     z-index: -2 !important;
-    background-image: url('imagen/fondo4.jpg') !important;
+    background-image: url('https://unsplash.com') !important;
+    
+    /* ANIMACIÓN DEL FUNDIDO CON ZOOM 3D */
     animation: fundidoCruzadoEterno 18s ease-in-out infinite !important;
 }
 
-/* 📐 5. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN PREMIUM CON ZOOM 3D */
+/* 📐 5. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN CONTINUA */
 @keyframes fundidoCruzadoEterno {
-    0%, 15% { opacity: 0 !important; transform: scale(1.04); }
-    35%, 65% { opacity: 1 !important; transform: scale(1); }
-    85%, 100% { opacity: 0 !important; transform: scale(1.04); }
+    0%, 15% {
+        opacity: 0 !important;
+        transform: scale(1.04); 
+    }
+    35%, 65% {
+        opacity: 1 !important;
+        transform: scale(1); 
+    }
+    85%, 100% {
+        opacity: 0 !important;
+        transform: scale(1.04);
+    }
 }
 
-/* 🚀 6. REPARACIÓN CRÍTICA: Convertimos tus cajas sólidas en cristal translúcido elegante */
+/* 🚀 6. FILTRO CRÍTICO TRANSLÚCIDO PARA LAS CAJAS */
 .box, section, #vp {
-    /* Cambiamos el fondo negro sólido por un tono ahumado que deja ver el fondo */
-    background: rgba(20, 20, 20, 0.6) !important; 
-    /* Efecto cristal difuminado premium de alta cocina */
-    backdrop-filter: blur(12px) !important; 
-    -webkit-backdrop-filter: blur(12px) !important;
+    background: rgba(15, 15, 15, 0.65) !important; 
+    backdrop-filter: blur(14px) !important; 
+    -webkit-backdrop-filter: blur(14px) !important;
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
-
-/* Las tarjetas de arriba también deben ser translúcidas */
 .tarjeta-uzlet-top {
-    background: rgba(17, 17, 17, 0.5) !important;
+    background: rgba(20, 20, 20, 0.5) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
 }
+
 
 <!-- BLOQUE_02_DE_20 -->
         header { 
