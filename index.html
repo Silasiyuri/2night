@@ -895,7 +895,7 @@ body::before {
         forzarCierreMenu(); 
         if (typeof configurarBotonesTienda === 'function') configurarBotonesTienda(); 
     }
-    function configurarBotonesTienda() {
+        function configurarBotonesTienda() {
         const btnFlotante = document.getElementById('btnIrAlCarrito');
         if(modoSoloVer) { 
             if(btnFlotante) btnFlotante.style.setProperty('display', 'none', 'important'); 
@@ -984,7 +984,6 @@ body::before {
         let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; 
         if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
         
-        // Estructura original nativa restaurada para que no se congele la pestaña
         carritoItems.push({ 
             nombre: finalName, 
             precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
@@ -998,7 +997,6 @@ body::before {
         carritoItems.splice(index, 1); 
         actualizarRenderCarrito();
     }
-
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
@@ -1069,7 +1067,6 @@ body::before {
         }
 
         const textoItemsFormateado = carritoItems.map(item => `${item.nombre} (${item.precio} Ft)`).join("\n");
-
         const modoTexto = tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes átvétel';
         const vAddress = `${modoTexto} - Cím: ${inpCim.value.trim()} - Tel: ${inpTel.value.trim()}`;
         
@@ -1078,9 +1075,6 @@ body::before {
 
         const totContenedor = document.getElementById('tp');
         const vTotalPrice = totContenedor ? parseFloat(totContenedor.innerText.replace(/[^0-9.]/g, '')) : 0;
-
-        const btnEnvio = document.querySelector('button[onclick*="ejecutarEnvioFinal"]');
-        if(btnEnvio) btnEnvio.disabled = true;
 
         try {
             const { data, error } = await supabase.rpc('registrar_comanda_forzada', {
@@ -1092,27 +1086,22 @@ body::before {
 
             if (error) {
                 console.error("Supabase Error:", error);
-                alert("Hiba történt a Supabase küldés során: " + error.message);
+                alert("Hiba történt: " + error.message);
             } else {
-                alert('Rendelés sikeresen elküldve!\nMód: ' + modoTexto + '\nMegjegyzés: ' + vNotes);
-                
+                alert('Rendelés sikeresen elküldve!\nMód: ' + modoTexto);
                 carritoItems = []; 
                 descuentoAplicado = false; 
                 if(inpMegjegyzes) inpMegjegyzes.value = ""; 
                 const inpKupon = document.getElementById('inpKupon');
                 if(inpKupon) { inpKupon.value = ""; inpKupon.style.color = "#ffffff"; }
-                
                 actualizarRenderCarrito(); 
                 ocultarTodasLasSecciones(); 
-                
                 const vp = document.getElementById('vp'); 
                 if (vp) vp.style.setProperty('display', 'flex', 'important');
             }
         } catch (err) {
             console.error(err);
             alert("Kritikus hálózati hiba lépett fel.");
-        } finally {
-            if(btnEnvio) btnEnvio.disabled = false;
         }
     }
     function cargarDatosEnCarrito() { 
@@ -1181,7 +1170,6 @@ body::before {
             modalFoto.style.setProperty('display', 'flex', 'important');
         }
     }
-</script>
 
 
         <!-- MOTOR ROTATIVO DE FONDOS INMUNE A CONGELAMIENTOS Y PANTALLAS OSCURAS -->
