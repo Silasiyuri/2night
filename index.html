@@ -75,26 +75,7 @@ body {
     background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
 }
 
-/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
-body::before {
-    content: "" !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
-    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
-    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
-    background-color: #000000 !important; /* Fondo negro base de seguridad */
-    
-    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
-    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
-}
-
-/* ESTILOS COMUNES DE SEGURIDAD PARA LAS DOS CAPAS */
+/* 1. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS */
 body::before, body::after {
     content: "" !important;
     position: fixed !important;
@@ -106,46 +87,46 @@ body::before, body::after {
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
-    opacity: 1 !important; /* VISIBILIDAD ABSOLUTA: Prohibido caer a cero */
 }
 
-
-
-     
-/* 🛋️ CAPA BASE TRASERA (Sostiene la Foto 1 fija eternamente detrás) */
+/* 🛋️ 2. CAPA TRASERA: Sostiene la primera pizza (Siempre visible de fondo) */
 body::before {
-    z-index: -3 !important; /* Se coloca al fondo del todo */
-    background-image: url('imagen/fondo4.jpg') !important;
-}
-
-/* 🎭 CAPA DELANTERA DINÁMICA (Aparece y desaparece encima con suavidad) */
-body::after {
-    z-index: -2 !important; /* Se coloca justo encima de la capa base */
+    z-index: -3 !important; /* Detrás del proyecto */
     background-image: url('imagen/fondo.jpg') !important;
-    
-    /* ANIMACIÓN EXCLUSIVA DE TRANSICIÓN CONTINUA */
-    animation: fundidoCruzadoEterno 16s ease-in-out infinite !important;
 }
 
-/* 📐 FOTOGRAMAS CLAVE SIN CAÍDAS A NEGRO: Solo controlamos la capa de arriba */
+/* 🎭 3. CAPA DELANTERA: Sostiene la segunda pizza (Aparece y desaparece encima) */
+body::after {
+    z-index: -2 !important; /* Justo encima de la capa trasera */
+    background-image: url('imagen/fondo4.jpg') !important;
+    
+    /* 🕒 ANIMACIÓN DEL FUNDIDO CON ZOOM 3D EN CADENA */
+    animation: fundidoCruzadoEterno 18s ease-in-out infinite !important;
+}
+
+/* 📐 4. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN PREMIUM CON ZOOM 3D SEAMLESS */
 @keyframes fundidoCruzadoEterno {
-    /* Al inicio (0% a 15%), la capa de arriba es invisible y se ve la foto trasera (fondo.jpg) */
+    /* Al inicio del ciclo (0% al 15%), la capa delantera se desvanece por completo. 
+       Se muestra al 100% la foto de atrás (fondo.jpg) */
     0%, 15% {
         opacity: 0 !important;
-        transform: scale(1);
+        transform: scale(1.04); /* Aplica el zoom progresivo al inicio */
     }
-    /* En el medio (35% a 65%), la capa de arriba se vuelve 100% visible cubriendo la de atrás (fondo4.jpg) */
+    
+    /* En la mitad del ciclo (35% al 65%), la capa delantera se enciende al máximo. 
+       Cubre por completo a la foto de atrás y muestra la pizza 2 (fondo4.jpg) */
     35%, 65% {
         opacity: 1 !important;
-        transform: scale(1.04); /* Mantiene el efecto de zoom 3D lento en movimiento */
+        transform: scale(1); /* Regresa el zoom de forma fluida */
     }
-    /* Al regresar (85% a 100%), la capa de arriba se desvanece y vuelve a descubrir la foto base de atrás */
+    
+    /* Al cerrar el ciclo (85% al 100%), la capa delantera se vuelve a desvanecer suavemente.
+       Vuelve a descubrir la foto base de atrás para reiniciar el bucle sin saltos negros */
     85%, 100% {
         opacity: 0 !important;
-        transform: scale(1);
+        transform: scale(1.04);
     }
 }
-
 
 <!-- BLOQUE_02_DE_20 -->
         header { 
