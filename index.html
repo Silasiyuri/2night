@@ -626,79 +626,6 @@ body::before {
         }
     }
 
-    // ==========================================================================
-    // FUNCIÓN INTEGRADA PARA ENVIAR EL CARRITO HÚNGARO A TU TABLA DE SUPABASE
-    // ==========================================================================
-    async function enviarPedidoASupabase() {
-        if (!supabase) {
-            alert("Hiba: A Supabase nincs megfelelően inicializálva.");
-            return;
-        }
-
-        if (carritoItems.length === 0) {
-            alert("A kosár üres!");
-            return;
-        }
-
-        // 1. Convertimos la matriz 'carritoItems' y sus extras estructurados a texto legible
-        const textoItemsFormateado = carritoItems.map(item => {
-            let detalle = `${item.cantidad}x ${item.nombre}`;
-            if (item.extras && Object.keys(item.extras).length > 0) {
-                const listaExtras = Object.entries(item.extras)
-                    .map(([nombreExtra, cant]) => `${nombreExtra} (x${cant})`)
-                    .join(", ");
-                detalle += ` [Extras: ${listaExtras}]`;
-            }
-            return detalle;
-        }).join("\n");
-
-        // 2. Extraemos el modo de envío seleccionado y la dirección del cliente
-        const modoEnvioTexto = tipoDeEnvioSeleccionadoCart === 'delivery' ? "Délibáb (Szállítás)" : "Személyes átvétel";
-        const inputDireccion = document.getElementById('customer-address')?.value || document.querySelector('input[placeholder*="Cím"]')?.value || "";
-        const vAddress = `${modoEnvioTexto} - ${inputDireccion}`.trim();
-
-        // 3. Capturamos las notas y limpiamos el precio total (eliminamos letras/Ft)
-        const vNotes = document.getElementById('customer-notes')?.value || document.querySelector('textarea[placeholder*="Megjegyzés"]')?.value || "";
-        
-        // Busca el contenedor de precio nativo de tu plantilla o usa los datos calculados de la cesta
-        const contenedorPrecio = document.getElementById('cart-total-price') || document.querySelector('.kosar-osszesen') || { innerText: "0" };
-        const vTotalPrice = parseFloat(contenedorPrecio.innerText.replace(/[^0-9.]/g, '')) || 0;
-
-        try {
-            // 4. Invocación de la función RPC segura para inyectar la fila limpia
-            const { data, error } = await supabase.rpc('registrar_comanda_forzada', {
-                p_address: vAddress,
-                p_items: textoItemsFormateado,
-                p_notes: vNotes,
-                p_price: vTotalPrice
-            });
-
-            if (error) {
-                console.error("Supabase Error:", error);
-                alert("Hiba történt a rendelés elküldésekor: " + error.message);
-            } else {
-                alert("Rendelés sikeresen elküldve! Köszönjük!");
-                
-                // Limpieza interna del carrito nativo
-                carritoItems = [];
-                if (typeof actualizarInterfazCarrito === 'function') {
-                    actualizarInterfazCarrito();
-                } else if (typeof renderizarKosar === 'function') {
-                    renderizarKosar();
-                }
-                
-                // Opcional: Redirigir a la página de inicio tras comprar
-                if (typeof evaluarFlujoAcceso === 'function') {
-                    evaluarFlujoAcceso('home');
-                }
-            }
-        } catch (err) {
-            console.error("Critical Exception:", err);
-            alert("Hálózati hiba történt a küldés során.");
-        }
-    }
-
-
 <!-- BLOQUE_18_DE_20 -->
     window.addEventListener('DOMContentLoaded', function() {
         const cd = document.getElementById('card-delivero'); 
@@ -784,27 +711,6 @@ body::before {
                 }
             });
         }
-
-        // ==========================================================================
-        // 🔗 CAPTURA E INTERCEPTACIÓN DEL BOTÓN DE ENVÍO DE LA CESTA (KOSÁR)
-        // ==========================================================================
-        const botonRendeles = document.querySelector('button[onclick*="Rendelés elküldése"], .kosar-oldal button, #btn-send-order') || 
-                              Array.from(document.querySelectorAll('button')).find(el => el.textContent.includes('Rendelés elküldése'));
-        
-        if (botonRendeles) {
-            // Remonvemos cualquier acción inline previa para evitar ejecuciones dobles
-            botonRendeles.removeAttribute('onclick');
-            botonRendeles.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Verificamos si la función declarada en el Bloque 17 está disponible antes de ejecutar
-                if (typeof enviarPedidoASupabase === 'function') {
-                    enviarPedidoASupabase();
-                } else {
-                    alert("Hiba: Az adatbázis küldő modul nem töltődött be.");
-                }
-            });
-        }
-
         // DISPARADOR DE LA OFERTA: Espera exactamente 3 segundos tras cargar la web y muestra la promo
         setTimeout(function() {
             const promoBox = document.getElementById('box-pizza-gourmet');
@@ -814,7 +720,6 @@ body::before {
                 promoBox.style.setProperty('display', 'block', 'important');
             }
         }, 3000); // 3000 milisegundos = 3 segundos
-    });
 
 <!-- BLOQUE_19_DE_20 -->
         const lLogout = document.getElementById('lnk-m-logout');
@@ -830,12 +735,7 @@ body::before {
                     userEmail = null; 
                     carritoItems = []; 
                     document.getElementById('lnk-m-logout').style.setProperty('display', 'none', 'important'); 
-                    // Se unifica el render para evitar colisiones con el borrado de la cesta
-                    if (typeof actualizarRenderCarrito === 'function') {
-                        actualizarRenderCarrito();
-                    } else if (typeof actualizarInterfazCarrito === 'function') {
-                        actualizarInterfazCarrito();
-                    }
+                    actualizarRenderCarrito(); 
                     ocultarTodasLasSecciones(); 
                     const vp = document.getElementById('vp'); 
                     if(vp) vp.style.setProperty('display', 'flex', 'important'); 
@@ -843,7 +743,7 @@ body::before {
                 }
             });
         }
-    }); // Cierre correcto y seguro del window.addEventListener('DOMContentLoaded')
+    });
 
     document.addEventListener('click', function(e) {
         const ml = document.getElementById('menu-lateral-css'); 
@@ -859,7 +759,7 @@ body::before {
             const sLogin = document.getElementById('s-login');
             if (sLogin) sLogin.style.setProperty('display', 'block', 'important'); 
         } else { 
-            if (typeof cargarDatosEnCarrito === 'function') cargarDatosEnCarrito(); 
+            cargarDatosEnCarrito(); 
             ocultarTodasLasSecciones(); 
             const sVentana = document.getElementById('s-ventana-carrito');
             if (sVentana) sVentana.style.setProperty('display', 'block', 'important'); 
@@ -873,29 +773,12 @@ body::before {
     document.getElementById('lnk-m-deszertek').addEventListener('click', function(e) { e.preventDefault(); irACategoriaSoloVer('deszertek'); });
     document.getElementById('lnk-m-cont').addEventListener('click', function(e) { e.preventDefault(); ocultarTodasLasSecciones(); const sCont = document.getElementById('s-cont'); if (sCont) sCont.style.setProperty('display', 'block', 'important'); forzarCierreMenu(); });
     document.getElementById('lnk-m-carrito-directo').addEventListener('click', function(e) { e.preventDefault(); verificarEntradaCarritoNativa(e); forzarCierreMenu(); });
-    
-    const btnIrAlCarrito = document.getElementById('btnIrAlCarrito');
-    if (btnIrAlCarrito) {
-        btnIrAlCarrito.addEventListener('click', function(e) { verificarEntradaCarritoNativa(e); });
-    }
+    document.getElementById('btnIrAlCarrito').addEventListener('click', function(e) { verificarEntradaCarritoNativa(e); });
 
-    function regresarAProductos() { 
-        ocultarTodasLasSecciones(); 
-        const sTienda = document.getElementById('s-tienda');
-        if (sTienda) sTienda.style.setProperty('display', 'block', 'important'); 
-        if (typeof configurarBotonesTienda === 'function') configurarBotonesTienda(); 
-    }
-    
-    function irACategoriaSoloVer(cat) { 
-        modoSoloVer = true; 
-        ocultarTodasLasSecciones(); 
-        const sTienda = document.getElementById('s-tienda');
-        if (sTienda) sTienda.style.setProperty('display', 'block', 'important'); 
-        if (typeof cambiarTab === 'function') cambiarTab(cat); 
-        forzarCierreMenu(); 
-        if (typeof configurarBotonesTienda === 'function') configurarBotonesTienda(); 
-    }
-        function configurarBotonesTienda() {
+    function regresarAProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); configurarBotonesTienda(); }
+    function irACategoriaSoloVer(cat) { modoSoloVer = true; ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); cambiarTab(cat); forzarCierreMenu(); configurarBotonesTienda(); }
+<!-- BLOQUE_20_PARTE_1_DE_2 -->
+    function configurarBotonesTienda() {
         const btnFlotante = document.getElementById('btnIrAlCarrito');
         if(modoSoloVer) { 
             if(btnFlotante) btnFlotante.style.setProperty('display', 'none', 'important'); 
@@ -905,115 +788,50 @@ body::before {
         document.querySelectorAll('.btn-nyito-extras-basilico').forEach(btn => {
             btn.innerText = "+"; 
             if (modoSoloVer) { 
-                btn.onclick = function(e) { 
-                    e.preventDefault(); 
-                    alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); 
-                }; 
+                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); }; 
             } else { 
-                btn.onclick = function(e) { 
-                    e.preventDefault(); 
-                    const name = this.getAttribute('data-name'); 
-                    const price = this.getAttribute('data-price'); 
-                    inicializarVentanaExtras(name, price); 
-                }; 
+                btn.onclick = function(e) { e.preventDefault(); const name = this.getAttribute('data-name'); const price = this.getAttribute('data-price'); inicializarVentanaExtras(name, price); }; 
             }
         });
     }
 
     function inicializarVentanaExtras(nombreProducto, precioProducto) {
-        OBJETO_PRODUCTO_ACTIVO.nombre = nombreProducto; 
-        OBJETO_PRODUCTO_ACTIVO.precioBase = parseInt(precioProducto); 
-        OBJETO_PRODUCTO_ACTIVO.precioAcumulado = parseInt(precioProducto); 
-        OBJETO_PRODUCTO_ACTIVO.extras = {};
-        
-        document.getElementById('txtNombrePizzaModal').innerText = nombreProducto; 
-        document.getElementById('txtPrecioPizzaModal').innerText = precioProducto + " Ft";
-        
-        let listaSeleccionada = CONFIG_EXTRAS_POR_PRODUCTO[nombreProducto] || []; 
-        let htmlLista = "";
-        
-        if (listaSeleccionada.length === 0) { 
-            htmlLista = `<p style="text-align:center; color:#888; font-size:0.9rem; padding:10px 0;">Ehhez a termékhez nincsenek választható extra feltétek.</p>`; 
-        } else {
+        OBJETO_PRODUCTO_ACTIVO.nombre = nombreProducto; OBJETO_PRODUCTO_ACTIVO.precioBase = parseInt(precioProducto); OBJETO_PRODUCTO_ACTIVO.precioAcumulado = parseInt(precioProducto); OBJETO_PRODUCTO_ACTIVO.extras = {};
+        document.getElementById('txtNombrePizzaModal').innerText = nombreProducto; document.getElementById('txtPrecioPizzaModal').innerText = precioProducto + " Ft";
+        let listaSeleccionada = CONFIG_EXTRAS_POR_PRODUCTO[nombreProducto] || []; let htmlLista = "";
+        if (listaSeleccionada.length === 0) { htmlLista = `<p style="text-align:center; color:#888; font-size:0.9rem; padding:10px 0;">Ehhez a termékhez nincsenek választható extra feltétek.</p>`; } 
+        else {
             listaSeleccionada.forEach(item => {
                 OBJETO_PRODUCTO_ACTIVO.extras[item.id] = { nombre: item.nombre, precio: item.precio, quantity: 0, max: item.max };
                 htmlLista += `<div class="item-extra-linea"><span>${item.nombre} (+${item.precio} Ft) <span id="badge-nuevo-${item.id}" style="display:none; background:#2ecc71; color:white; padding:2px 6px; border-radius:10px; font-size:0.8rem; margin-left:5px;">0</span></span><div><button id="btn-restar-nuevo-${item.id}" onclick="event.stopPropagation(); operarExtra('${item.id}', -1)" disabled style="width:30px; height:30px;">-</button><button id="btn-sumar-nuevo-${item.id}" onclick="event.stopPropagation(); operarExtra('${item.id}', 1)" style="width:30px; height:30px;">+</button></div></div>`;
             });
         }
-        document.getElementById('contenedorListaExtrasDinamicos').innerHTML = htmlLista; 
-        document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'flex', 'important');
+        document.getElementById('contenedorListaExtrasDinamicos').innerHTML = htmlLista; document.getElementById('pestaModalExtrasIndependiente').style.setProperty('display', 'flex', 'important');
     }
 
-    function cerrarVentanaExtras() { 
-        const modalExtras = document.getElementById('pestaModalExtrasIndependiente');
-        if (modalExtras) modalExtras.style.setProperty('display', 'none', 'important'); 
-    }
-
+    function cerrarVentanaExtras() { document.getElementById('pestaModalExtrasIndependiente').style.setProperty('none', 'important'); }
     function operarExtra(idItem, c) {
-        let ing = OBJETO_PRODUCTO_ACTIVO.extras[idItem]; 
-        if (!ing) return; 
-        if (c === -1 && ing.quantity === 0) return; 
-        if (c === 1 && ing.quantity >= ing.max) { 
-            alert(`Maximális mennyiség elérve ehhez a feltéthez (${ing.max}x)!`); 
-            return; 
-        }
-        
-        ing.quantity += c; 
-        document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; 
-        document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; 
-        document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; 
-        if(document.getElementById('btn-sumar-nuevo-' + idItem)) { 
-            document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; 
-        }
-        
-        let total = OBJETO_PRODUCTO_ACTIVO.precioBase; 
-        Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { 
-            total += (OBJETO_PRODUCTO_ACTIVO.extras[k].precio * OBJETO_PRODUCTO_ACTIVO.extras[k].quantity); 
-        }); 
-        OBJETO_PRODUCTO_ACTIVO.precioAcumulado = total; 
-        document.getElementById('txtPrecioPizzaModal').innerText = total + " Ft";
+        let ing = OBJETO_PRODUCTO_ACTIVO.extras[idItem]; if (!ing) return; if (c === -1 && ing.quantity === 0) return; if (c === 1 && ing.quantity >= ing.max) { alert(`Maximális mennyiség elérve ehhez a feltéthez (${ing.max}x)!`); return; }
+        ing.quantity += c; document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; if(document.getElementById('btn-sumar-nuevo-' + idItem)) { document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; }
+        let total = OBJETO_PRODUCTO_ACTIVO.precioBase; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { total += (OBJETO_PRODUCTO_ACTIVO.extras[k].precio * OBJETO_PRODUCTO_ACTIVO.extras[k].quantity); }); OBJETO_PRODUCTO_ACTIVO.precioAcumulado = total; document.getElementById('txtPrecioPizzaModal').innerText = total + " Ft";
     }
 
     function confirmarYAgregarAlCarrito() {
-        let ex = []; 
-        Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { 
-            let item = OBJETO_PRODUCTO_ACTIVO.extras[k]; 
-            if (item.quantity > 0) ex.push(`${item.nombre} (x${item.quantity})`); 
-        });
-        
-        let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; 
-        if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
-        
-        carritoItems.push({ 
-            nombre: finalName, 
-            precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
-        }); 
-        
-        cerrarVentanaExtras(); 
-        actualizarRenderCarrito();
+        let ex = []; Object.keys(OBJETO_PRODUCTO_ACTIVO.extras).forEach(k => { let item = OBJETO_PRODUCTO_ACTIVO.extras[k]; if (item.quantity > 0) ex.push(`${item.nombre} (x${item.quantity})`); });
+        let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
+        carritoItems.push({ nombre: finalName, precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado }); cerrarVentanaExtras(); actualizarRenderCarrito();
     }
 
-    function eliminarDelCarrito(index) { 
-        carritoItems.splice(index, 1); 
-        actualizarRenderCarrito();
-    }
+    function eliminarDelCarrito(index) { carritoItems.splice(index, 1); actualizarRenderCarrito(); }
+<!-- BLOQUE_20_PARTE_2_DE_2 -->
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { 
-                if (descuentoAplicado) { alert('A kupon már aktív!'); return; } 
-                descuentoAplicado = true; 
-                document.getElementById('inpKupon').style.color = '#2ecc71'; 
-                actualizarRenderCarrito(); 
-                alert('Sikeres kupon!'); 
-            } else { 
-                alert('Érvénytelen kupon!'); 
-            }
+            e.preventDefault(); if (document.getElementById('inpKupon').value.trim().toUpperCase() === 'NIGHT10') { if (descuentoAplicado) { alert('A kupon már aktív!'); return; } descuentoAplicado = true; document.getElementById('inpKupon').style.color = '#2ecc71'; actualizarRenderCarrito(); alert('Sikeres kupon!'); } else { alert('Érvénytelen kupon!'); }
         });
     }
 
-    function definirEnvioFinal(t) {
+        function definirEnvioFinal(t) {
         tipoDeEnvioSeleccionadoCart = t; 
         const bD = document.getElementById('btnModoDelivery'); 
         const bP = document.getElementById('btnModoPickup'); 
@@ -1024,34 +842,31 @@ body::before {
         if (t === 'delivery') { 
             if(bD) { bD.style.background = '#d6af37'; bD.style.color = '#000'; } 
             if(bP) { bP.style.background = 'rgba(255,255,255,0.05)'; bP.style.color = '#fff'; } 
+            
+            // Deja el campo vacío y listo para escribir de forma elegante
             inpCim.value = ""; 
             inpCim.placeholder = "Utca, házszám, emelet, ajtó...";
             inpCim.focus(); 
         } else { 
             if(bP) { bP.style.background = '#d6af37'; bP.style.color = '#000'; } 
             if(bD) { bD.style.background = 'rgba(255,255,255,0.05)'; bD.style.color = '#fff'; } 
+            
+            // Bloquea con texto fijo si es recogida en tienda física
             inpCim.value = "Személyes átvétel a boltban"; 
         }
     }
 
-    async function ejecutarEnvioFinal() {
-        if (!supabase) {
-            alert("Hiba: A Supabase kapcsolat nem épült fel.");
-            return;
-        }
 
-        if (!tipoDeEnvioSeleccionadoCart) { 
-            alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); 
-            return; 
-        }
-        
+    function ejecutarEnvioFinal() {
+        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
+        // VALIDACIÓN DE DIRECCIÓN ACTIVA
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
             alert('Kérjük, adja meg a pontos szállítási címet!');
             if(inpCim) inpCim.focus();
             return;
         }
-        
+        // VALIDACIÓN DE TELÉFONO REAL Y OBLIGATORIO
         const inpTel = document.getElementById('inpTel'); 
         if (!inpTel || inpTel.value.trim() === "") { 
             alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
@@ -1059,65 +874,21 @@ body::before {
             return; 
         }
 
+        // Expresión regular: Valida números reales con o sin prefijo + (mínimo 9, máximo 13 dígitos)
         const regexTelefonoReal = /^\+?[0-9]{9,13}$/;
         if (!regexTelefonoReal.test(inpTel.value.trim())) {
-            alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567)');
+            alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567 vagy 06301234567)');
             inpTel.focus();
             return;
         }
 
-        const textoItemsFormateado = carritoItems.map(item => `${item.nombre} (${item.precio} Ft)`).join("\n");
-        const modoTexto = tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes átvétel';
-        const vAddress = `${modoTexto} - Cím: ${inpCim.value.trim()} - Tel: ${inpTel.value.trim()}`;
-        
-        const inpMegjegyzes = document.getElementById('inpMegjegyzes');
-        const vNotes = inpMegjegyzes ? inpMegjegyzes.value.trim() : "";
-
-        const totContenedor = document.getElementById('tp');
-        const vTotalPrice = totContenedor ? parseFloat(totContenedor.innerText.replace(/[^0-9.]/g, '')) : 0;
-
-        try {
-            const { data, error } = await supabase.rpc('registrar_comanda_forzada', {
-                p_address: vAddress,
-                p_items: textoItemsFormateado,
-                p_notes: vNotes,
-                p_price: vTotalPrice
-            });
-
-            if (error) {
-                console.error("Supabase Error:", error);
-                alert("Hiba történt: " + error.message);
-            } else {
-                alert('Rendelés sikeresen elküldve!\nMód: ' + modoTexto);
-                carritoItems = []; 
-                descuentoAplicado = false; 
-                if(inpMegjegyzes) inpMegjegyzes.value = ""; 
-                const inpKupon = document.getElementById('inpKupon');
-                if(inpKupon) { inpKupon.value = ""; inpKupon.style.color = "#ffffff"; }
-                actualizarRenderCarrito(); 
-                ocultarTodasLasSecciones(); 
-                const vp = document.getElementById('vp'); 
-                if (vp) vp.style.setProperty('display', 'flex', 'important');
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Kritikus hálózati hiba lépett fel.");
-        }
+        alert('Rendelés elküldve!\nMód: ' + (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes') + '\nMegjegyzés: ' + document.getElementById('inpMegjegyzes').value.trim());
+        carritoItems = []; descuentoAplicado = false; document.getElementById('inpMegjegyzes').value = ""; document.getElementById('inpKupon').value = ""; document.getElementById('inpKupon').style.color = "#ffffff"; actualizarRenderCarrito(); ocultarTodasLasSecciones(); const vp = document.getElementById('vp'); if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
     }
-    function cargarDatosEnCarrito() { 
-        if(accessToken) { 
-            const inpNev = document.getElementById('inpNev'); 
-            if(inpNev) inpNev.value = userEmail || ''; 
-            if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); 
-        } 
-    }
-    
-    function mostrarTiendaDeProductos() { 
-        ocultarTodasLasSecciones(); 
-        document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); 
-        ordenarContadorBoton(); 
-        configurarBotonesTienda(); 
-    }
+
+
+    function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
+    function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
     
     function ocultarTodasLasSecciones() { 
         const vp = document.getElementById('vp'); if (vp) vp.style.setProperty('display', 'none', 'important'); 
@@ -1127,36 +898,16 @@ body::before {
         const sCont = document.getElementById('s-cont'); if (sCont) sCont.style.setProperty('display', 'none', 'important'); 
     }
     
-    function cambiarTab(cat) { 
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
-        const t = document.getElementById('tab-' + cat); if(t) t.classList.add('active'); 
-        const ca = document.getElementById('cat-' + cat); if(ca) ca.classList.add('active'); 
-    }
-    
-    function ordenarContadorBoton() { 
-        const btnFlotante = document.getElementById('btnIrAlCarrito'); 
-        if (btnFlotante) { btnFlotante.innerText = carritoItems.length > 0 ? `Kosár megtekintése (${carritoItems.length})` : "Kosár megtekintése"; } 
-    }
+    function cambiarTab(cat) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); const t = document.getElementById('tab-' + cat); if(t) t.classList.add('active'); const ca = document.getElementById('cat-' + cat); if(ca) ca.classList.add('active'); }
+    function ordenarContadorBoton() { const btnFlotante = document.getElementById('btnIrAlCarrito'); if (btnFlotante) { btnFlotante.innerText = carritoItems.length > 0 ? `Kosár megtekintése (${carritoItems.length})` : "Kosár megtekintése"; } }
 
     function actualizarRenderCarrito() {
-        const cont = document.getElementById('itCar'); 
-        const tot = document.getElementById('tp'); 
-        if (!cont || !tot) return; 
-        ordenarContadorBoton(); 
-        if (carritoItems.length === 0) { cont.innerHTML = 'A kosár üres.'; tot.innerText = '0'; return; }
-        
-        let html = ''; 
-        let suma = 0;
-        carritoItems.forEach((item, index) => { 
-            html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; 
-            suma += item.precio; 
-        });
-        if(descuentoAplicado) { suma = Math.round(suma * 0.9); } 
-        cont.innerHTML = html; 
-        tot.innerText = suma;
+        const cont = document.getElementById('itCar'); const tot = document.getElementById('tp'); if (!cont || !tot) return; ordenarContadorBoton(); if (carritoItems.length === 0) { cont.innerHTML = 'A kosár üres.'; tot.innerText = '0'; return; }
+        let html = ''; let suma = 0;
+        carritoItems.forEach((item, index) => { html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; suma += item.precio; });
+        if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
     }
-
+    // FUNCIÓN DE APERTURA: Inserta los datos dinámicos y fuerza la visualización del cristal templado
     function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
         const modalFoto = document.getElementById('pestaModalFotoGrande');
         const imgTarget = document.getElementById('imgModalFotoDinamica');
@@ -1169,12 +920,12 @@ body::before {
             descTarget.innerText = descripcionProducto;
             modalFoto.style.setProperty('display', 'flex', 'important');
         }
+
     }
 
-
-       
+</script>
     
-    
+    <script>
     <!-- hasta aqui el 20-2-2-MOTOR ROTATIVO DE FONDOS INMUNE A CONGELAMIENTOS Y PANTALLAS OSCURAS -->
 
     (function() {
