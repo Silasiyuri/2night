@@ -406,7 +406,7 @@ body::after {
             
             <div class="grid-uzletek-top" style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1200px; margin: 0 auto;">
                 <div class="tarjeta-uzlet-top service-info" style="background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><h3>🕒 KISZÁLLÍTÁSI INFÓ</h3><p class="bold-p" style="margin-top: 8px; font-weight: 700;">Nyitvatartás: 18:00 - 04:00</p><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 4px;">Budapest VI, VII, VIII, IX. kerület</p></div>
-                <div class="tarjeta-uzlet-top service-delivero" id="card-delivero" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
+                <div class="tarjeta-uzlet-top service-delivery" id="card-delivery" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
                 <div class="tarjeta-uzlet-top service-pickup" id="card-pickup" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🏃 SZEMÉLYES ÁTVÉTEL</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Válaszd ki a legközelebbi üzletet.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
             </div>
             
@@ -900,7 +900,7 @@ body::after {
 
 
     function ejecutarEnvioFinal() {
-        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
+        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); return; }
         // VALIDACIÓN DE DIRECCIÓN ACTIVA
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
