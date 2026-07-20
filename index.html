@@ -237,7 +237,6 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE PANTALLA */
 /* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE ANCHO */
 .contenedor-carrusel {
     position: relative !important;
@@ -251,13 +250,13 @@ body::before {
     box-sizing: border-box !important;
 }
 
-/* TIRA DE LOS 2 BLOQUES UNIFICADOS */
+/* TIRA DE LOS 2 BLOQUES UNIFICADOS CON PASOS PASO A PASO */
 .wrapper-carrusel {
     display: flex !important;
     width: max-content !important;
     gap: 0px !important;
-    /* 🕒 DURACIÓN TOTAL: 25 segundos (unos 4 segundos quieta y 1 de viaje por foto) */
-    animation: slider2BloquesCuadrados 25s ease-in-out infinite !important;
+    /* 🕒 DURACIÓN TOTAL: 50 segundos en total para recorrer los 2 bloques con paradas cómodas */
+    animation: slider2BloquesInfinito 50s ease-in-out infinite !important;
 }
 
 /* FOTOS CUADRADAS RESPONSIVAS QUE SE ACOPLAN A CUALQUIER PANTALLA */
@@ -283,25 +282,24 @@ body::before {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA PASO A PASO PARA 2 BLOQUES (5 fotos originales x 100vw = -500vw al final) */
-@keyframes slider2BloquesCuadrados {
-    /* --- FOTO 1 --- */
-    0%, 15% { transform: translateX(0); }
+/* 📐 MATEMÁTICA PASO A PASO AJUSTADA PARA EL BUCLE CONTINUO (10 fotos x 100vw = -1000vw al final) */
+@keyframes slider2BloquesInfinito {
+    /* --- BLOQUE 1 (Fotos 1 a 5) --- */
+    0%, 7% { transform: translateX(0); }
+    9%, 16% { transform: translateX(-100vw); }
+    18%, 25% { transform: translateX(-200vw); }
+    27%, 34% { transform: translateX(-300vw); }
+    36%, 43% { transform: translateX(-400vw); }
     
-    /* Desplazamiento hacia la foto 2 */
-    20%, 35% { transform: translateX(-100vw); }
+    /* --- BLOQUE 2 (Fotos 6 a 10) --- */
+    45%, 52% { transform: translateX(-550vw); } /* Ajuste de compensación para el segundo bloque */
+    54%, 61% { transform: translateX(-650vw); }
+    63%, 70% { transform: translateX(-750vw); }
+    72%, 79% { transform: translateX(-850vw); }
+    81%, 95% { transform: translateX(-950vw); }
     
-    /* Desplazamiento hacia la foto 3 */
-    40%, 55% { transform: translateX(-200vw); }
-    
-    /* Desplazamiento hacia la foto 4 */
-    60%, 75% { transform: translateX(-300vw); }
-    
-    /* Desplazamiento hacia la foto 5 */
-    80%, 95% { transform: translateX(-400vw); }
-    
-    /* Empalme perfecto invisible instantáneo con el fotograma inicial (0vw) al tocar el segundo bloque */
-    100% { transform: translateX(-500vw); }
+    /* Empalme perfecto invisible instantáneo con el fotograma inicial al tocar el enganche final */
+    100% { transform: translateX(-1000vw); }
 }
 
 
@@ -417,12 +415,15 @@ body::before {
         <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
         <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
         
-        <!-- BLOQUE 2: GRUPO CLONADO EXACTO (Mismas fotos y mismo orden para enganche invisible) -->
-        <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-        <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-        <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+        <!-- BLOQUE 2: GRUPO CLONADO (5 FOTOS CONFIGURADAS) -->
+        <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+        <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+        <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
         <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-        <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+        <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+
+        <!-- 🚀 FOTO 11 EXTRA DE ENGANCHE: REPETIMOS LA FOTO 1 DEL PRIMER BLOQUE PARA CERRAR EL CICLO SIN SALTOS -->
+        <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
     </div>
 </div>
 
