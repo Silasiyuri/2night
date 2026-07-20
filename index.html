@@ -237,81 +237,29 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR SUPREMO: Aplica un difuminado en los bordes para máxima elegancia */
-.contenedor-carrusel {
-    position: relative !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
-    overflow: hidden !important;
-    padding: 35px 0 !important; /* Más espacio para lucir el resplandor */
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    background: transparent !important;
-    box-sizing: border-box !important;
-    
-    /* 🌟 MÁSCARA GOURMET: Hace que las fotos aparezcan y desaparezcan suavemente en los bordes */
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%) !important;
-    mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%) !important;
-}
-
-/* TIRA HORIZONTAL SIN SEPARACIONES BRUSCAS */
-.wrapper-carrusel {
-    display: flex !important;
-    width: 1100% !important; /* 11 fotos en total exactas */
-    gap: 0px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    /* 🕒 VELOCIDAD SIN PRISAS: 45 segundos para que la transición sea un deleite visual */
-    animation: sliderGourmetEterno 45s ease-in-out infinite !important;
-}
-
-/* CADA IMAGEN ACTÚA COMO UNA DIAPOSITIVA PREMIUM CUADRADA */
+/* FOTOS CUADRADAS GIGANTES DE MÁXIMA CALIDAD VISUAL */
 .carrusel-img {
-    width: 9.090909% !important; /* 100% dividido entre 11 fotos */
+    width: 9.090909% !important; /* 100% dividido entre 11 fotos exactas */
     aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
     height: auto !important;
     
-    /* LIMITADORES DE SEGURIDAD PARA PANTALLAS GRANDES */
-    max-width: 420px !important;
-    max-height: 420px !important;
+    /* 📐 TAMAÑO AMPLIADO GOURMET: Escalado para ver las pizzas mucho más grandes */
+    max-width: 480px !important;
+    max-height: 480px !important;
     margin: 0 auto !important; 
     
-    object-fit: cover !important; /* Evita cualquier deformación en la pizza */
+    object-fit: cover !important; /* Evita que la pizza se estire o pierda su proporción */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 20px !important; /* Distancia elegante tipo marco de cuadro */
+    
+    /* Reducimos el padding lateral para que la foto estire más de esquina a esquina */
+    padding: 0 8px !important; 
     box-sizing: border-box !important;
-    border-radius: 40px !important; /* Esquinas redondeadas suaves y modernas */
+    border-radius: 44px !important; /* Esquinas redondeadas adaptadas al formato grande */
     
-    /* 👑 ILUMINACIÓN GOURMET: Sombra profunda acentuada con un sutil halo dorado */
-    box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.95), 0 0 25px rgba(214, 175, 55, 0.2) !important;
+    /* ILUMINACIÓN CORPORATIVA */
+    box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.95), 0 0 25px rgba(214, 175, 55, 0.25) !important;
     filter: brightness(0.95) contrast(1.02);
-}
-
-/* EL DEDO O EL CURSOR NO INTERRUMPEN EL FLUJO DEL RESTAURANTE */
-.wrapper-carrusel:hover {
-    animation-play-state: running !important;
-}
-
-/* 📐 MATEMÁTICA LENTA CON PARADAS SUAVES (Un tin quieta y avanza con elegancia) */
-@keyframes sliderGourmetEterno {
-    /* --- BLOQUE 1 --- */
-    0%, 7%     { transform: translateX(0); }
-    9%, 16%    { transform: translateX(-9.090909%); }
-    18%, 25%   { transform: translateX(-18.181818%); }
-    27%, 34%   { transform: translateX(-27.272727%); }
-    36%, 43%   { transform: translateX(-36.363636%); }
-    
-    /* --- BLOQUE 2 --- */
-    45%, 52%   { transform: translateX(-45.454545%); }
-    54%, 61%   { transform: translateX(-54.545454%); }
-    63%, 70%   { transform: translateX(-63.636363%); }
-    72%, 79%   { transform: translateX(-72.727272%); }
-    81%, 88%   { transform: translateX(-81.818181%); }
-    
-    /* --- EMPALME CIRCULAR INFINITO SIN CORTES (Conecta la foto 11 con el inicio) --- */
-    90%, 99.9% { transform: translateX(-90.909091%); }
-    100%       { transform: translateX(0); }
 }
 
     </style>
