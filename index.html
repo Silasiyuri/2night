@@ -72,52 +72,54 @@
     animation: rotarCarruselInfinito 28s linear infinite !important;
 }
 
-/* IMÁGENES TOTALMENTE ADAPTATIVAS SEGÚN EL TAMAÑO DE LA PANTALLA */
+/* 1. Resetear el cuerpo para evitar que el navegador añada espacios en blanco ocultos */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden; /* Evita barras de desplazamiento horizontal */
+}
+
+/* 2. El contenedor principal ignorará los márgenes de sus padres y ocupará el 100% de la pantalla */
+.contenedor-carrusel {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    overflow: hidden; /* Oculta las fotos que van saliendo de la pantalla */
+    padding: 0;
+}
+
+/* 3. El wrapper que mueve las imágenes de forma infinita */
+.wrapper-carrusel {
+    display: flex;
+    width: max-content; /* Permite que el grupo de fotos crezca horizontalmente de forma infinita */
+    animation: carruselInfinito 25s linear infinite; /* Ajusta los segundos para cambiar la velocidad */
+}
+
+/* 4. Las imágenes del carrusel estiradas correctamente */
 .carrusel-img {
-    /* En ordenadores grandes se verán exactamente 4 fotos idénticas por pantalla */
-    width: 25vw !important; 
-    height: 190px !important;
-    object-fit: cover !important;
-    flex-shrink: 0 !important;
-    cursor: pointer !important;
-    /* Manejamos la separación como padding interno para no romper la matemática lineal */
-    padding: 0 10px !important; 
-    box-sizing: border-box !important;
-    border-radius: 22px !important; /* Mantiene tus bordes redondeados limpios */
+    height: 350px; /* Cambia esta altura a tu gusto según el diseño */
+    width: auto;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+    padding: 0;
+    margin: 0;
 }
 
-/* ACCIÓN DE PAUSA AL PASAR EL CURSOR */
-.wrapper-carrusel:hover {
-    animation-play-state: paused !important;
-}
-
-/* 📐 MATEMÁTICA EXACTA INFINITA ANTI-SALTOS DE ESQUINA A ESQUINA */
-@keyframes rotarCarruselInfinito {
+/* 5. Animación CSS para el empalme matemático continuo */
+@keyframes carruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplaza exactamente las 5 fotos del grupo original (5 x 25vw) para enganchar con el clon */
-        transform: translateX(-125vw);
+        transform: translateX(-50%); /* Se desplaza exactamente la mitad (el grupo original) */
     }
 }
 
-/* RESPONSIVE: ADAPTACIÓN AUTOMÁTICA PARA MÓVILES Y TABLETS PEQUEÑAS */
-@media (max-width: 768px) {
-    .carrusel-img {
-        /* En pantallas pequeñas se verán exactamente 2 fotos por pantalla (2 x 50vw = 100% del ancho) */
-        width: 50vw !important; 
-    }
-    @keyframes rotarCarruselInfinito {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            /* Desplazamiento ajustado para móviles (5 fotos x 50vw = 250vw) */
-            transform: translateX(-250vw);
-        }
-    }
-}
 
 /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
