@@ -237,15 +237,66 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-@keyframes rotarCarruselInfinito {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        /* Desplazamiento exacto del 50% del total más el desfase del gap */
-        transform: translateX(calc(-50% - 10px));
-    }
+/* CONTENEDOR DE ESQUINA A ESQUINA REAL */
+.contenedor-carrusel {
+    position: relative !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+    padding: 20px 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
 }
+
+/* TIRA INTERNA EN LÍNEA DIRECTA CONTINUA */
+.wrapper-carrusel {
+    display: flex !important;
+    width: max-content !important;
+    gap: 0px !important;
+    /* 🕒 DURACIÓN TOTAL: 25 segundos en total (unos 4 segundos quieta por foto y 1 segundo de viaje) */
+    animation: sliderPasosPausa 25s ease-in-out infinite !important;
+}
+
+/* CADA IMAGEN OCUPA EL 100% DE LA PANTALLA */
+.carrusel-img {
+    width: 100vw !important; 
+    height: 380px !important; 
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    padding: 0 15px !important; 
+    box-sizing: border-box !important;
+    border-radius: 28px !important; 
+}
+
+/* EL DEDO O EL CURSOR NO PAUSAN ESTA ANIMACIÓN AUTOMÁTICA */
+.wrapper-carrusel:hover {
+    animation-play-state: running !important;
+}
+
+/* 📐 MATEMÁTICA DE PASO Y PAUSA REPARADA SIN SALTOS (5 fotos originales x 100vw = -500vw al final) */
+@keyframes sliderPasosPausa {
+    /* --- FOTO 1 --- */
+    0%, 15% { transform: translateX(0); }
+    
+    /* Desplazamiento hacia la foto 2 */
+    20%, 35% { transform: translateX(-100vw); }
+    
+    /* Desplazamiento hacia la foto 3 */
+    40%, 55% { transform: translateX(-200vw); }
+    
+    /* Desplazamiento hacia la foto 4 */
+    60%, 75% { transform: translateX(-300vw); }
+    
+    /* Desplazamiento hacia la foto 5 */
+    80%, 95% { transform: translateX(-400vw); }
+    
+    /* Empalme perfecto instantáneo al milímetro con el fotograma inicial del clon */
+    100% { transform: translateX(-500vw); }
+}
+
 
     </style>
 </head>
