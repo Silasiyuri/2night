@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2NIGHT</title>
     
-  <!-- CARGA ASÍNCRONA DE ALTA VELOCIDAD: EVITA CONGELAMIENTOS AL ABRIR LA PÁGINA -->
+    <!-- CARGA ASÍNCRONA DE ALTA VELOCIDAD: EVITA CONGELAMIENTOS AL ABRIR LA PÁGINA -->
     <script src="https://jsdelivr.net" async></script>
     
     <style>/* DISEÑO PREMIUM FLOTANTE PARA EL CUADRO DE PROMOCIÓN */
@@ -49,76 +49,82 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-/* CONTENEDOR QUE ROMPE LOS MÁRGENES DE LA PLANTILLA Y TOCA LOS BORDES */
-.contenedor-carrusel {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    overflow: hidden !important;
-    padding: 25px 0 !important;
-    position: relative !important;
-    left: 50% !important;
-    right: 50% !important;
-    margin-left: -50vw !important;
-    margin-right: -50vw !important;
-    background: transparent !important;
-    box-sizing: border-box !important;
-}
-
-/* GRUPO DE IMÁGENES ALINEADO SIN ESPACIOS INTERMEDIOS EXTRAÑOS */
-.wrapper-carrusel {
-    display: flex !important;
-    width: max-content !important;
-    gap: 0px !important; 
-    animation: rotarCarruselInfinito 28s linear infinite !important;
-}
-
-/* 1. Resetear la configuración del navegador para evitar bordes blancos */
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    overflow-x: hidden; /* Crucial para evitar la barra de desplazamiento abajo */
-}
-
-/* 2. El contenedor se divorcia de sus padres y se pega a los bordes de la pantalla */
-.contenedor-carrusel {
-    position: absolute; /* Cambiado a absoluto para romper cualquier caja contenedora */
-    left: 0 !important;
-    right: 0 !important;
-    width: 100vw !important; /* Mide exactamente el 100% del monitor */
-    overflow: hidden;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* 3. Tira horizontal donde se mueven las fotos */
-.wrapper-carrusel {
-    display: flex !important;
-    width: max-content !important; /* Permite que la fila de imágenes crezca al infinito */
-    animation: carruselInfinito 25s linear infinite;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* 4. Ajuste estricto de las imágenes en bloque */
-.carrusel-img {
-    height: 350px; /* Modifica la altura a tu gusto */
-    width: auto;
-    object-fit: cover;
-    cursor: pointer;
-    display: block !important; /* Elimina el comportamiento de texto que deja huecos */
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-}
-
-/* 5. Animación continua para el grupo duplicado */
-@keyframes carruselInfinito {
+/* EFECTO DE DESPLAZAMIENTO INFINITO SEAMLESS */
+@keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%); /* Empalme matemático invisible a la mitad */
+        /* Desplaza exactamente la mitad del contenedor (el grupo original) */
+        transform: translateX(calc(-50% - 7.5px));
+    }
+}
+
+/* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
+.wrapper-carrusel:hover {
+    animation-play-state: paused;
+}
+
+        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
+body { 
+    color: #f8fafc; 
+    min-height: 100vh; 
+    overflow-x: hidden; 
+    position: relative;
+    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
+    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
+}
+
+/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
+body::before {
+    content: "" !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
+    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
+    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
+    background-color: #000000 !important; /* Fondo negro base de seguridad */
+    
+    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
+    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
+}
+
+/* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
+@keyframes aparecerFotosFondo {
+    /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
+    0% {
+        background-image: url('fondo.jpg');
+        opacity: 0;
+        transform: scale(1.06); /* Efecto zoom emergente */
+    }
+    5%, 45% {
+        opacity: 1; /* Se muestra al 100% */
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0; /* Se desvanece suavemente */
+        transform: scale(0.96);
+    }
+
+    /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
+    51% {
+        background-image: url('fondo4.jpg');
+        opacity: 0;
+        transform: scale(1.06);
+    }
+    56%, 95% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.96);
+        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
     }
 }
 
@@ -226,17 +232,15 @@ html, body {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* EFECTO DE DESPLAZAMIENTO INFINITO SEAMLESS REPARADO SIN SALTOS */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplaza exactamente los 1600px del primer grupo para enganchar con el clon */
-        transform: translateX(-1600px);
+        /* Desplazamiento exacto del 50% del total más el desfase del gap */
+        transform: translateX(calc(-50% - 10px));
     }
 }
-
 
     </style>
 </head>
@@ -328,8 +332,7 @@ html, body {
 
     <main class="h">
 
-
-           <!-- BLOQUE_10_DE_20 -->
+<!-- BLOQUE_10_DE_20 -->
         <div class="cp" id="vp" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center !important; width: 100% !important;">
             <h1 style="font-size: 4rem; color: #FFD700; font-weight: 900; letter-spacing: 2px; margin-top: 35px; margin-bottom: 0px; line-height: 1;">2NIGHT</h1>
             <p class="sub-brand" style="color: #FFFFFF; font-weight: 700; letter-spacing: 1px; margin-top: 5px; margin-bottom: 25px; font-size: 1.15rem; text-transform: uppercase;">Pizza & Food &bull; Budapest</p>
@@ -342,37 +345,32 @@ html, body {
             
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
-            <!-- SECCIÓN CONTENEDORA DE RESERVA -->
-<div style="position: relative; width: 100%; height: 350px; margin: 0; padding: 0;">
+            <div class="contenedor-carrusel" style="width: 100%; max-width: 1200px; overflow: hidden; margin: 0 auto; padding: 25px 0; position: relative;">
+                <div class="wrapper-carrusel" style="display: flex; gap: 20px; width: max-content; animation: rotarCarruselInfinito 22s linear infinite;">
+                    <!-- GRUPO ORIGINAL: 5 FOTOS CON DETALLES ADAPTADOS -->
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    
+                    <!-- GRUPO DUPLICADO: CLONA LOS MISMOS CLICKS PARA EL EFECTO INFINITO -->
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="JMH.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
 
-    <!-- CONTENEDOR SEAMLESS DE ESQUINA A ESQUINA -->
-    <div class="contenedor-carrusel">
-        <div class="wrapper-carrusel">
-            <!-- GRUPO ORIGINAL: 5 FOTOS -->
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/S.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            
-            <!-- GRUPO DUPLICADO EXACTO -->
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/S.jpg" class="carrusel-img" onclick="...">
-            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
-        </div>
-    </div>
-
-</div>
-
+                </div>
+            </div>
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
-            <div id="bloque-contacto-principal">
-    <p>📍 <strong>Címünk:</strong> Budapest, Kőfaragó u. 15, 1085</p>
-    <p>📞 <strong>Telefon:</strong> (06 1) 781 0538</p>
-    <p>🕒 <strong>Nyitvatartás:</strong> Hétfő - Szombat: 12:00 - 21:00</p>
-</div>
-
+            <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📞</span><strong>Telefon</strong>(06 1) 781 0538</div>
+                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">🕒</span><strong>Nyitvatartás</strong>Hétfő - Szombat: 12:00 - 21:00</div>
+            </div>
+        </div> <!-- AQUÍ ENCIERRA EL VP CON ABSOLUTA SEGURIDAD Y LIMPIEZA -->
+        </div>
 
         <!-- NUEVA VENTANA DE INFORMACIÓN ELEGANTE EN PANTALLA COMPLETA (MODAL DE FOTOS) -->
         <div id="pestaModalFotoGrande" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100vh !important; background: rgba(0, 0, 0, 0.9) !important; z-index: 2147483647 !important; align-items: center !important; justify-content: center !important; padding: 20px; box-sizing: border-box;" onclick="if(event.target === this) this.style.setProperty('display', 'none', 'important');">
@@ -901,62 +899,5 @@ html, body {
     }
 
 </script>
-        <script>
-    // Lista de tus imágenes de fondo locales
-    var imagenesFondo = ['imagen/fondo.jpg', 'imagen/fondo4.jpg'];
-    var indiceFondoActual = 0;
-    var intervaloFondoDinamico;
-
-    // FUNCIÓN: Cambia físicamente la propiedad del CSS inyectando la foto que toca
-    function alternarImagenDeFondo() {
-        // Buscamos la regla CSS del body::before usando una variable inyectada al documento
-        document.documentElement.style.setProperty('--fondo-dinamico', "url('" + imagenesFondo[indiceFondoActual] + "')");
-        
-        // Pasamos a la siguiente foto del array
-        indiceFondoActual = (indiceFondoActual + 1) % imagenesFondo.length;
-    }
-
-    // FUNCIÓN: Arranca el temporizador de cambio de imágenes (Cada 8000 milisegundos = 8 segundos)
-    function iniciarBucleDeFondo() {
-        clearInterval(intervaloFondoDinamico);
-        alternarImagenDeFondo(); // Pone la primera foto de inmediato
-        intervaloFondoDinamico = setInterval(alternarImagenDeFondo, 8000);
-    }
-
-    // SINCRO DE RED: Escuchamos de forma obligatoria cuando el cliente sale o regresa a la pestaña
-    document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) {
-            // ¡El usuario regresó! Despertamos el bucle a la fuerza para que la pantalla no se quede en negro
-            iniciarBucleDeFondo();
-        } else {
-            // Si el usuario se va, pausamos el bucle para no consumir batería en la tablet/móvil
-            clearInterval(intervaloFondoDinamico);
-        }
-    });
-
-    // Arrancamos el sistema automáticamente al cargar la página por primera vez
-    iniciarBucleDeFondo();
-            document.addEventListener("DOMContentLoaded", function() {
-    const infoBloque = document.getElementById('bloque-contacto-principal');
-    
-    if (infoBloque) {
-        // Obtiene la ruta actual (ejemplo: "/menu.html" o "#menu")
-        const rutaActual = window.location.pathname;
-        const hashActual = window.location.hash;
-
-        // Si es la raíz de la web, index.html o no tiene hashes de subsecciones
-        const esPaginaPrincipal = rutaActual === '/' || rutaActual.endsWith('index.html') || hashActual === '' || hashActual === '#home';
-
-        if (esPaginaPrincipal) {
-            infoBloque.style.display = 'block'; // Se muestra en la principal
-        } else {
-            infoBloque.style.display = 'none';  // Se oculta en el resto de páginas
-        }
-    }
-});
-
-</script>
-
-
 </body>
 </html>
