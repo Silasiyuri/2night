@@ -237,50 +237,69 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA REAL */
+/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE ANCHO */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 30px 0 !important;
+    padding: 20px 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: transparent !important;
     box-sizing: border-box !important;
 }
 
-/* TIRA INTERNA EN LÍNEA DIRECTA CON TRANSICIÓN SUAVE CONTROLADA */
+/* TIRA DE LOS 2 BLOQUES CON ANIMACIÓN LINEAL FLUIDA SIN PARADAS */
 .wrapper-carrusel {
     display: flex !important;
     width: max-content !important;
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    /* Transición de 0.6 segundos para el cambio fluido de una en una */
-    transition: transform 0.6s ease-in-out !important; 
+    /* 🕒 MOVIMIENTO CONTINUO: Rueda sin detenerse nunca de forma lineal y fluida */
+    animation: rotarCarruselContinuoEterno 25s linear infinite !important;
 }
 
-/* FOTOS CUADRADAS RESPONSIVAS */
+/* FOTOS CUADRADAS RESPONSIVAS QUE SE ACOPLAN DE ESQUINA A ESQUINA */
 .carrusel-img {
-    width: 100vw !important; /* Ocupa la pantalla completa */
-    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO */
+    width: 25vw !important; /* En computadoras salen exactamente 4 fotos por pantalla */
+    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
     height: auto !important;
-    max-width: 440px !important; 
-    max-height: 440px !important; 
-    margin: 0 auto !important; 
-    object-fit: cover !important;
+    object-fit: cover !important; /* Evita que la pizza se estire o pierda su proporción */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 15px !important; 
+    padding: 0 12px !important; /* Separación estética interna tipo marco */
     box-sizing: border-box !important;
-    border-radius: 36px !important; 
+    border-radius: 32px !important; /* Bordes redondeados limpios */
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
 }
 
-/* EL CURSOR O EL DEDO YA NO AFECTAN AL GIRO INTERMINABLE */
+/* ANULACIÓN DE PAUSA: El cursor o el dedo del cliente no detendrán la rotación continua */
 .wrapper-carrusel:hover {
     animation-play-state: running !important;
+}
+
+/* 📐 MATEMÁTICA FLUIDA SIN CORTES NI SALTOS (5 fotos originales x 25vw = -125vw) */
+@keyframes rotarCarruselContinuoEterno {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        /* Desplaza el primer bloque completo para empalmar con el clon idéntico */
+        transform: translateX(-125vw);
+    }
+}
+
+/* 📱 ADAPTACIÓN AUTOMÁTICA EN TELÉFONOS (Salen exactamente 2 fotos cuadradas completas por pantalla) */
+@media (max-width: 768px) {
+    .carrusel-img {
+        width: 50vw !important; /* Cada foto mide la mitad de la pantalla del móvil */
+    }
+    @keyframes rotarCarruselContinuoEterno {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-250vw); } /* Ajuste de móvil: 5 fotos originales x 50vw = -250vw */
+    }
 }
 
     </style>
@@ -387,17 +406,23 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <div class="contenedor-carrusel">
-                <div id="carruselEterno2Night" class="wrapper-carrusel">
-                    <!-- ÚNICAMENTE LAS 5 IMÁGENES ORIGINALES SIN DUPLICAR NADA -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                <div class="wrapper-carrusel">
+                    <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                    
+                    <!-- BLOQUE 2: GRUPO CLONADO SIMÉTRICO (Mismas 5 fotos en el mismo orden para rotación infinita continua) -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                 </div>
             </div>
         </div>
-
 
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
