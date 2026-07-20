@@ -237,7 +237,7 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR SUPREMO: Toca los bordes físicos de la pantalla en cualquier dispositivo */
+/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE ANCHO */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
@@ -257,7 +257,8 @@ body::before {
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    will-change: transform !important;
+    /* Transición suave de 0.8 segundos para el viaje entre fotos */
+    transition: transform 0.8s ease-in-out !important; 
 }
 
 /* CADA FOTO SE ADAPTA AL 100% DE LA PANTALLA EN FORMATO CUADRADO PERFECTO */
@@ -278,6 +279,11 @@ body::before {
     box-sizing: border-box !important;
     border-radius: 36px !important; /* Bordes redondeados corporativos limpios */
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
+}
+
+/* EL DEDO O EL CURSOR YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
+.wrapper-carrusel:hover {
+    animation-play-state: running !important;
 }
 
     </style>
@@ -384,66 +390,28 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <div class="contenedor-carrusel">
-                <div id="carruselEternoUnaEnUna" class="wrapper-carrusel">
-                    <!-- TUS 5 FOTOS EXCLUSIVAS SIN DUPLICADOS -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk...');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk...');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát...');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú...');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján...');">
+                <div id="carruselEternoConPausa" class="wrapper-carrusel">
+                    <!-- ÚNICAMENTE TUS 5 IMÁGENES ORIGINALES EXCLUSIVAS -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                 </div>
             </div>
-     
 
- <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
-            <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
-                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
-                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📞</span><strong>Telefon</strong>(06 1) 781 0538</div>
-                <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">🕒</span><strong>Nyitvatartás</strong>Hétfő - Szombat: 12:00 - 21:00</div>
-            </div>
-        </div> <!-- AQUÍ ENCIERRA EL VP CON ABSOLUTA SEGURIDAD Y LIMPIEZA -->
-        </div>
+            <!-- DATOS DE CONTACTO FIJOS SÓLO EN PORTADA -->
+            <div class="bloque-contacto-portada" style="margin-top: 40px; padding: 20px; background: rgba(17,17,17,0.6); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); max-width: 400px; width: 90%;">
+                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">📍 Címünk</p>
+                <p style="color: #ffffff; margin-bottom: 20px; font-size: 0.95rem;">Budapest, Kőfaragó u. 15, 1085</p>
 
-        <!-- NUEVA VENTANA DE INFORMACIÓN ELEGANTE EN PANTALLA COMPLETA (MODAL DE FOTOS) -->
-        <div id="pestaModalFotoGrande" style="display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100vh !important; background: rgba(0, 0, 0, 0.9) !important; z-index: 2147483647 !important; align-items: center !important; justify-content: center !important; padding: 20px; box-sizing: border-box;" onclick="if(event.target === this) this.style.setProperty('display', 'none', 'important');">
-            <div style="background: #111111 !important; border: 1px solid rgba(214, 175, 55, 0.3) !important; border-radius: 16px !important; max-width: 500px !important; width: 100% !important; padding: 25px !important; position: relative !important; text-align: center !important; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-                <span onclick="event.stopPropagation(); document.getElementById('pestaModalFotoGrande').style.setProperty('display', 'none', 'important');" style="position: absolute !important; top: 12px !important; right: 18px !important; color: #d6af37; font-size: 2rem; cursor: pointer; font-weight: bold;">&times;</span>
-                <img id="imgModalFotoDinamica" src="" style="width: 100% !important; height: 240px !important; object-fit: cover !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px !important;">
-                <h3 id="txtTituloFotoModal" style="color: #d6af37 !important; font-size: 1.4rem !important; font-weight: 800; text-transform: uppercase; margin-bottom: 10px !important;">Cargando...</h3>
-                <p id="txtDescripcionFotoModal" style="color: #aaaaaa !important; font-size: 0.95rem !important; line-height: 1.5; text-align: justify !important; margin: 0; padding: 0 5px;"></p>
+                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">📞 Telefon</p>
+                <p style="color: #ffffff; margin-bottom: 20px; font-size: 0.95rem;">(06 1) 781 0538</p>
 
-
+                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">🕒 Nyitvatartás</p>
+                <p style="color: #ffffff; margin-bottom: 0px; font-size: 0.95rem;">Hétfő - Szombat: 12:00 - 21:00</p>
             </div>
         </div>
-
-<!-- BLOQUE_11_DE_20 -->
-        <!-- PANEL DE AUTENTICACIÓN PREMIUM Y ELEGANTE -->
-<div id="s-login" class="sc" style="display:none; max-width: 420px; margin: 40px auto; padding: 0 20px; box-sizing: border-box;">
-    <div class="b-contenido" style="background: rgba(18, 18, 18, 0.8) !important; padding: 40px 30px !important; border-radius: 20px !important; border: 1px solid rgba(214, 175, 55, 0.25) !important; backdrop-filter: blur(12px) !important; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75) !important; width: 100%; box-sizing: border-box;">
-        
-        <!-- TÍTULO PREMIUM CON TIPOGRAFÍA ESTILIZADA -->
-        <h2 id="supaCardTitle" style="text-align: center !important; width: 100%; font-size: 24px !important; font-weight: 800 !important; color: #ffffff !important; letter-spacing: 1px !important; margin-bottom: 25px !important; text-transform: uppercase !important;">Vásárlói Belépés</h2>
-        
-        <div class="form-kosar" id="supaForm" style="display: flex; flex-direction: column; width: 100%;">
-            
-            <!-- CAMPO E-MAIL -->
-            <label style="display: block; margin-bottom: 8px; color: #a1a1aa !important; font-size: 11px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 1px !important; text-align: left;">E-mail cím</label>
-            <input type="email" id="supaEmail" placeholder="name@example.com" autocomplete="email" required style="width: 100%; padding: 14px 16px; margin-bottom: 22px; border: 1px solid rgba(255, 255, 255, 0.1) !important; border-radius: 12px !important; background: rgba(0, 0, 0, 0.4) !important; color: #ffffff !important; font-size: 15px !important; outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out;">
-            
-            <!-- CAMPO PASSWORD -->
-            <label style="display: block; margin-bottom: 8px; color: #a1a1aa !important; font-size: 11px !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: 1px !important; text-align: left;">Jelszó</label>
-            <input type="password" id="supaPassword" placeholder="••••••••" autocomplete="current-password" required style="width: 100%; padding: 14px 16px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.1) !important; border-radius: 12px !important; background: rgba(0, 0, 0, 0.4) !important; color: #ffffff !important; font-size: 15px !important; outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out;">
-            
-            <!-- BOTÓN ACCIÓN PRINCIPAL (DORADO) -->
-            <button id="btnSupaPrimary" style="width: 100%; padding: 15px; background: #d6af37 !important; color: #000000 !important; font-weight: 800 !important; font-size: 14px !important; text-transform: uppercase !important; letter-spacing: 1px !important; border: none !important; border-radius: 12px !important; cursor: pointer !important; transition: all 0.2s ease-in-out; box-shadow: 0 4px 15px rgba(214, 175, 55, 0.2) !important;">Belépés</button>
-            
-            <!-- BOTÓN CONMUTADOR DE MODO (MINIMALISTA) -->
-            <button id="btnSupaToggle" style="width: 100%; padding: 12px; margin-top: 15px; background: transparent !important; color: #a1a1aa !important; border: none !important; cursor: pointer !important; font-weight: 600 !important; font-size: 13px !important; transition: color 0.2s ease;">Nincs még fiókod? Regisztrálj</button>
-            
-            <div id="supaStatusMessage" class="msg-supabase" style="margin-top: 15px; border-radius: 12px;"></div>
-        </div>
-    </div>
-</div>
 
 <!-- BLOQUE_12_DE_20 -->
        <div id="s-tienda" class="sc" style="display:none; max-width: 100%; margin: 20px 0; width: 100% !important;">
@@ -1044,6 +1012,49 @@ body::before {
         });
 
         arrancarBucleEterno();
+    })();
+</script>
+<!-- MOTOR ROTATIVO PASO A PASO CON DETENCIÓN OBLIGATORIA -->
+<script>
+    (function() {
+        var relojMecanicoInfinito;
+        
+        // 🕒 PAUSA RECOMIENDADA (Un poquitín): 3500 milisegundos = 3.5 Segundos quieta por pizza
+        var tiempoPausaPoquitin = 3500; 
+
+        function ejecutarGiroConPausa() {
+            var elTira = document.getElementById('carruselEternoConPausa');
+            if (!elTira) return;
+
+            // 1. Desplazamos la tira horizontal suavemente hacia la izquierda el ancho de una pantalla
+            elTira.style.transition = "transform 0.8s ease-in-out";
+            elTira.style.transform = "translateX(-100vw)";
+
+            // 2. Esperamos a que el deslizamiento termine (0.8 segundos = 800 milisegundos)
+            setTimeout(function() {
+                var primeraFotoCompletada = elTira.firstElementChild;
+                
+                // Apagamos la animación por un milisegundo para reordenar las imágenes en secreto
+                elTira.style.transition = "none";
+                elTira.style.transform = "translateX(0)";
+                
+                // Cortamos la primera foto del inicio y la movemos de posición al final de la fila
+                elTira.appendChild(primeraFotoCompletada);
+            }, 800);
+        }
+
+        function arrancarRelojSlider() {
+            clearInterval(relojMecanicoInfinito);
+            relojMecanicoInfinito = setInterval(ejecutarGiroConPausa, tiempoPausaPoquitin);
+        }
+
+        // Control de ahorro de energía estricto para evitar que se descompile en segundo plano
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) { arrancarRelojSlider(); } 
+            else { clearInterval(relojMecanicoInfinito); }
+        });
+
+        arrancarRelojSlider();
     })();
 </script>
 
