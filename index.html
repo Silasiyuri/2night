@@ -65,72 +65,67 @@
     animation-play-state: paused;
 }
 
-       /* 1. VACIADO DEL BODY PARA ENMARCAR EL FONDO GOURMET */
+        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    background: transparent !important; /* Totalmente transparente para descubrir las fotos */
+    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
+    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
 }
 
-/* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS */
-body::before, body::after {
+/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
+body::before {
     content: "" !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
+    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
+    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
+    background-color: #000000 !important; /* Fondo negro base de seguridad */
+    
+    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
+    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-    display: block !important;
-    background-color: #0c0c0c !important; /* Fondo negro base de seguridad interno */
+    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
 }
 
-/* 🛋️ 3. CAPA TRASERA: Sostiene la primera pizza de alta resolución en la red */
-body::before {
-    z-index: -3 !important;
-    background-image: url('imagen/fondo4.jpg') !important;
-}
-
-/* 🎭 4. CAPA DELANTERA: Sostiene la segunda pizza premium en la red */
-body::after {
-    z-index: -2 !important;
-    background-image: url('imagen/fondo.jpg') !important;
-    
-    /* ANIMACIÓN DEL FUNDIDO CON ZOOM 3D */
-    animation: fundidoCruzadoEterno 18s ease-in-out infinite !important;
-}
-
-/* 📐 5. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN CONTINUA */
-@keyframes fundidoCruzadoEterno {
-    0%, 15% {
-        opacity: 0 !important;
-        transform: scale(1.04); 
+/* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
+@keyframes aparecerFotosFondo {
+    /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
+    0% {
+        background-image: url('fondo.jpg');
+        opacity: 0;
+        transform: scale(1.06); /* Efecto zoom emergente */
     }
-    35%, 65% {
-        opacity: 1 !important;
-        transform: scale(1); 
+    5%, 45% {
+        opacity: 1; /* Se muestra al 100% */
+        transform: scale(1);
     }
-    85%, 100% {
-        opacity: 0 !important;
-        transform: scale(1.04);
+    50% {
+        opacity: 0; /* Se desvanece suavemente */
+        transform: scale(0.96);
     }
-}
 
-/* 🚀 6. FILTRO CRÍTICO TRANSLÚCIDO PARA LAS CAJAS */
-.box, section, #vp {
-    background: rgba(15, 15, 15, 0.65) !important; 
-    backdrop-filter: blur(14px) !important; 
-    -webkit-backdrop-filter: blur(14px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-.tarjeta-uzlet-top {
-    background: rgba(20, 20, 20, 0.5) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
+    /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
+    51% {
+        background-image: url('fondo4.jpg');
+        opacity: 0;
+        transform: scale(1.06);
+    }
+    56%, 95% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.96);
+        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
+    }
 }
 
 
