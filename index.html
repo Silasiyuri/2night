@@ -72,84 +72,54 @@
     animation: rotarCarruselInfinito 28s linear infinite !important;
 }
 
-/* 1. Resetear el cuerpo para evitar que el navegador añada espacios en blanco ocultos */
+/* 1. Resetear la configuración del navegador para evitar bordes blancos */
 html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    overflow-x: hidden; /* Evita barras de desplazamiento horizontal */
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden; /* Crucial para evitar la barra de desplazamiento abajo */
 }
 
-/* 2. El contenedor principal ignorará los márgenes de sus padres y ocupará el 100% de la pantalla */
+/* 2. El contenedor se divorcia de sus padres y se pega a los bordes de la pantalla */
 .contenedor-carrusel {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    overflow: hidden; /* Oculta las fotos que van saliendo de la pantalla */
-    padding: 0;
+    position: absolute; /* Cambiado a absoluto para romper cualquier caja contenedora */
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important; /* Mide exactamente el 100% del monitor */
+    overflow: hidden;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-/* 3. El wrapper que mueve las imágenes de forma infinita */
+/* 3. Tira horizontal donde se mueven las fotos */
 .wrapper-carrusel {
-    display: flex;
-    width: max-content; /* Permite que el grupo de fotos crezca horizontalmente de forma infinita */
-    animation: carruselInfinito 25s linear infinite; /* Ajusta los segundos para cambiar la velocidad */
+    display: flex !important;
+    width: max-content !important; /* Permite que la fila de imágenes crezca al infinito */
+    animation: carruselInfinito 25s linear infinite;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-/* 4. Las imágenes del carrusel estiradas correctamente */
+/* 4. Ajuste estricto de las imágenes en bloque */
 .carrusel-img {
-    height: 350px; /* Cambia esta altura a tu gusto según el diseño */
+    height: 350px; /* Modifica la altura a tu gusto */
     width: auto;
     object-fit: cover;
     cursor: pointer;
-    display: block;
-    padding: 0;
-    margin: 0;
+    display: block !important; /* Elimina el comportamiento de texto que deja huecos */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
 
-/* 5. Animación CSS para el empalme matemático continuo */
+/* 5. Animación continua para el grupo duplicado */
 @keyframes carruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-50%); /* Se desplaza exactamente la mitad (el grupo original) */
+        transform: translateX(-50%); /* Empalme matemático invisible a la mitad */
     }
-}
-
-
-/* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
-body { 
-    color: #f8fafc; 
-    min-height: 100vh; 
-    overflow-x: hidden; 
-    position: relative;
-    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
-    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
-}
-
-/* 🚀 AQUÍ PONES LA CAPA AISLADA CONECTADA A JAVASCRIPT: */
-body::before {
-    content: "" !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: -2 !important;
-    background-color: #000000 !important;
-    background-size: cover !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    display: block !important;
-    /* Transición suave para que la foto no cambie de golpe */
-    transition: background-image 1.5s ease-in-out !important;
-    
-    /* ESTA ES LA LÍNEA CRÍTICA CONECTADA AL SCRIPT: */
-    background-image: var(--fondo-dinamico) !important;
 }
 
 <!-- BLOQUE_02_DE_20 -->
@@ -372,25 +342,29 @@ body::before {
             
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
-            <!-- CONTENEDOR SEAMLESS DE ESQUINA A ESQUINA -->
-            <div class="contenedor-carrusel">
-                <div class="wrapper-carrusel">
-                    <!-- GRUPO ORIGINAL: 5 FOTOS -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát...'); }">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján...'); }">
-                    
-                    <!-- GRUPO DUPLICADO EXACTO PARA EMPALME MATEMÁTICO PERFECTO -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát...'); }">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú...'); }">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande === 'function') { abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján...'); }">
-                </div>
-            </div>
+            <!-- SECCIÓN CONTENEDORA DE RESERVA -->
+<div style="position: relative; width: 100%; height: 350px; margin: 0; padding: 0;">
+
+    <!-- CONTENEDOR SEAMLESS DE ESQUINA A ESQUINA -->
+    <div class="contenedor-carrusel">
+        <div class="wrapper-carrusel">
+            <!-- GRUPO ORIGINAL: 5 FOTOS -->
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/S.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            
+            <!-- GRUPO DUPLICADO EXACTO -->
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/S.jpg" class="carrusel-img" onclick="...">
+            <img src="imagen/foto.jpg" class="carrusel-img" onclick="...">
         </div>
+    </div>
+
+</div>
 
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div id="bloque-contacto-principal">
