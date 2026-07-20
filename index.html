@@ -857,16 +857,22 @@ body::before {
     }
 
 
-    function ejecutarEnvioFinal() {
-        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
-        // VALIDACIÓN DE DIRECCIÓN ACTIVA
+        async function ejecutarEnvioFinal() {
+        const ID_PROYECTO = "kpxcpkzmquqyduadnahz";
+        const SUPABASE_KEY = "sb_publishable_XMm1hlrSBzm8iyLWM1iqCA__qBE79B3";
+
+        if (!tipoDeEnvioSeleccionadoCart) { 
+            alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); 
+            return; 
+        }
+        
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
             alert('Kérjük, adja meg a pontos szállítási címet!');
             if(inpCim) inpCim.focus();
             return;
         }
-        // VALIDACIÓN DE TELÉFONO REAL Y OBLIGATORIO
+        
         const inpTel = document.getElementById('inpTel'); 
         if (!inpTel || inpTel.value.trim() === "") { 
             alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
@@ -874,19 +880,65 @@ body::before {
             return; 
         }
 
-        // Expresión regular: Valida números reales con o sin prefijo + (mínimo 9, máximo 13 dígitos)
         const regexTelefonoReal = /^\+?[0-9]{9,13}$/;
         if (!regexTelefonoReal.test(inpTel.value.trim())) {
-            alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567 vagy 06301234567)');
+            alert('Kérjük, valós telefonszámot adjon meg! (Pl: +36301234567)');
             inpTel.focus();
             return;
         }
 
-        alert('Rendelés elküldve!\nMód: ' + (tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes') + '\nMegjegyzés: ' + document.getElementById('inpMegjegyzes').value.trim());
-        carritoItems = []; descuentoAplicado = false; document.getElementById('inpMegjegyzes').value = ""; document.getElementById('inpKupon').value = ""; document.getElementById('inpKupon').style.color = "#ffffff"; actualizarRenderCarrito(); ocultarTodasLasSecciones(); const vp = document.getElementById('vp'); if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+        const textoItemsFormateado = carritoItems.map(item => `${item.nombre} (${item.precio} Ft)`).join("\n");
+        const modoTexto = tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes átvétel';
+        const vAddress = `${modoTexto} - Cím: ${inpCim.value.trim()} - Tel: ${inpTel.value.trim()}`;
+        
+        const inpMegjegyzes = document.getElementById('inpMegjegyzes');
+        const vNotes = inpMegjegyzes ? inpMegjegyzes.value.trim() : "";
+
+        const totContenedor = document.getElementById('tp');
+        const vTotalPrice = totContenedor ? parseFloat(totContenedor.innerText.replace(/[^0-9.]/g, '')) : 0;
+
+        const urlEndpoint = `https://${ID_PROYECTO}.supabase.co/rest/v1/rpc/registrar_comanda_forzada`;
+
+        try {
+            const respuesta = await fetch(urlEndpoint, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': 'Bearer ' + SUPABASE_KEY,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'params=single-object'
+                },
+                body: JSON.stringify({
+                    p_address: vAddress,
+                    p_items: textoItemsFormateado,
+                    p_notes: vNotes,
+                    p_price: vTotalPrice
+                })
+            });
+
+            if (respuesta.ok) {
+                alert("¡Misión cumplida! Rendelés sikeresen elküldve!");
+                
+                carritoItems = []; 
+                descuentoAplicado = false; 
+                if(inpMegjegyzes) inpMegjegyzes.value = ""; 
+                const inpKupon = document.getElementById('inpKupon');
+                if(inpKupon) { inpKupon.value = ""; inpKupon.style.color = "#ffffff"; }
+                
+                actualizarRenderCarrito(); 
+                ocultarTodasLasSecciones(); 
+                
+                const vp = document.getElementById('vp'); 
+                if (vp) vp.style.setProperty('display', 'flex', 'important');
+            } else {
+                const errorTexto = await respuesta.text();
+                alert("Supabase Error: " + errorTexto);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Kritikus hálózati hiba lépett fel.");
+        }
     }
-
-
     function cargarDatosEnCarrito() { if(accessToken) { const inpNev = document.getElementById('inpNev'); if(inpNev) inpNev.value = userEmail || ''; if (tipoDeEnvioSeleccionadoCart) definirEnvioFinal(tipoDeEnvioSeleccionadoCart); } }
     function mostrarTiendaDeProductos() { ocultarTodasLasSecciones(); document.getElementById('s-tienda').style.setProperty('display', 'block', 'important'); ordenarContadorBoton(); configuring = false; configurarBotonesTienda(); }
     
@@ -907,7 +959,7 @@ body::before {
         carritoItems.forEach((item, index) => { html += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:rgba(255,255,255,0.02); padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; flex-direction:column; text-align:left;"><span style="color:#fff; font-weight:600; font-size:0.95rem;">${item.nombre}</span><span style="color:#d6af37; font-size:0.9rem; font-weight:700; margin-top:2px;">${item.precio} Ft</span></div><button class="btn-torles-item" onclick="eliminarDelCarrito(${index})">Törlés</button></div>`; suma += item.precio; });
         if(descuentoAplicado) { suma = Math.round(suma * 0.9); } cont.innerHTML = html; tot.innerText = suma;
     }
-    // FUNCIÓN DE APERTURA: Inserta los datos dinámicos y fuerza la visualización del cristal templado
+
     function abrirFotoGrande(rutaImagen, tituloProducto, descripcionProducto) {
         const modalFoto = document.getElementById('pestaModalFotoGrande');
         const imgTarget = document.getElementById('imgModalFotoDinamica');
@@ -920,7 +972,6 @@ body::before {
             descTarget.innerText = descripcionProducto;
             modalFoto.style.setProperty('display', 'flex', 'important');
         }
-
     }
 
 </script>
