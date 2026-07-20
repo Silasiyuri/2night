@@ -255,20 +255,25 @@ body::before {
     display: flex !important;
     width: max-content !important;
     gap: 0px !important;
-    /* 🕒 DURACIÓN TOTAL: 25 segundos en total (unos 4 segundos quieta y 1 de viaje) */
-    animation: sliderPasosPausaUniversal 25s ease-in-out infinite !important;
+    /* 🕒 DURACIÓN TOTAL: 25 segundos (unos 4 segundos quieta y 1 de viaje) */
+    animation: sliderPasosPausaUniversalAlto 25s ease-in-out infinite !important;
 }
 
-/* CADA IMAGEN SE ACOPLA AUTOMÁTICAMENTE AL ANCHO DEL DISPOSITIVO */
+/* CADA IMAGEN SE ACOPLA AL ANCHO Y ALTO DINÁMICO DE TU DISPOSITIVO */
 .carrusel-img {
     width: 100vw !important; /* Ocupa exactamente toda la pantalla horizontal */
-    height: 320px !important; /* Alto fijo estético (puedes subirlo a 400px si lo quieres más alto) */
-    object-fit: cover !important; /* ACOPLE INTELIGENTE: Evita que la foto se estire o se deforme */
+    
+    /* 📐 MÁS ALTA Y RESPONSIVA: Ocupa siempre el 55% de la altura física de cualquier pantalla */
+    height: 55vh !important; 
+    min-height: 300px !important; /* Altura mínima de seguridad para móviles muy pequeños */
+    max-height: 500px !important; /* Altura máxima de seguridad para monitores gigantes */
+    
+    object-fit: cover !important; /* ACOPLE INTELIGENTE: Evita que la foto se estire o pierda proporción */
     flex-shrink: 0 !important;
     cursor: pointer !important;
     padding: 0 15px !important; /* Margen interno para que no toque los bordes físicos de golpe */
     box-sizing: border-box !important;
-    border-radius: 28px !important; /* Bordes redondeados corporativos limpios */
+    border-radius: 32px !important; /* Bordes redondeados más imponentes para fotos grandes */
 }
 
 /* EL DEDO O EL CURSOR NO PAUSAN ESTA ANIMACIÓN AUTOMÁTICA */
@@ -276,8 +281,8 @@ body::before {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA ACOPLADA PARA PANTALLA COMPLETA (5 fotos originales x 100vw = -500vw al final) */
-@keyframes sliderPasosPausaUniversal {
+/* 📐 MATEMÁTICA EN PANTALLA COMPLETA (5 fotos originales x 100vw = -500vw al final) */
+@keyframes sliderPasosPausaUniversalAlto {
     /* --- FOTO 1 --- */
     0%, 15% { transform: translateX(0); }
     
@@ -290,10 +295,10 @@ body::before {
     /* Desplazamiento hacia la foto 4 (-300vw) */
     60%, 75% { transform: translateX(-300vw); }
     
-    /* Desplazamiento hacia la foto 5 (-440vw) */
-    80%, 95% { transform: translateX(-440vw); }
+    /* Desplazamiento hacia la foto 5 (-400vw) */
+    80%, 95% { transform: translateX(-400vw); }
     
-    /* Empalme perfecto instantáneo al milímetro con el clon */
+    /* Empalme perfecto instantáneo en el píxel cero con el clon */
     100% { transform: translateX(-500vw); }
 }
 
