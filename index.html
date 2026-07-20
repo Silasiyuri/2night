@@ -65,7 +65,7 @@
     animation-play-state: paused;
 }
 
-    /* 1. REGLA DEL BODY CON FONDO TOTALMENTE TRANSPARENTE SEGURO */
+   /* 1. REGLA DEL BODY CON FONDO TOTALMENTE TRANSPARENTE SEGURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
@@ -74,7 +74,7 @@ body {
     background: transparent !important; 
 }
 
-/* 2. CAPA TRASERA BASE (Sostiene la Pizza 1 fija siempre encendida detrás) */
+/* 2. CAPA TRASERA BASE (Maneja la Foto 1 con animación de salida) */
 body::before {
     content: "" !important;
     position: fixed !important;
@@ -87,13 +87,14 @@ body::before {
     background-repeat: no-repeat !important;
     display: block !important;
     z-index: -3 !important; 
-    
-    /* 🚀 ENLACE WEB REPARADO 1: Ruta directa a archivo real de Pizza artesanal */
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo.jpg') !important;
+    
+    /* 🚀 ANIMACIÓN CRÍTICA EN SIMETRÍA CON LA CAPA DELANTERA */
+    animation: cicloFondoBase 16s ease-in-out infinite !important;
 }
 
-/* 3. CAPA DELANTERA DINÁMICA (Aparece y desaparece encima con total nitidez) */
+/* 3. CAPA DELANTERA DINÁMICA (Maneja la Foto 2 con animación de entrada) */
 body::after {
     content: "" !important;
     position: fixed !important;
@@ -106,35 +107,27 @@ body::after {
     background-repeat: no-repeat !important;
     display: block !important;
     z-index: -2 !important; 
-    
-    /* 🚀 ENLACE WEB REPARADO 2: Ruta directa a archivo real de Pizza Pepperoni premium */
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo4.jpg') !important;
     
-    /* ANIMACIÓN CRÍTICA DEL INTERCAMBIO CON ZOOM 3D */
-    animation: fundidoCruzadoLuminoso 16s ease-in-out infinite !important;
+    /* 🚀 ANIMACIÓN CRÍTICA EN SIMETRÍA CON LA CAPA TRASERA */
+    animation: cicloFondoDelantero 16s ease-in-out infinite !important;
 }
 
-/* 4. FOTOGRAMAS AJUSTADOS EN ALTA LUMINOSIDAD */
-@keyframes fundidoCruzadoLuminoso {
-    /* Muestra al 100% de luz la Pizza 1 trasera en internet */
-    0%, 20% {
-        opacity: 0 !important;
-        transform: scale(1.05) !important; 
-    }
-    
-    /* Cubre por completo la pantalla mostrando la Pizza 2 en internet con máxima nitidez */
-    38%, 68% {
-        opacity: 1 !important;
-        transform: scale(1) !important; 
-    }
-    
-    /* Regresa suavemente a la primera imagen sin pasar jamás por pantallas negras */
-    88%, 100% {
-        opacity: 0 !important;
-        transform: scale(1.05) !important;
-    }
+/* 📐 4. FOTOGRAMAS CLAVE PARA LA CAPA TRASERA (Fondo 1) */
+@keyframes cicloFondoBase {
+    0%, 20%   { opacity: 1 !important; transform: scale(1.05) !important; }
+    38%, 68%  { opacity: 0 !important; transform: scale(1) !important; }
+    88%, 100% { opacity: 1 !important; transform: scale(1.05) !important; }
 }
+
+/* 📐 5. FOTOGRAMAS CLAVE PARA LA CAPA DELANTERA (Fondo 2) */
+@keyframes cicloFondoDelantero {
+    0%, 20%   { opacity: 0 !important; transform: scale(1) !important; }
+    38%, 68%  { opacity: 1 !important; transform: scale(1.05) !important; }
+    88%, 100% { opacity: 0 !important; transform: scale(1) !important; }
+}
+
 
 
 <!-- BLOQUE_02_DE_20 -->
