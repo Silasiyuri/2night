@@ -65,7 +65,7 @@
     animation-play-state: paused;
 }
 
-        /* 1. REGLA DEL BODY TOTALMENTE TRANSPARENTE SEGURO */
+       /* 1. REGLA DEL BODY TOTALMENTE TRANSPARENTE SEGURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
@@ -74,7 +74,7 @@ body {
     background: transparent !important; /* Vacía el color base para poder ver las 3 fotos detrás */
 }
 
-/* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS TRES CAPAS */
+/* 2. CONFIGURACIÓN COMÚN DE ANIMACIÓN Y PANTALLA COMPLETA */
 body::before, body::after, html::before {
     content: "" !important;
     position: fixed !important;
@@ -86,56 +86,58 @@ body::before, body::after, html::before {
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
+    
+    /* 🕒 RELOJ UNIFICADO: Las tres capas comparten la misma animación de 24 segundos */
+    animation: rotarTresFondos 24s ease-in-out infinite !important;
 }
 
-/* 🛋️ CAPA 1 (Fondo Base Trasero): Sostiene tu primera foto local 'fondo.jpg' */
+/* 🛋️ CAPA 1: Sostiene tu primera foto local 'fondo.jpg' */
 body::before {
-    z-index: -4 !important; /* Al fondo del todo */
+    z-index: -4 !important; 
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo.jpg') !important;
-    animation: zoomEternoTresFotos 30s ease-in-out infinite !important;
+    /* Arranca de inmediato */
+    animation-delay: 0s !important;
 }
 
-/* 🎭 CAPA 2 (Fondo Intermedio): Sostiene tu segunda foto local 'fondo4.jpg' */
+/* 🎭 CAPA 2: Sostiene tu segunda foto local 'fondo4.jpg' */
 body::after {
     z-index: -3 !important; 
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo4.jpg') !important;
-    animation: fundidoCapaDos 30s ease-in-out infinite !important;
+    /* 🚀 RETRASO MATEMÁTICO: Se desfasa exactamente un tercio del tiempo total (-8 segundos) */
+    animation-delay: -8s !important;
 }
 
-/* 👑 CAPA 3 (Fondo Delantero Supremo): Sostiene tu tercera foto local 'foto.jpg' */
+/* 👑 CAPA 3: Sostiene tu tercera foto local 'foto.jpg' */
 html::before {
-    z-index: -2 !important; /* Justo debajo de tus botones y textos */
+    z-index: -2 !important; 
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
-                      url('imagen/fondo.jpg') !important;
-    animation: fundidoCapaTres 30s ease-in-out infinite !important;
+                      url('imagen/foto.jpg') !important;
+    /* 🚀 RETRASO MATEMÁTICO: Se desfasa exactamente dos tercios del tiempo total (-16 segundos) */
+    animation-delay: -16s !important;
 }
 
 /* ==================================================================
-   📐 FÓRMULA MATEMÁTICA DE TRIPLE FUNDIDO CRUZADO CON ZOOM 3D SEAMLESS
+   📐 FÓRMULA MATEMÁTICA ÚNICA DE INTERCAMBIO Y ZOOM 3D CONTINUO
    ================================================================= */
-
-/* Mantén el efecto de zoom 3D respirando de forma continua en todo el ciclo */
-@keyframes zoomEternoTresFotos {
-    0%, 100% { transform: scale(1.05); }
-    50%      { transform: scale(1); }
+@keyframes rotarTresFondos {
+    /* 0% al 33.33%: La foto actual está totalmente visible y hace un zoom suave */
+    0%, 33.33% {
+        opacity: 1 !important;
+        transform: scale(1.05) !important;
+    }
+    /* 38.33% al 95%: La foto se desvanece de forma transparente para dejar ver la capa de abajo */
+    38.33%, 95% {
+        opacity: 0 !important;
+        transform: scale(1) !important;
+    }
+    /* 100%: Regresa al estado inicial para empalmar el bucle circular */
+    100% {
+        opacity: 1 !important;
+        transform: scale(1.05) !important;
+    }
 }
-
-/* Controla la aparición y desaparición de la Foto 2 (fondo4.jpg) */
-@keyframes fundidoCapaDos {
-    0%, 25%   { opacity: 0 !important; transform: scale(1); }    /* Se ve la foto 1 */
-    33%, 58%  { opacity: 1 !important; transform: scale(1.04); } /* Se enciende la foto 2 */
-    66%, 100% { opacity: 0 !important; transform: scale(1); }    /* Se apaga para dejar paso a las demás */
-}
-
-/* Controla la aparición y desaparición de la Foto 3 (foto.jpg) */
-@keyframes fundidoCapaTres {
-    0%, 58%   { opacity: 0 !important; transform: scale(1); }    /* Oculta mientras juegan la 1 y la 2 */
-    66%, 92%  { opacity: 1 !important; transform: scale(1.04); } /* Se enciende con fuerza la foto 3 */
-    100%      { opacity: 0 !important; transform: scale(1); }    /* Cierra el ciclo limpio regresando a la foto 1 */
-}
-
 
 <!-- BLOQUE_02_DE_20 -->
         header { 
