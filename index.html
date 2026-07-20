@@ -65,27 +65,16 @@
     animation-play-state: paused;
 }
 
-       /* 1. REGLA DEL BODY MANTENIENDO EL FILTRO DE PROTECCIÓN TRANSLÚCIDO */
+      /* 1. REGLA DEL BODY CON FONDO TOTALMENTE TRANSPARENTE SEGURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    /* Al vaciar el color sólido de aquí, permitimos descubrir las pizzas de atrás */
-    background: transparent !important; 
+    background: transparent !important; /* Permite descubrir el fondo real */
 }
 
-/* 2. CAPA ADICIONAL FIJA DE CONTRASTE: Mantiene los textos legibles sobre las fotos */
-body::text-protection-overlay {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: -1;
-    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
-    pointer-events: none;
-}
-
-/* 3. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS DE FOTOS */
+/* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS DE FOTOS */
 body::before, body::after {
     content: "" !important;
     position: fixed !important;
@@ -99,44 +88,46 @@ body::before, body::after {
     display: block !important;
 }
 
-/* 🛋️ 4. CAPA TRASERA BASE (Sostiene la Foto 1 fija iluminando al 100% por detrás) */
+/* 🛋️ 3. CAPA TRASERA BASE (Sostiene la Pizza 1 fija al 100% de brillo por detrás) */
 body::before {
     z-index: -3 !important; /* Detrás del todo */
-    background-image: url('fondo.jpg') !important;
+    /* 🚀 FOTO LOCAL INYECTADA: Filtro oscuro premium + tu imagen de fondo */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)), 
+                      url('imagen/fondo.jpg') !important;
 }
 
-/* 🎭 5. CAPA DELANTERA DINÁMICA (Sostiene la Foto 2 encima y se funde suavemente) */
+/* 🎭 4. CAPA DELANTERA DINÁMICA (Sostiene la Pizza 2 encima y se funde con suavidad) */
 body::after {
     z-index: -2 !important; /* Justo arriba de la capa base */
-    background-image: url('fondo4.jpg') !important;
+    /* 🚀 FOTO LOCAL INYECTADA: Filtro oscuro premium + tu segunda imagen de fondo */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)), 
+                      url('imagen/fondo4.jpg') !important;
     
     /* ANIMACIÓN CRÍTICA INTERCONECTADA CON ZOOM 3D */
     animation: fundidoCruzadoGourmet 20s ease-in-out infinite !important;
 }
 
-/* 📐 6. FOTOGRAMAS CLAVE CORREGIDOS: Prohibido caer a opacidad cero absoluta en la base */
+/* 📐 5. FOTOGRAMAS CLAVE CORREGIDOS: Prohibido caer a opacidad cero absoluta en la base */
 @keyframes fundidoCruzadoGourmet {
-    /* Al inicio del ciclo (0% al 20%), la capa delantera es invisible. 
-       Se muestra de fondo la pizza 1 (fondo.jpg) con un zoom inicial suave */
+    /* Al inicio del ciclo (0% al 20%), la capa delantera es invisible. Se muestra fondo.jpg */
     0%, 20% {
         opacity: 0 !important;
         transform: scale(1.04);
     }
     
-    /* En el medio del ciclo (40% al 70%), la capa delantera se enciende por completo. 
-       Cubre de forma limpia la foto de atrás mostrando la pizza 2 (fondo4.jpg) */
+    /* En el medio del ciclo (40% al 70%), la capa delantera se enciende cubriendo limpio a la trasera */
     40%, 70% {
         opacity: 1 !important;
         transform: scale(1); /* Desplazamiento lento del Zoom 3D */
     }
     
-    /* Al cerrar el ciclo (90% al 100%), la capa delantera se desvanece de nuevo en silencio.
-       Vuelve a descubrir la primera foto trasera para reiniciar la rueda sin saltos oscuros */
+    /* Al cerrar el ciclo (90% al 100%), la capa delantera se desvanece de nuevo en silencio */
     90%, 100% {
         opacity: 0 !important;
         transform: scale(1.04);
     }
 }
+
 
 
 <!-- BLOQUE_02_DE_20 -->
