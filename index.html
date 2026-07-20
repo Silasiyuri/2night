@@ -86,13 +86,18 @@ body::before {
     z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
     background-color: #000000 !important; /* Fondo negro base de seguridad */
     
-    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
-    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
+    /* CONTROL REMOTO POR JAVASCRIPT: Elimina el bug del fondo negro */
+    background-image: var(--fondo-dinamico) !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
+    display: block !important; 
+    
+    /* Mantiene el Zoom 3D activo sin depender de keyframes congelables */
+    transform: scale(1.03) !important;
+    transition: background-image 1.2s ease-in-out !important;
 }
+
 
 /* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
 @keyframes aparecerFotosFondo {
@@ -349,7 +354,7 @@ body::before {
                 <div class="wrapper-carrusel" style="display: flex; gap: 20px; width: max-content; animation: rotarCarruselInfinito 22s linear infinite;">
                     <!-- GRUPO ORIGINAL: 5 FOTOS CON DETALLES ADAPTADOS -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
-                    <img src="imajen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');" style="width: 300px; height: 190px; object-fit: cover; border-radius: 12px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); cursor: pointer;">
@@ -899,5 +904,35 @@ body::before {
     }
 
 </script>
+        <script>
+    (function() {
+        var fotosPizzerias = ['imagen/fondo.jpg', 'imagen/fondo4.jpg'];
+        var fotoPosicion = 0;
+        var relojFondo;
+
+        function forzarCambioFoto() {
+            document.documentElement.style.setProperty('--fondo-dinamico', "url('" + fotosPizzerias[fotoPosicion] + "')");
+            fotoPosicion = (fotoPosicion + 1) % fotosPizzerias.length;
+        }
+
+        function iniciarRelojFondo() {
+            clearInterval(relojFondo);
+            forzarCambioFoto(); // Inyecta la foto al milisegundo al regresar
+            relojFondo = setInterval(forzarCambioFoto, 10000); // Cambia cada 10 segundos
+        }
+
+        // DESPERTAFOR DE EMERGENCIA: Rompe el bloqueo de ahorro de energía del navegador
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                iniciarRelojFondo(); // Obliga al navegador a pintar la foto ya mismo
+            } else {
+                clearInterval(relojFondo);
+            }
+        });
+
+        iniciarRelojFondo();
+    })();
+</script>
+
 </body>
 </html>
