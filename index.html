@@ -256,24 +256,27 @@ body::before {
     width: max-content !important;
     gap: 0px !important;
     /* 🕒 DURACIÓN TOTAL: 25 segundos (unos 4 segundos quieta y 1 de viaje) */
-    animation: sliderPasosPausaUniversalAlto 25s ease-in-out infinite !important;
+    animation: sliderCuadradoUniversal 25s ease-in-out infinite !important;
 }
 
-/* CADA IMAGEN SE ACOPLA AL ANCHO Y ALTO DINÁMICO DE TU DISPOSITIVO */
+/* CADA IMAGEN SE ACOPLA COMO UN CUADRADO PERFECTO AL ANCHO DE TU DISPOSITIVO */
 .carrusel-img {
     width: 100vw !important; /* Ocupa exactamente toda la pantalla horizontal */
     
-    /* 📐 MÁS ALTA Y RESPONSIVA: Ocupa siempre el 55% de la altura física de cualquier pantalla */
-    height: 55vh !important; 
-    min-height: 300px !important; /* Altura mínima de seguridad para móviles muy pequeños */
-    max-height: 500px !important; /* Altura máxima de seguridad para monitores gigantes */
+    /* 📐 FORMATO CUADRADO ABSOLUTO: Fuerza la proporción 1:1 en cualquier pantalla */
+    aspect-ratio: 1 / 1 !important; 
+    height: auto !important; /* El alto se calcula solo en base al ancho para ser un cuadrado perfecto */
     
-    object-fit: cover !important; /* ACOPLE INTELIGENTE: Evita que la foto se estire o pierda proporción */
+    /* 📱 LIMITADORES DE SEGURIDAD: Evitan que el cuadrado sea gigantesco en monitores de computadora */
+    max-width: 450px !important; 
+    margin: 0 auto !important; /* Centra el bloque cuadrado de forma elegante en pantallas grandes */
+    
+    object-fit: cover !important; /* ACOPLE INTELIGENTE: Evita que la foto de la pizza se estire o aplaste */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 15px !important; /* Margen interno para que no toque los bordes físicos de golpe */
+    padding: 0 15px !important; /* Margen interno para el efecto marco */
     box-sizing: border-box !important;
-    border-radius: 32px !important; /* Bordes redondeados más imponentes para fotos grandes */
+    border-radius: 32px !important; /* Bordes redondeados corporativos limpios */
 }
 
 /* EL DEDO O EL CURSOR NO PAUSAN ESTA ANIMACIÓN AUTOMÁTICA */
@@ -282,7 +285,7 @@ body::before {
 }
 
 /* 📐 MATEMÁTICA EN PANTALLA COMPLETA (5 fotos originales x 100vw = -500vw al final) */
-@keyframes sliderPasosPausaUniversalAlto {
+@keyframes sliderCuadradoUniversal {
     /* --- FOTO 1 --- */
     0%, 15% { transform: translateX(0); }
     
@@ -301,6 +304,7 @@ body::before {
     /* Empalme perfecto instantáneo en el píxel cero con el clon */
     100% { transform: translateX(-500vw); }
 }
+
 
     </style>
 </head>
