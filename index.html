@@ -65,66 +65,76 @@
     animation-play-state: paused;
 }
 
-        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
+       /* 1. REGLA DEL BODY MANTENIENDO EL FILTRO DE PROTECCIÓN TRANSLÚCIDO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
-    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
+    /* Al vaciar el color sólido de aquí, permitimos descubrir las pizzas de atrás */
+    background: transparent !important; 
 }
 
-/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
-body::before {
+/* 2. CAPA ADICIONAL FIJA DE CONTRASTE: Mantiene los textos legibles sobre las fotos */
+body::text-protection-overlay {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: -1;
+    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
+    pointer-events: none;
+}
+
+/* 3. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS DE FOTOS */
+body::before, body::after {
     content: "" !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
-    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
-    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
-    background-color: #000000 !important; /* Fondo negro base de seguridad */
-    
-    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
-    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
+    width: 100vw !important;
+    height: 100vh !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
+    display: block !important;
 }
 
-/* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
-@keyframes aparecerFotosFondo {
-    /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
-    0% {
-        background-image: url('fondo.jpg');
-        opacity: 0;
-        transform: scale(1.06); /* Efecto zoom emergente */
-    }
-    5%, 45% {
-        opacity: 1; /* Se muestra al 100% */
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0; /* Se desvanece suavemente */
-        transform: scale(0.96);
-    }
+/* 🛋️ 4. CAPA TRASERA BASE (Sostiene la Foto 1 fija iluminando al 100% por detrás) */
+body::before {
+    z-index: -3 !important; /* Detrás del todo */
+    background-image: url('fondo.jpg') !important;
+}
 
-    /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
-    51% {
-        background-image: url('fondo4.jpg');
-        opacity: 0;
-        transform: scale(1.06);
+/* 🎭 5. CAPA DELANTERA DINÁMICA (Sostiene la Foto 2 encima y se funde suavemente) */
+body::after {
+    z-index: -2 !important; /* Justo arriba de la capa base */
+    background-image: url('fondo4.jpg') !important;
+    
+    /* ANIMACIÓN CRÍTICA INTERCONECTADA CON ZOOM 3D */
+    animation: fundidoCruzadoGourmet 20s ease-in-out infinite !important;
+}
+
+/* 📐 6. FOTOGRAMAS CLAVE CORREGIDOS: Prohibido caer a opacidad cero absoluta en la base */
+@keyframes fundidoCruzadoGourmet {
+    /* Al inicio del ciclo (0% al 20%), la capa delantera es invisible. 
+       Se muestra de fondo la pizza 1 (fondo.jpg) con un zoom inicial suave */
+    0%, 20% {
+        opacity: 0 !important;
+        transform: scale(1.04);
     }
-    56%, 95% {
-        opacity: 1;
-        transform: scale(1);
+    
+    /* En el medio del ciclo (40% al 70%), la capa delantera se enciende por completo. 
+       Cubre de forma limpia la foto de atrás mostrando la pizza 2 (fondo4.jpg) */
+    40%, 70% {
+        opacity: 1 !important;
+        transform: scale(1); /* Desplazamiento lento del Zoom 3D */
     }
-    100% {
-        opacity: 0;
-        transform: scale(0.96);
-        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
+    
+    /* Al cerrar el ciclo (90% al 100%), la capa delantera se desvanece de nuevo en silencio.
+       Vuelve a descubrir la primera foto trasera para reiniciar la rueda sin saltos oscuros */
+    90%, 100% {
+        opacity: 0 !important;
+        transform: scale(1.04);
     }
 }
 
