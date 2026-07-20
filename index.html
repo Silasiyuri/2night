@@ -223,10 +223,14 @@ body::before {
     animation: rotarCarruselInfinito 32s linear infinite !important;
 }
 
-/* FOTOS TOTALMENTE FLUIDAS: Salen exactamente 4 por pantalla en cualquier monitor o laptop */
+/* FOTOS TOTALMENTE FLUIDAS Y CUADRADAS */
 .carrusel-img {
     width: 25vw !important; /* Cada foto mide exactamente un cuarto de la pantalla */
-    height: 200px !important;
+    
+    /* 📐 RELACIÓN DE ASPECTO 1:1 REPARADA PARA FORMATO CUADRADO */
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important; /* Permite que el ancho controle la simetría del cubo */
+    
     object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
@@ -240,7 +244,6 @@ body::before {
     animation-play-state: running !important;
 }
 
-
 /* 📐 MATEMÁTICA EXACTA ANTI-SALTOS: Desplaza exactamente las 5 primeras fotos originales (5 x 25vw = -125vw) */
 @keyframes rotarCarruselInfinito {
     0% {
@@ -251,17 +254,16 @@ body::before {
     }
 }
 
-/* 📱 ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (Fuerza a que salgan exactamente 2 fotos por pantalla) */
+/* 📱 ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (Fuerza a que salgan exactamente 2 fotos cuadradas perfectas por pantalla) */
 @media (max-width: 768px) {
     .carrusel-img {
-        width: 50vw !important; /* Cada foto mide la mitad de la pantalla del celular */
+        width: 50vw !important; /* Cada foto mide la mitad de la pantalla del celular de ancho y alto */
     }
     @keyframes rotarCarruselInfinito {
         0% { transform: translateX(0); }
         100% { transform: translateX(-250vw); } /* Ajuste matemático móvil: 5 fotos originales x 50vw = -250vw */
     }
 }
-
 
     </style>
 </head>
