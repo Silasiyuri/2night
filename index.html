@@ -49,55 +49,50 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-/* 1. Resetear la configuración del navegador para evitar bordes blancos */
-html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    overflow-x: hidden; /* Crucial para evitar la barra de desplazamiento abajo */
-}
-
-/* 2. El contenedor se divorcia de sus padres y se pega a los bordes de la pantalla */
-.contenedor-carrusel {
-    position: absolute; /* Cambiado a absoluto para romper cualquier caja contenedora */
-    left: 0 !important;
-    right: 0 !important;
-    width: 100vw !important; /* Mide exactamente el 100% del monitor */
-    overflow: hidden;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* 3. Tira horizontal donde se mueven las fotos */
-.wrapper-carrusel {
-    display: flex !important;
-    width: max-content !important; /* Permite que la fila de imágenes crezca al infinito */
-    animation: carruselInfinito 25s linear infinite;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* 4. Ajuste estricto de las imágenes en bloque */
-.carrusel-img {
-    height: 350px; /* Modifica la altura a tu gusto */
-    width: auto;
-    object-fit: cover;
-    cursor: pointer;
-    display: block !important; /* Elimina el comportamiento de texto que deja huecos */
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-}
-
-/* 5. Animación continua para el grupo duplicado */
-@keyframes carruselInfinito {
-    0% {
-        transform: translateX(0);
+ /* ==========================================================================
+       ESTILOS DEL CARRUSEL SEAMLESS (ESQUINA A ESQUINA)
+       ========================================================================== */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        overflow-x: hidden; /* Evita que aparezca una barra de desplazamiento horizontal abajo */
     }
-    100% {
-        transform: translateX(-50%); /* Empalme matemático invisible a la mitad */
+
+    .contenedor-carrusel {
+        position: absolute; /* Rompe y anula cualquier caja contenedora superior o márgenes heredados */
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important; /* Forza al bloque a medir el 100% exacto del monitor */
+        overflow: hidden;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: #000;
     }
-}
+
+    .wrapper-carrusel {
+        display: flex !important;
+        width: max-content !important; /* Deja que la tira horizontal de fotos crezca sin límites */
+        animation: carruselInfinito 32s linear infinite; /* Animación continua y fluida de fondo */
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .carrusel-img {
+        height: 450px; /* ¡Fotos más grandes! */
+        width: auto;
+        object-fit: cover;
+        cursor: pointer;
+        display: block !important; /* Neutraliza el espaciado fantasma que el navegador aplica al texto inline */
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+
+    @keyframes carruselInfinito {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); } /* Salto invisible al centro exacto del empalme matemático */
+    }
 
 
 /* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
