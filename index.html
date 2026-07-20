@@ -237,53 +237,81 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE ANCHO */
+/* CONTENEDOR SUPREMO: Aplica un difuminado en los bordes para máxima elegancia */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 20px 0 !important;
+    padding: 35px 0 !important; /* Más espacio para lucir el resplandor */
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: transparent !important;
     box-sizing: border-box !important;
+    
+    /* 🌟 MÁSCARA GOURMET: Hace que las fotos aparezcan y desaparezcan suavemente en los bordes */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%) !important;
+    mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%) !important;
 }
 
-/* TIRA HORIZONTAL EN LÍNEA DIRECTA FLUIDA */
+/* TIRA HORIZONTAL SIN SEPARACIONES BRUSCAS */
 .wrapper-carrusel {
     display: flex !important;
-    width: max-content !important;
+    width: 1100% !important; /* 11 fotos en total exactas */
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    /* Transición suave de 0.8 segundos para el viaje entre fotos */
-    transition: transform 0.8s ease-in-out !important; 
+    /* 🕒 VELOCIDAD SIN PRISAS: 45 segundos para que la transición sea un deleite visual */
+    animation: sliderGourmetEterno 45s ease-in-out infinite !important;
 }
 
-/* CADA FOTO SE ADAPTA AL 100% DE LA PANTALLA EN FORMATO CUADRADO PERFECTO */
+/* CADA IMAGEN ACTÚA COMO UNA DIAPOSITIVA PREMIUM CUADRADA */
 .carrusel-img {
-    width: 100vw !important; /* Fuerza a que se vea estrictamente una sola foto a la vez */
-    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO ABSOLUTO 1:1 */
+    width: 9.090909% !important; /* 100% dividido entre 11 fotos */
+    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
     height: auto !important;
     
-    /* LIMITADORES DE SEGURIDAD: Evitan que el cuadrado sea gigante en monitores de PC */
-    max-width: 440px !important;
-    max-height: 440px !important;
-    margin: 0 auto !important; /* Centra el bloque de forma elegante en pantallas grandes */
+    /* LIMITADORES DE SEGURIDAD PARA PANTALLAS GRANDES */
+    max-width: 420px !important;
+    max-height: 420px !important;
+    margin: 0 auto !important; 
     
-    object-fit: cover !important; /* Evita que la pizza se estire o pierda su proporción */
+    object-fit: cover !important; /* Evita cualquier deformación en la pizza */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 15px !important; /* Separación simétrica interna tipo marco */
+    padding: 0 20px !important; /* Distancia elegante tipo marco de cuadro */
     box-sizing: border-box !important;
-    border-radius: 36px !important; /* Bordes redondeados corporativos limpios */
-    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
+    border-radius: 40px !important; /* Esquinas redondeadas suaves y modernas */
+    
+    /* 👑 ILUMINACIÓN GOURMET: Sombra profunda acentuada con un sutil halo dorado */
+    box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.95), 0 0 25px rgba(214, 175, 55, 0.2) !important;
+    filter: brightness(0.95) contrast(1.02);
 }
 
-/* EL DEDO O EL CURSOR YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
+/* EL DEDO O EL CURSOR NO INTERRUMPEN EL FLUJO DEL RESTAURANTE */
 .wrapper-carrusel:hover {
     animation-play-state: running !important;
+}
+
+/* 📐 MATEMÁTICA LENTA CON PARADAS SUAVES (Un tin quieta y avanza con elegancia) */
+@keyframes sliderGourmetEterno {
+    /* --- BLOQUE 1 --- */
+    0%, 7%     { transform: translateX(0); }
+    9%, 16%    { transform: translateX(-9.090909%); }
+    18%, 25%   { transform: translateX(-18.181818%); }
+    27%, 34%   { transform: translateX(-27.272727%); }
+    36%, 43%   { transform: translateX(-36.363636%); }
+    
+    /* --- BLOQUE 2 --- */
+    45%, 52%   { transform: translateX(-45.454545%); }
+    54%, 61%   { transform: translateX(-54.545454%); }
+    63%, 70%   { transform: translateX(-63.636363%); }
+    72%, 79%   { transform: translateX(-72.727272%); }
+    81%, 88%   { transform: translateX(-81.818181%); }
+    
+    /* --- EMPALME CIRCULAR INFINITO SIN CORTES (Conecta la foto 11 con el inicio) --- */
+    90%, 99.9% { transform: translateX(-90.909091%); }
+    100%       { transform: translateX(0); }
 }
 
     </style>
@@ -390,28 +418,39 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <div class="contenedor-carrusel">
-                <div id="carruselEternoConPausa" class="wrapper-carrusel">
-                    <!-- ÚNICAMENTE TUS 5 IMÁGENES ORIGINALES EXCLUSIVAS -->
+                <div class="wrapper-carrusel">
+                    <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                    
+                    <!-- BLOQUE 2: GRUPO CLONADO (5 FOTOS CONFIGURADAS) -->
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/M.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/M.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+
+                    <!-- FOTO 11: ENGANCHE DE ARRANQUE INFINITO SIN CORTES -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                 </div>
             </div>
 
-            <!-- DATOS DE CONTACTO FIJOS SÓLO EN PORTADA -->
-            <div class="bloque-contacto-portada" style="margin-top: 40px; padding: 20px; background: rgba(17,17,17,0.6); border-radius: 12px; border: 1px solid rgba(255,255,255,0.02); max-width: 400px; width: 90%;">
-                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">📍 Címünk</p>
-                <p style="color: #ffffff; margin-bottom: 20px; font-size: 0.95rem;">Budapest, Kőfaragó u. 15, 1085</p>
+            <!-- TARJETA DE CONTACTO ESTILIZADA CON CRISTAL TRANSLÚCIDO (SÓLO PORTADA) -->
+            <div class="bloque-contacto-portada" style="margin-top: 40px; padding: 25px; background: rgba(15, 15, 15, 0.65) !important; backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important; border-radius: 16px; border: 1px solid rgba(214, 175, 55, 0.15); max-width: 420px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">📍 Címünk</p>
+                <p style="color: #f1f5f9; margin-bottom: 22px; font-size: 0.95rem; font-weight: 500;">Budapest, Kőfaragó u. 15, 1085</p>
 
-                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">📞 Telefon</p>
-                <p style="color: #ffffff; margin-bottom: 20px; font-size: 0.95rem;">(06 1) 781 0538</p>
+                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">📞 Telefon</p>
+                <p style="color: #f1f5f9; margin-bottom: 22px; font-size: 0.95rem; font-weight: 500;">(06 1) 781 0538</p>
 
-                <p style="color: #d6af37; font-weight: bold; margin-bottom: 4px;">🕒 Nyitvatartás</p>
-                <p style="color: #ffffff; margin-bottom: 0px; font-size: 0.95rem;">Hétfő - Szombat: 12:00 - 21:00</p>
+                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">🕒 Nyitvatartás</p>
+                <p style="color: #f1f5f9; margin-bottom: 0px; font-size: 0.95rem; font-weight: 500;">Hétfő - Szombat: 12:00 - 21:00</p>
             </div>
         </div>
+
 
 <!-- BLOQUE_12_DE_20 -->
        <div id="s-tienda" class="sc" style="display:none; max-width: 100%; margin: 20px 0; width: 100% !important;">
