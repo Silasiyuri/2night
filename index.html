@@ -89,10 +89,54 @@
         border: none !important;
     }
 
-    @keyframes carruselInfinito {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-50%); } /* Salto invisible al centro exacto del empalme matemático */
-    }
+    /* ==========================================================================
+   ANIMACIÓN FLUIDA CON MICRO-PAUSAS (Empalme Matemático Perfecto)
+   Cada foto se desplaza un 10% exacto y se congela durante un 3% del tiempo total
+   ========================================================================== */
+@keyframes carruselInfinito {
+    /* --- FOTO 1 --- */
+    0%   { transform: translateX(0); }
+    3%   { transform: translateX(0); } /* Pausa en la Foto 1 */
+
+    /* --- FOTO 2 --- */
+    17%  { transform: translateX(-10%); }
+    20%  { transform: translateX(-10%); } /* Pausa en la Foto 2 */
+
+    /* --- FOTO 3 --- */
+    37%  { transform: translateX(-20%); }
+    40%  { transform: translateX(-20%); } /* Pausa en la Foto 3 */
+
+    /* --- FOTO 4 --- */
+    57%  { transform: translateX(-30%); }
+    60%  { transform: translateX(-30%); } /* Pausa en la Foto 4 */
+
+    /* --- FOTO 5 --- */
+    77%  { transform: translateX(-40%); }
+    80%  { transform: translateX(-40%); } /* Pausa en la Foto 5 */
+
+    /* --- EMPALME INVISIBLE --- */
+    97%  { transform: translateX(-50%); }
+    100% { transform: translateX(-50%); } /* Llega al final exacto del duplicado sin saltos */
+}
+
+/* 
+   IMPORTANTE: Para que la aceleración y desaceleración al pausarse sea natural, 
+   asegúrate de que tu clase `.wrapper-carrusel` tenga el efecto de suavizado 
+   "ease-in-out" en lugar de "linear":
+*/
+.wrapper-carrusel {
+    display: flex !important;
+    width: max-content !important;
+    animation: carruselInfinito 30s ease-in-out infinite; /* ¡Usa ease-in-out para evitar golpes visuales! */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
+.wrapper-carrusel:hover {
+    animation-play-state: paused;
+}
+
 
 
 /* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
@@ -381,7 +425,7 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <!--  Evita que el carrusel absoluto pise o tape los elementos inferiores de la web. -->
-<div style="position: relative; width: 80%; height: 200px; margin: 0; padding: 0;">
+<div style="position: relative; width: 100%; height: 200px; margin: 0; padding: 0;">
     
     <!-- CONTENEDOR SEAMLESS DE ESQUINA A ESQUINA -->
     <div class="contenedor-carrusel">
