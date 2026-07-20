@@ -237,76 +237,50 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA SIN MÁRGENES DE LA PLANTILLA */
+/* CONTENEDOR DE ESQUINA A ESQUINA REAL */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 30px 0 !important; /* Espacio para el resplandor dorado */
+    padding: 30px 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: transparent !important;
     box-sizing: border-box !important;
 }
 
-/* TIRA DE IMÁGENES ALINEADA EN LÍNEA DIRECTA CON ANCHO MULTIPLICADO */
+/* TIRA INTERNA EN LÍNEA DIRECTA CON TRANSICIÓN SUAVE CONTROLADA */
 .wrapper-carrusel {
     display: flex !important;
-    width: 1100% !important; /* 11 fotos en total */
+    width: max-content !important;
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    /* 🕒 MOVIMIENTO ETERNO: 40 segundos en total para un ciclo suave y pausado */
-    animation: sliderEterno2Bloques 40s ease-in-out infinite !important;
+    /* Transición de 0.6 segundos para el cambio fluido de una en una */
+    transition: transform 0.6s ease-in-out !important; 
 }
 
-/* FOTOS CUADRADAS DE ALTA NITIDEZ */
+/* FOTOS CUADRADAS RESPONSIVAS */
 .carrusel-img {
-    width: 9.090909% !important; /* 100% dividido entre 11 fotos */
-    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
+    width: 100vw !important; /* Ocupa la pantalla completa */
+    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO */
     height: auto !important;
-    
-    /* LIMITADORES DE SEGURIDAD PARA MONITORES GRANDES */
     max-width: 440px !important; 
     max-height: 440px !important; 
-    
-    object-fit: cover !important; /* Centra la pizza de forma inteligente */
-    object-position: center center !important;
+    margin: 0 auto !important; 
+    object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 20px !important; /* Separación simétrica de marco */
+    padding: 0 15px !important; 
     box-sizing: border-box !important;
-    border-radius: 36px !important; /* Esquinas redondeadas premium */
-    
-    /* ILUMINACIÓN CORPORATIVA */
+    border-radius: 36px !important; 
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
-    filter: brightness(0.95) contrast(1.05);
 }
 
-/* EL CURSOR O EL DEDO EN LA PANTALLA YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
+/* EL CURSOR O EL DEDO YA NO AFECTAN AL GIRO INTERMINABLE */
 .wrapper-carrusel:hover {
     animation-play-state: running !important;
-}
-
-/* 📐 FÓRMULA MATEMÁTICA IMPARABLE: Avanza siempre hacia adelante en pasos exactos de 9.0909% */
-@keyframes sliderEterno2Bloques {
-    /* --- BLOQUE 1 (Fotos 1 a 5) --- */
-    0%, 7%   { transform: translateX(0); }
-    9%, 16%  { transform: translateX(-9.090909%); }
-    18%, 25% { transform: translateX(-18.181818%); }
-    27%, 34% { transform: translateX(-27.272727%); }
-    36%, 43% { transform: translateX(-36.363636%); }
-    
-    /* --- BLOQUE 2 (Fotos 6 a 10) --- */
-    45%, 52% { transform: translateX(-45.454545%); }
-    54%, 61% { transform: translateX(-54.545454%); }
-    63%, 70% { transform: translateX(-63.636363%); }
-    72%, 79% { transform: translateX(-72.727272%); }
-    81%, 88% { transform: translateX(-81.818181%); }
-    
-    /* --- ENGANCHE SIN FIN: Muestra el Clon (Foto 11) y el motor infinite de CSS lo reinicia a cero sin cortes --- */
-    90%, 100% { transform: translateX(-90.909091%); }
 }
 
     </style>
@@ -413,23 +387,13 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <div class="contenedor-carrusel">
-                <div class="wrapper-carrusel">
-                    <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
-                    
-                    <!-- BLOQUE 2: GRUPO CLONADO (5 FOTOS CONFIGURADAS) -->
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot và minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
-
-                    <!-- 🚀 FOTO 11: REPETIMOS LA FOTO 1 PARA QUE EL REINICIO SEA INFINITO, INTERMINABLE Y 100% FLUIDO -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                <div id="carruselEterno2Night" class="wrapper-carrusel">
+                    <!-- ÚNICAMENTE LAS 5 IMÁGENES ORIGINALES SIN DUPLICAR NADA -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                 </div>
             </div>
         </div>
@@ -998,6 +962,48 @@ body::before {
         });
 
         iniciarRelojFondo();
+    })();
+</script>
+<!-- SCRIPT DE ROTACIÓN FÍSICA DE IMÁGENES CONTINUA E INFINITA -->
+<script>
+    (function() {
+        var relojEternoMecanico;
+        // 🕒 VELOCIDAD DEL TIMER: 4500 milisegundos = 4.5 segundos quieta mostrando la pizza
+        var tiempoDeEsperaTin = 4500; 
+
+        function forzarGiroInfinito() {
+            var tiraHorizontal = document.getElementById('carruselEterno2Night');
+            if (!tiraHorizontal) return;
+
+            // 1. Movemos la tira el ancho de una pantalla de una en una hacia la izquierda
+            tiraHorizontal.style.transition = "transform 0.6s ease-in-out";
+            tiraHorizontal.style.transform = "translateX(-100vw)";
+
+            // 2. Esperamos a que la foto termine de viajar (0.6 segundos = 600 milisegundos)
+            setTimeout(function() {
+                var primeraFotoVista = tiraHorizontal.firstElementChild;
+                
+                // Apagamos la animación por un milisegundo para reacomodar el orden en secreto
+                tiraHorizontal.style.transition = "none";
+                tiraHorizontal.style.transform = "translateX(0)";
+                
+                // Pasamos la primera imagen al final de la fila. El bucle nunca se terminará
+                tiraHorizontal.appendChild(primeraFotoVista);
+            }, 600);
+        }
+
+        function activarBucleInterminable() {
+            clearInterval(relojEternoMecanico);
+            relojEternoMecanico = setInterval(forzarGiroInfinito, tiempoDeEsperaTin);
+        }
+
+        // CONTROL ANTI-SUSPENSIÓN: Fuerza la reactivación si el usuario minimiza el navegador o apaga la pantalla
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) { activarBucleInterminable(); } 
+            else { clearInterval(relojEternoMecanico); }
+        });
+
+        activarBucleInterminable();
     })();
 </script>
 
