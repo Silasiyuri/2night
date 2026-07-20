@@ -109,6 +109,16 @@ body::before, body::after {
     opacity: 1 !important; /* VISIBILIDAD ABSOLUTA: Prohibido caer a cero */
 }
 
+
+
+        /* 🎭 CAPA DELANTERA DINÁMICA (Aparece y desaparece encima con suavidad) */
+body::after {
+    z-index: -2 !important; /* Se coloca justo encima de la capa base */
+    background-image: url('imagen/fondo4.jpg') !important;
+    
+    /* ANIMACIÓN EXCLUSIVA DE TRANSICIÓN CONTINUA */
+    animation: fundidoCruzadoEterno 16s ease-in-out infinite !important;
+}
 /* 🛋️ CAPA BASE TRASERA (Sostiene la Foto 1 fija eternamente detrás) */
 body::before {
     z-index: -3 !important; /* Se coloca al fondo del todo */
@@ -539,7 +549,7 @@ body::after {
             <div style="margin: 1.5rem 0 1rem 0; text-align: left;">
                 <label style="display:block; margin-bottom:8px; color:#fff; font-weight:700;">Átvétel módja (Kötelező):</label>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <button type="button" id="btnModoDelivery" onclick="definirEnvioFinal('delivery')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Délibáb (Szállítás)</button>
+                    <button type="button" id="btnModoDelivery" onclick="definirEnvioFinal('delivery')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Delivery (Szállítás)</button>
                     <button type="button" id="btnModoPickup" onclick="definirEnvioFinal('szemelyes')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Személyes átvétel</button>
                 </div>
             </div>
@@ -830,7 +840,7 @@ body::after {
         document.querySelectorAll('.btn-nyito-extras-basilico').forEach(btn => {
             btn.innerText = "+"; 
             if (modoSoloVer) { 
-                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); }; 
+                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivery vagy Személyes átvétel opciót a főoldalon.'); }; 
             } else { 
                 btn.onclick = function(e) { e.preventDefault(); const name = this.getAttribute('data-name'); const price = this.getAttribute('data-price'); inicializarVentanaExtras(name, price); }; 
             }
