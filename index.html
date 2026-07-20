@@ -89,41 +89,14 @@
         border: none !important;
     }
 
-    /* ==========================================================================
-   ANIMACIÓN FLUIDA CON MICRO-PAUSAS (Empalme Matemático Perfecto)
-   Cada foto se desplaza un 10% exacto y se congela durante un 3% del tiempo total
-   ========================================================================== */
-@keyframes carruselInfinito {
-    /* --- FOTO 1 --- */
-    0%   { transform: translateX(0); }
-    3%   { transform: translateX(0); } /* Pausa en la Foto 1 */
-
-    /* --- FOTO 2 --- */
-    17%  { transform: translateX(-10%); }
-    20%  { transform: translateX(-10%); } /* Pausa en la Foto 2 */
-
-    /* --- FOTO 3 --- */
-    37%  { transform: translateX(-20%); }
-    40%  { transform: translateX(-20%); } /* Pausa en la Foto 3 */
-
-    /* --- FOTO 4 --- */
-    57%  { transform: translateX(-30%); }
-    60%  { transform: translateX(-30%); } /* Pausa en la Foto 4 */
-
-    /* --- FOTO 5 --- */
-    77%  { transform: translateX(-40%); }
-    80%  { transform: translateX(-40%); } /* Pausa en la Foto 5 */
-
-    /* --- EMPALME INVISIBLE --- */
-    97%  { transform: translateX(-50%); }
-    100% { transform: translateX(-50%); } /* Llega al final exacto del duplicado sin saltos */
+    @keyframes carruselInfinito {
+    0% { 
+        transform: translateX(0); 
+    }
+    100% { 
+        transform: translateX(-50%); 
+    }
 }
-
-/* 
-   IMPORTANTE: Para que la aceleración y desaceleración al pausarse sea natural, 
-   asegúrate de que tu clase `.wrapper-carrusel` tenga el efecto de suavizado 
-   "ease-in-out" en lugar de "linear":
-*/
 .wrapper-carrusel {
     display: flex !important;
     width: max-content !important;
@@ -132,17 +105,6 @@
     margin: 0 !important;
 }
 
-/* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
-.wrapper-carrusel:hover {
-    animation-play-state: paused;
-}
-
-
-
-/* Detiene la rotación suavemente si el usuario posiciona el cursor encima */
-.wrapper-carrusel:hover {
-    animation-play-state: paused;
-}
 
         /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
