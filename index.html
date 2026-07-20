@@ -65,16 +65,16 @@
     animation-play-state: paused;
 }
 
-       /* 1. REGLA DEL BODY TOTALMENTE TRANSPARENTE SEGURO */
+       /* 1. REGLA DEL BODY CON FONDO TOTALMENTE TRANSPARENTE SEGURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    background: transparent !important; /* Vacía el color base para poder ver las 3 fotos detrás */
+    background: transparent !important; /* Permite descubrir los fondos reales traseros */
 }
 
-/* 2. CONFIGURACIÓN COMÚN DE ANIMACIÓN Y PANTALLA COMPLETA */
+/* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS TRES CAPAS */
 body::before, body::after, html::before {
     content: "" !important;
     position: fixed !important;
@@ -86,58 +86,53 @@ body::before, body::after, html::before {
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
-    
-    /* 🕒 RELOJ UNIFICADO: Las tres capas comparten la misma animación de 24 segundos */
-    animation: rotarTresFondos 24s ease-in-out infinite !important;
+    /* 📐 ZOOM 3D INTEGRADO DE FORMA FIJA: Evita colapsos de la tarjeta gráfica */
+    transform: scale(1.04) !important;
 }
 
-/* 🛋️ CAPA 1: Sostiene tu primera foto local 'fondo.jpg' */
+/* 🛋️ 3. CAPA TRASERA BASE (Sostiene la Foto 1 FIJA e iluminada al 100% todo el tiempo) */
 body::before {
-    z-index: -4 !important; 
+    z-index: -4 !important; /* Detrás de absolutamente todo */
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo.jpg') !important;
-    /* Arranca de inmediato */
-    animation-delay: 0s !important;
+    /* Al estar fija al 100% de opacidad sin animación, garantiza que la pantalla NUNCA se ponga negra */
 }
 
-/* 🎭 CAPA 2: Sostiene tu segunda foto local 'fondo4.jpg' */
+/* 🎭 4. CAPA INTERMEDIA DINÁMICA (Sostiene la Foto 2 y aparece en el segundo tercio) */
 body::after {
     z-index: -3 !important; 
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/fondo4.jpg') !important;
-    /* 🚀 RETRASO MATEMÁTICO: Se desfasa exactamente un tercio del tiempo total (-8 segundos) */
-    animation-delay: -8s !important;
+    /* 🕒 Duración total del ciclo unificado: 24 segundos en bucle perpetuo */
+    animation: cicloFondoDos 24s ease-in-out infinite !important;
 }
 
-/* 👑 CAPA 3: Sostiene tu tercera foto local 'foto.jpg' */
+/* 👑 5. CAPA DELANTERA SUPREMA (Sostiene la Foto 3 y aparece en el tercer tercio) */
 html::before {
-    z-index: -2 !important; 
+    z-index: -2 !important; /* Justo debajo de tus tarjetas de texto */
     background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
                       url('imagen/foto.jpg') !important;
-    /* 🚀 RETRASO MATEMÁTICO: Se desfasa exactamente dos tercios del tiempo total (-16 segundos) */
-    animation-delay: -16s !important;
+    animation: cicloFondoTres 24s ease-in-out infinite !important;
 }
 
 /* ==================================================================
-   📐 FÓRMULA MATEMÁTICA ÚNICA DE INTERCAMBIO Y ZOOM 3D CONTINUO
+   📐 LÍNEA DE TIEMPO DIVIDIDA EN 3 TRAMOS PROPORCIONALES SIN RETARDOS
    ================================================================= */
-@keyframes rotarTresFondos {
-    /* 0% al 33.33%: La foto actual está totalmente visible y hace un zoom suave */
-    0%, 33.33% {
-        opacity: 1 !important;
-        transform: scale(1.05) !important;
-    }
-    /* 38.33% al 95%: La foto se desvanece de forma transparente para dejar ver la capa de abajo */
-    38.33%, 95% {
-        opacity: 0 !important;
-        transform: scale(1) !important;
-    }
-    /* 100%: Regresa al estado inicial para empalmar el bucle circular */
-    100% {
-        opacity: 1 !important;
-        transform: scale(1.05) !important;
-    }
+
+/* 📸 ANIMACIÓN FOTO 2 (fondo4.jpg): Se enciende del 33% al 66% del tiempo */
+@keyframes cicloFondoDos {
+    0%, 28%   { opacity: 0 !important; } /* Invisible mientras se muestra la Foto 1 */
+    33%, 61%  { opacity: 1 !important; } /* Se enciende y se mantiene nítida en pantalla */
+    66%, 100% { opacity: 0 !important; } /* Se apaga para dejar pasar a la Foto 3 */
 }
+
+/* 📸 ANIMACIÓN FOTO 3 (foto.jpg): Se enciende del 66% al 100% del tiempo */
+@keyframes cicloFondoTres {
+    0%, 61%   { opacity: 0 !important; } /* Invisible mientras juegan la Foto 1 y la Foto 2 */
+    66%, 95%  { opacity: 1 !important; } /* Se enciende y se mantiene nítida en pantalla */
+    100%      { opacity: 0 !important; } /* Se apaga para cerrar el ciclo limpio y regresar a la Foto 1 */
+}
+
 
 <!-- BLOQUE_02_DE_20 -->
         header { 
@@ -445,6 +440,7 @@ html::before {
 
             </div>
         </div>
+         </div>
 
 <!-- BLOQUE_11_DE_20 -->
         <!-- PANEL DE AUTENTICACIÓN PREMIUM Y ELEGANTE -->
