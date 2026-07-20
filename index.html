@@ -243,7 +243,7 @@ body::before {
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 30px 0 !important; /* Espacio para el resplandor de la foto */
+    padding: 30px 0 !important; /* Espacio para el resplandor dorado */
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: transparent !important;
@@ -253,17 +253,17 @@ body::before {
 /* TIRA DE IMÁGENES ALINEADA EN LÍNEA DIRECTA CON ANCHO MULTIPLICADO */
 .wrapper-carrusel {
     display: flex !important;
-    width: 1100% !important; /* Forzado estricto para las 11 fotos totales */
+    width: 1100% !important; /* 11 fotos en total */
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    /* 🕒 DURACIÓN DEL CICLO INFINITO: 45 segundos para que vaya lento y elegante */
-    animation: slider2BloquesInfinitoReal 45s ease-in-out infinite !important;
+    /* 🕒 MOVIMIENTO ETERNO: 40 segundos en total para un ciclo suave y pausado */
+    animation: sliderEterno2Bloques 40s ease-in-out infinite !important;
 }
 
-/* FOTOS CUADRADAS DE MÁXIMA CALIDAD VISUAL */
+/* FOTOS CUADRADAS DE ALTA NITIDEZ */
 .carrusel-img {
-    width: 9.090909% !important; /* 100% dividido entre 11 fotos exactas */
+    width: 9.090909% !important; /* 100% dividido entre 11 fotos */
     aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
     height: auto !important;
     
@@ -275,41 +275,39 @@ body::before {
     object-position: center center !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 20px !important; /* Marco de separación estética */
+    padding: 0 20px !important; /* Separación simétrica de marco */
     box-sizing: border-box !important;
     border-radius: 36px !important; /* Esquinas redondeadas premium */
     
-    /* ILUMINACIÓN DORADA: Hace que la pizza se vea con máxima nitidez */
+    /* ILUMINACIÓN CORPORATIVA */
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
     filter: brightness(0.95) contrast(1.05);
 }
 
-/* EL DEDO O EL CURSOR YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
+/* EL CURSOR O EL DEDO EN LA PANTALLA YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
 .wrapper-carrusel:hover {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA PURA AL MILÍMETRO SIN SALTOS NI CORTES AL FINAL */
-@keyframes slider2BloquesInfinitoReal {
+/* 📐 FÓRMULA MATEMÁTICA IMPARABLE: Avanza siempre hacia adelante en pasos exactos de 9.0909% */
+@keyframes sliderEterno2Bloques {
     /* --- BLOQUE 1 (Fotos 1 a 5) --- */
-    0%, 7%     { transform: translateX(0); }
-    9%, 16%    { transform: translateX(-9.090909%); }
-    18%, 25%   { transform: translateX(-18.181818%); }
-    27%, 34%   { transform: translateX(-27.272727%); }
-    36%, 43%   { transform: translateX(-36.363636%); }
+    0%, 7%   { transform: translateX(0); }
+    9%, 16%  { transform: translateX(-9.090909%); }
+    18%, 25% { transform: translateX(-18.181818%); }
+    27%, 34% { transform: translateX(-27.272727%); }
+    36%, 43% { transform: translateX(-36.363636%); }
     
     /* --- BLOQUE 2 (Fotos 6 a 10) --- */
-    45%, 52%   { transform: translateX(-45.454545%); }
-    54%, 61%   { transform: translateX(-54.545454%); }
-    63%, 70%   { transform: translateX(-63.636363%); }
-    72%, 79%   { transform: translateX(-72.727272%); }
-    81%, 88%   { transform: translateX(-81.818181%); }
+    45%, 52% { transform: translateX(-45.454545%); }
+    54%, 61% { transform: translateX(-54.545454%); }
+    63%, 70% { transform: translateX(-63.636363%); }
+    72%, 79% { transform: translateX(-72.727272%); }
+    81%, 88% { transform: translateX(-81.818181%); }
     
-    /* --- ENGANCHE INVISIBLE: Avanza al Clon (Foto 11) y enlaza con el fotograma inicial en el acto --- */
-    90%, 99.9% { transform: translateX(-90.909091%); }
-    100%       { transform: translateX(0); }
+    /* --- ENGANCHE SIN FIN: Muestra el Clon (Foto 11) y el motor infinite de CSS lo reinicia a cero sin cortes --- */
+    90%, 100% { transform: translateX(-90.909091%); }
 }
-
 
     </style>
 </head>
@@ -414,7 +412,7 @@ body::before {
             
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
-          <div class="contenedor-carrusel">
+            <div class="contenedor-carrusel">
                 <div class="wrapper-carrusel">
                     <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
@@ -426,15 +424,16 @@ body::before {
                     <!-- BLOQUE 2: GRUPO CLONADO (5 FOTOS CONFIGURADAS) -->
                     <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot và minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
                     <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
                     <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
 
-                    <!-- FOTO 11 FINAL: LA COPIA EXACTA DE LA FOTO 1 PARA EL CIERRE INFINITO SIN CORTES -->
+                    <!-- 🚀 FOTO 11: REPETIMOS LA FOTO 1 PARA QUE EL REINICIO SEA INFINITO, INTERMINABLE Y 100% FLUIDO -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                 </div>
             </div>
         </div>
+
 
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
