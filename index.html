@@ -243,7 +243,7 @@ body::before {
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 30px 0 !important; /* Más espacio arriba y abajo para el resplandor */
+    padding: 30px 0 !important; /* Espacio para el resplandor de la foto */
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: transparent !important;
@@ -253,85 +253,63 @@ body::before {
 /* TIRA DE IMÁGENES ALINEADA EN LÍNEA DIRECTA CON ANCHO MULTIPLICADO */
 .wrapper-carrusel {
     display: flex !important;
-    width: 1100% !important; /* 11 fotos en total */
+    width: 1100% !important; /* Forzado estricto para las 11 fotos totales */
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    animation: slider2BloquesFocoFoto 40s ease-in-out infinite !important;
+    /* 🕒 DURACIÓN DEL CICLO INFINITO: 45 segundos para que vaya lento y elegante */
+    animation: slider2BloquesInfinitoReal 45s ease-in-out infinite !important;
 }
 
 /* FOTOS CUADRADAS DE MÁXIMA CALIDAD VISUAL */
 .carrusel-img {
-    width: 9.090909% !important; /* 100% dividido entre 11 fotos */
-    aspect-ratio: 1 / 1 !important; /* Formato cuadrado perfecto 1:1 */
+    width: 9.090909% !important; /* 100% dividido entre 11 fotos exactas */
+    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
     height: auto !important;
     
-    /* LIMITADORES DE SEGURIDAD PARA QUE NO SE VEA GIGANTE EN COMPUTADORAS */
+    /* LIMITADORES DE SEGURIDAD PARA MONITORES GRANDES */
     max-width: 440px !important; 
     max-height: 440px !important; 
     
     object-fit: cover !important; /* Centra la pizza de forma inteligente */
-    object-position: center center !important; /* Clava el encuadre en el medio exacto */
+    object-position: center center !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 20px !important; /* Espacio de marco elegante */
+    padding: 0 20px !important; /* Marco de separación estética */
     box-sizing: border-box !important;
-    border-radius: 36px !important; /* Bordes redondeados súper premium */
+    border-radius: 36px !important; /* Esquinas redondeadas premium */
     
-    /* EFECTO BASE: Resplandor dorado corporativo y transición ultra suave */
+    /* ILUMINACIÓN DORADA: Hace que la pizza se vea con máxima nitidez */
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
-    transition: transform 0.4s ease, filter 0.4s ease, box-shadow 0.4s ease !important;
-    filter: brightness(0.9) contrast(1); /* Tono base de seguridad */
+    filter: brightness(0.95) contrast(1.05);
 }
 
-/* EL CURSOR O EL DEDO EN LA PANTALLA YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
+/* EL DEDO O EL CURSOR YA NO DETIENEN EL MOVIMIENTO AUTOMÁTICO */
 .wrapper-carrusel:hover {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA CON ENFOQUE DE FOTO DE ENTRADA (Mete zoom y brillo a la pizza que se para en pantalla) */
-@keyframes slider2BloquesFocoFoto {
-    /* --- FOTO 1 --- */
-    0%, 7% { transform: translateX(0); }
+/* 📐 MATEMÁTICA PURA AL MILÍMETRO SIN SALTOS NI CORTES AL FINAL */
+@keyframes slider2BloquesInfinitoReal {
+    /* --- BLOQUE 1 (Fotos 1 a 5) --- */
+    0%, 7%     { transform: translateX(0); }
+    9%, 16%    { transform: translateX(-9.090909%); }
+    18%, 25%   { transform: translateX(-18.181818%); }
+    27%, 34%   { transform: translateX(-27.272727%); }
+    36%, 43%   { transform: translateX(-36.363636%); }
     
-    /* --- FOTO 2 --- */
-    9%, 16% { transform: translateX(-9.0909%); }
+    /* --- BLOQUE 2 (Fotos 6 a 10) --- */
+    45%, 52%   { transform: translateX(-45.454545%); }
+    54%, 61%   { transform: translateX(-54.545454%); }
+    63%, 70%   { transform: translateX(-63.636363%); }
+    72%, 79%   { transform: translateX(-72.727272%); }
+    81%, 88%   { transform: translateX(-81.818181%); }
     
-    /* --- FOTO 3 --- */
-    18%, 25% { transform: translateX(-18.1818%); }
-    
-    /* --- FOTO 4 --- */
-    27%, 34% { transform: translateX(-27.2727%); }
-    
-    /* --- FOTO 5 --- */
-    36%, 43% { transform: translateX(-36.3636%); }
-    
-    /* --- FOTO 6 (Inicio Bloque 2) --- */
-    45%, 52% { transform: translateX(-45.4545%); }
-    
-    /* --- FOTO 7 --- */
-    54%, 61% { transform: translateX(-54.5454%); }
-    
-    /* --- FOTO 8 --- */
-    63%, 70% { transform: translateX(-63.6363%); }
-    
-    /* --- FOTO 9 --- */
-    72%, 79% { transform: translateX(-72.7272%); }
-    
-    /* --- FOTO 10 --- */
-    81%, 88% { transform: translateX(-81.8181%); }
-    
-    /* --- EMPALME PERFECTO: Avanza a la Foto 11 e inicia de nuevo sin saltos --- */
-    90%, 98% { transform: translateX(-90.9090%); }
-    100% { transform: translateX(-90.9090%); }
+    /* --- ENGANCHE INVISIBLE: Avanza al Clon (Foto 11) y enlaza con el fotograma inicial en el acto --- */
+    90%, 99.9% { transform: translateX(-90.909091%); }
+    100%       { transform: translateX(0); }
 }
 
-/* 🚀 EFECTO HOVER OPCIONAL: Si el cliente pasa el mouse o toca la foto quieta, se ilumina aún más */
-.carrusel-img:hover {
-    transform: scale(1.02) !important;
-    filter: brightness(1.1) contrast(1.05) !important;
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.9), 0 0 30px rgba(214, 175, 55, 0.5) !important;
-}
 
     </style>
 </head>
