@@ -237,7 +237,7 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA REAL */
+/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE PANTALLA */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
@@ -255,20 +255,20 @@ body::before {
     display: flex !important;
     width: max-content !important;
     gap: 0px !important;
-    /* 🕒 DURACIÓN TOTAL: 25 segundos en total (unos 4 segundos quieta y 1 segundo de viaje) */
-    animation: sliderPasosPausaWider 25s ease-in-out infinite !important;
+    /* 🕒 DURACIÓN TOTAL: 25 segundos en total (unos 4 segundos quieta y 1 de viaje) */
+    animation: sliderPasosPausaUniversal 25s ease-in-out infinite !important;
 }
 
-/* CADA IMAGEN ES UN TIN MÁS ANCHA QUE LA PANTALLA (110vw) */
+/* CADA IMAGEN SE ACOPLA AUTOMÁTICAMENTE AL ANCHO DEL DISPOSITIVO */
 .carrusel-img {
-    width: 110vw !important; /* Fuerza el ancho aumentado */
-    height: 380px !important; 
-    object-fit: cover !important;
+    width: 100vw !important; /* Ocupa exactamente toda la pantalla horizontal */
+    height: 320px !important; /* Alto fijo estético (puedes subirlo a 400px si lo quieres más alto) */
+    object-fit: cover !important; /* ACOPLE INTELIGENTE: Evita que la foto se estire o se deforme */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 25px !important; /* Aumentamos el margen interno para el efecto panorámico */
+    padding: 0 15px !important; /* Margen interno para que no toque los bordes físicos de golpe */
     box-sizing: border-box !important;
-    border-radius: 32px !important; /* Bordes redondeados un poco más pronunciados */
+    border-radius: 28px !important; /* Bordes redondeados corporativos limpios */
 }
 
 /* EL DEDO O EL CURSOR NO PAUSAN ESTA ANIMACIÓN AUTOMÁTICA */
@@ -276,25 +276,25 @@ body::before {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA AJUSTADA PARA FOTOS DE 110vw (5 fotos originales x 110vw = -550vw al final) */
-@keyframes sliderPasosPausaWider {
+/* 📐 MATEMÁTICA ACOPLADA PARA PANTALLA COMPLETA (5 fotos originales x 100vw = -500vw al final) */
+@keyframes sliderPasosPausaUniversal {
     /* --- FOTO 1 --- */
     0%, 15% { transform: translateX(0); }
     
-    /* Desplazamiento hacia la foto 2 (-110vw) */
-    20%, 35% { transform: translateX(-110vw); }
+    /* Desplazamiento hacia la foto 2 (-100vw) */
+    20%, 35% { transform: translateX(-100vw); }
     
-    /* Desplazamiento hacia la foto 3 (-220vw) */
-    40%, 55% { transform: translateX(-220vw); }
+    /* Desplazamiento hacia la foto 3 (-200vw) */
+    40%, 55% { transform: translateX(-200vw); }
     
-    /* Desplazamiento hacia la foto 4 (-330vw) */
-    60%, 75% { transform: translateX(-330vw); }
+    /* Desplazamiento hacia la foto 4 (-300vw) */
+    60%, 75% { transform: translateX(-300vw); }
     
     /* Desplazamiento hacia la foto 5 (-440vw) */
     80%, 95% { transform: translateX(-440vw); }
     
     /* Empalme perfecto instantáneo al milímetro con el clon */
-    100% { transform: translateX(-550vw); }
+    100% { transform: translateX(-500vw); }
 }
 
     </style>
