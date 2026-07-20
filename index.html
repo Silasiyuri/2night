@@ -49,10 +49,10 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-/* CONTENEDOR QUE FUERZA EL DISEÑO DE BORDE A BORDE DE LA PANTALLA */
+/* CONTENEDOR QUE ROMPE LOS MÁRGENES DE LA PLANTILLA Y TOCA LOS BORDES */
 .contenedor-carrusel {
     width: 100vw !important;
-    max-width: 100% !important;
+    max-width: 100vw !important;
     overflow: hidden !important;
     padding: 25px 0 !important;
     position: relative !important;
@@ -61,49 +61,63 @@
     margin-left: -50vw !important;
     margin-right: -50vw !important;
     background: transparent !important;
+    box-sizing: border-box !important;
 }
 
-/* GRUPO DE IMÁGENES ALINEADO AL MILÍMETRO */
+/* GRUPO DE IMÁGENES ALINEADO SIN ESPACIOS INTERMEDIOS EXTRAÑOS */
 .wrapper-carrusel {
     display: flex !important;
-    /* Evitamos usar max-content para que el navegador no recalcule anchos variables */
-    width: flex !important; 
-    /* Forzamos que no haya separación externa, el hueco se controla en la imagen */
+    width: max-content !important;
     gap: 0px !important; 
-    /* Animación continua lineal infinita */
-    animation: rotarCarruselInfinito 25s linear infinite !important;
+    animation: rotarCarruselInfinito 28s linear infinite !important;
 }
 
-/* IMÁGENES ADAPTATIVAS SEGÚN EL DISPOSITIVO */
+/* IMÁGENES TOTALMENTE ADAPTATIVAS SEGÚN EL TAMAÑO DE LA PANTALLA */
 .carrusel-img {
-    /* Usamos unidades rem para asegurar que midan exactamente lo mismo en cualquier pantalla */
-    width: 20rem !important; 
+    /* En ordenadores grandes se verán exactamente 4 fotos idénticas por pantalla */
+    width: 25vw !important; 
     height: 190px !important;
     object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    /* Agregamos el espacio de separación a los lados de forma simétrica */
+    /* Manejamos la separación como padding interno para no romper la matemática lineal */
     padding: 0 10px !important; 
     box-sizing: border-box !important;
-    border-radius: 22px !important;
+    border-radius: 22px !important; /* Mantiene tus bordes redondeados limpios */
 }
 
-/* ACCIÓN DE DETENER AL PASAR EL CURSOR */
+/* ACCIÓN DE PAUSA AL PASAR EL CURSOR */
 .wrapper-carrusel:hover {
     animation-play-state: paused !important;
 }
 
-/* 📐 MATEMÁTICA EXACTA INFINITA ANTI-SALTOS (5 fotos originales x 20rem de ancho = 100rem exactos) */
+/* 📐 MATEMÁTICA EXACTA INFINITA ANTI-SALTOS DE ESQUINA A ESQUINA */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        /* Desplaza exactamente el equivalente al primer grupo y encaja con el clon al milisegundo */
-        transform: translateX(-100rem);
+        /* Desplaza exactamente las 5 fotos del grupo original (5 x 25vw) para enganchar con el clon */
+        transform: translateX(-125vw);
     }
 }
 
+/* RESPONSIVE: ADAPTACIÓN AUTOMÁTICA PARA MÓVILES Y TABLETS PEQUEÑAS */
+@media (max-width: 768px) {
+    .carrusel-img {
+        /* En pantallas pequeñas se verán exactamente 2 fotos por pantalla (2 x 50vw = 100% del ancho) */
+        width: 50vw !important; 
+    }
+    @keyframes rotarCarruselInfinito {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            /* Desplazamiento ajustado para móviles (5 fotos x 50vw = 250vw) */
+            transform: translateX(-250vw);
+        }
+    }
+}
 
 /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
@@ -358,14 +372,14 @@ body::before {
             
             <div class="contenedor-carrusel">
                 <div class="wrapper-carrusel">
-                    <!-- GRUPO ORIGINAL: 5 FOTOS CON RECETAS DE ENLACE -->
+                    <!-- GRUPO ORIGINAL: 5 FOTOS -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
                     <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                     
-                    <!-- GRUPO CLONADO: COPIA EXACTA DE LAS MISMAS IMÁGENES Y ENLACES PARA EL ACOPLE -->
+                    <!-- GRUPO CLONADO EXACTO PARA EMPALME VISUAL PERFECTO -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
@@ -374,7 +388,6 @@ body::before {
                 </div>
             </div>
         </div>
-
 
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
