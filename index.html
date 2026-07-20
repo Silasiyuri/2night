@@ -237,32 +237,41 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* ALINEACIÓN HORIZONTAL PREMIUM EN UNA SOLA LÍNEA */
-.fila-contacto-unica {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex-wrap: wrap !important; /* Si la pantalla del celular es muy pequeña, baja los elementos con suavidad sin romper el texto */
-    gap: 30px !important; /* Espacio de separación elegante entre cada dato */
+/* BARRA DE CONTACTO MINIMALISTA DE ALTA COCINA */
+.barra-contacto-gourmet {
     width: 100% !important;
-    margin-top: 40px !important;
-    padding: 10px 20px !important;
-    background: transparent !important; /* Eliminamos por completo el cuadro de fondo */
-    border: none !important; /* Eliminamos bordes */
+    max-width: 900px !important;
+    margin-top: 45px !important;
+    padding-top: 20px !important;
+    background: transparent !important;
+    border: none !important;
+    /* Línea superior ultra-fina que actúa como destello de luz dorado tenue */
+    border-top: 1px solid rgba(214, 175, 55, 0.15) !important; 
+    text-align: center !important;
+    box-sizing: border-box !important;
 }
 
-.item-contacto-inline {
-    display: inline-flex !important;
-    align-items: center !important;
-    color: #ffffff !important;
-    font-size: 0.9rem !important;
+.texto-contacto-luxury {
+    color: #e2e8f0 !important;
+    font-size: 0.82rem !important;
     font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important; /* Espaciado premium entre letras */
+    line-height: 1.8 !important;
+    display: inline-block !important;
 }
 
-.item-contacto-inline strong {
-    color: #FFD700 !important; /* Color dorado corporativo para los títulos */
-    margin-right: 6px !important;
+/* Iconos integrados sutiles en tono oro viejo */
+.texto-contacto-luxury span {
+    color: #d6af37 !important; 
+    font-weight: 700 !important;
+}
+
+/* Separador de puntos gourmet */
+.separador-luxury {
+    color: rgba(214, 175, 55, 0.4) !important;
+    margin: 0 10px !important;
+    font-weight: bold !important;
 }
 
     </style>
@@ -372,28 +381,32 @@ body::before {
                 <div class="wrapper-carrusel">
                     <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
                     
                     <!-- BLOQUE 2: GRUPO CLONADO (5 FOTOS CONFIGURADAS) -->
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/M.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
+                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
+                    <img src="imagen/M.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
 
                     <!-- FOTO 11: ENGANCHE DE ARRANQUE INFINITO SIN CORTES -->
                     <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
                 </div>
             </div>
 
-            <!-- DATOS DE CONTACTO DE CORRIDO EN UNA SOLA LÍNEA HORIZONTAL -->
-            <div class="fila-contacto-unica">
-                <span class="item-contacto-inline"><strong>📍 Címünk:</strong> Budapest, Kőfaragó u. 15, 1085</span>
-                <span class="item-contacto-inline"><strong>📞 Telefon:</strong> (06 1) 781 0538</span>
-                <span class="item-contacto-inline"><strong>🕒 Nyitvatartás:</strong> Hétfő - Szombat: 12:00 - 21:00</span>
+            <!-- LÍNEA SUTIL DE CONTACTO TIPO CREDENCIAL HAUTE CUISINE -->
+            <div class="barra-contacto-gourmet">
+                <p class="texto-contacto-luxury">
+                    <span>📍</span> Budapest, Kőfaragó u. 15, 1085
+                    <span class="separador-luxury">&ensp;&bull;&ensp;</span>
+                    <span>📞</span> (06 1) 781 0538
+                    <span class="separador-luxury">&ensp;&bull;&ensp;</span>
+                    <span>🕒</span> Hétfő - Szombat: 12:00 - 21:00
+                </p>
             </div>
         </div>
 
