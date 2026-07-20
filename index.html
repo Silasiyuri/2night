@@ -65,24 +65,13 @@
     animation-play-state: paused;
 }
 
-        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
+       /* 1. VACIADO DEL BODY PARA PERMITIR VER LAS FOTOS DETRÁS */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
-    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
-}
-
-/* 1. VACIADO DEL BODY PARA PERMITIR VER LAS FOTOS DETRÁS */
-body { 
-    color: #f8fafc; 
-    min-height: 100vh; 
-    overflow-x: hidden; 
-    position: relative;
-    /* 🚀 REPARACIÓN CRÍTICA: Quitamos el color negro de aquí para que no tape las capas */
-    background: transparent !important; 
+    background: transparent !important; /* Totalmente transparente */
 }
 
 /* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS */
@@ -97,39 +86,44 @@ body::before, body::after {
     background-position: center center !important;
     background-repeat: no-repeat !important;
     display: block !important;
-    /* 🚀 SEGURIDAD TRANSPARENTE: El fondo negro se procesa de forma interna en la capa aislada */
-    background-color: #0c0c0c !important; 
+    background-color: #0c0c0c !important; /* Fondo negro de seguridad interno */
 }
 
 /* 🛋️ 3. CAPA TRASERA: Sostiene la primera pizza (Siempre visible de fondo) */
 body::before {
-    z-index: -3 !important; /* Detrás del proyecto */
+    z-index: -3 !important;
     background-image: url('imagen/fondo.jpg') !important;
 }
 
-/* 🎭 4. CAPA DELANTERA: Sostiene la segunda pizza (Aparece y desaparece encima) */
+/* 🎭 4. CAPA DELANTERA: Sostiene la segunda pizza (Aparece/desaparece encima) */
 body::after {
-    z-index: -2 !important; /* Justo encima de la capa trasera */
+    z-index: -2 !important;
     background-image: url('imagen/fondo4.jpg') !important;
-    
-    /* 🕒 ANIMACIÓN DEL FUNDIDO CON ZOOM 3D EN CADENA */
     animation: fundidoCruzadoEterno 18s ease-in-out infinite !important;
 }
 
-/* 📐 5. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN PREMIUM CON ZOOM 3D SEAMLESS */
+/* 📐 5. FOTOGRAMAS MATEMÁTICOS DE TRANSICIÓN PREMIUM CON ZOOM 3D */
 @keyframes fundidoCruzadoEterno {
-    0%, 15% {
-        opacity: 0 !important;
-        transform: scale(1.04); 
-    }
-    35%, 65% {
-        opacity: 1 !important;
-        transform: scale(1); 
-    }
-    85%, 100% {
-        opacity: 0 !important;
-        transform: scale(1.04);
-    }
+    0%, 15% { opacity: 0 !important; transform: scale(1.04); }
+    35%, 65% { opacity: 1 !important; transform: scale(1); }
+    85%, 100% { opacity: 0 !important; transform: scale(1.04); }
+}
+
+/* 🚀 6. REPARACIÓN CRÍTICA: Convertimos tus cajas sólidas en cristal translúcido elegante */
+.box, section, #vp {
+    /* Cambiamos el fondo negro sólido por un tono ahumado que deja ver el fondo */
+    background: rgba(20, 20, 20, 0.6) !important; 
+    /* Efecto cristal difuminado premium de alta cocina */
+    backdrop-filter: blur(12px) !important; 
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Las tarjetas de arriba también deben ser translúcidas */
+.tarjeta-uzlet-top {
+    background: rgba(17, 17, 17, 0.5) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
 }
 
 <!-- BLOQUE_02_DE_20 -->
