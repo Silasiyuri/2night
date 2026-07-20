@@ -65,69 +65,68 @@
     animation-play-state: paused;
 }
 
-   /* 1. REGLA DEL BODY CON FONDO TOTALMENTE TRANSPARENTE SEGURO */
+        /* REGLA DEL BODY ASENTADA CON FILTRO OSCURO */
 body { 
     color: #f8fafc; 
     min-height: 100vh; 
     overflow-x: hidden; 
     position: relative;
-    background: transparent !important; 
+    /* Capa de protección fija para mantener legibles los textos dorados y blancos */
+    background: linear-gradient(rgba(0, 0, 0, 0.76), rgba(0, 0, 0, 0.86)) !important;
 }
 
-/* 2. CONFIGURACIÓN COMÚN DE PANTALLA COMPLETA PARA LAS DOS CAPAS DE FOTOS */
-body::before, body::after {
+/* CAPA AISLADA PARA LOS CAMBIOS DE FOTO DE FONDO CON ZOOM 3D TOTALMENTE CORREGIDA */
+body::before {
     content: "" !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100vw !important; /* Fuerza el ancho completo de la pantalla */
+    height: 100vh !important; /* Fuerza el alto completo de la pantalla */
+    z-index: -2 !important; /* Se coloca detrás de absolutamente todo */
+    background-color: #000000 !important; /* Fondo negro base de seguridad */
+    
+    /* ANIMACIÓN CRÍTICA INTERCONECTADA */
+    animation: aparecerFotosFondo 25s ease-in-out infinite !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
-    display: block !important;
-    /* 📐 ZOOM 3D INTEGRADO DE FORMA ESTABLE: Evita el colapso gráfico del navegador */
-    transform: scale(1.04) !important;
+    display: block !important; /* Asegura que el elemento se comporte como un bloque visible */
 }
 
-/* 🛋️ 3. CAPA TRASERA BASE (Sostiene la Foto 1 de forma permanente detrás) */
-body::before {
-    z-index: -3 !important; 
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
-                      url('imagen/fondo4.jpg') !important;
-}
-
-/* 🎭 4. CAPA DELANTERA DINÁMICA (Aparece y desaparece encima alternando el bucle) */
-body::after {
-    z-index: -2 !important; /* Se posiciona justo encima de la capa base */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), 
-                      url('imagen/fondo4.jpg') !important;
-    
-    /* 🚀 ANIMACIÓN CRÍTICA EN BUCE SIN FIN REAL DE 16 SEGUNDOS */
-    animation: cicloFundidoCruzadoEterno 16s ease-in-out infinite !important;
-}
-
-/* 📐 5. FOTOGRAMAS CLAVE OPTIMIZADOS PARA ROTACIÓN INFINITA SIN FALLOS */
-@keyframes cicloFundidoCruzadoEterno {
-    /* Al inicio del ciclo (0% al 20%), la capa delantera se oculta por completo. 
-       Se visualiza perfectamente la Foto 1 de la capa de atrás (fondo.jpg) */
-    0%, 20% {
-        opacity: 0 !important;
+/* FOTOGRAMAS CLAVE AJUSTADOS CON TUS DOS FOTOS LOCALES */
+@keyframes aparecerFotosFondo {
+    /* --- FOTO 1: fondo.jpg (Dura la primera mitad del ciclo) --- */
+    0% {
+        background-image: url('fondo.jpg');
+        opacity: 0;
+        transform: scale(1.06); /* Efecto zoom emergente */
     }
-    
-    /* En el medio del ciclo (40% al 70%), la capa delantera se enciende al 100%. 
-       Cubre de forma limpia la pantalla mostrando la Foto 2 (fondo4.jpg) */
-    40%, 70% {
-        opacity: 1 !important;
+    5%, 45% {
+        opacity: 1; /* Se muestra al 100% */
+        transform: scale(1);
     }
-    
-    /* Al cerrar el ciclo (90% al 100%), la capa de arriba se desvanece de nuevo con suavidad.
-       Vuelve a descubrir la primera foto trasera para reiniciar la rueda de forma interminable */
-    90%, 100% {
-        opacity: 0 !important;
+    50% {
+        opacity: 0; /* Se desvanece suavemente */
+        transform: scale(0.96);
+    }
+
+    /* --- FOTO 2: foto.jpg (Dura la segunda mitad del ciclo) --- */
+    51% {
+        background-image: url('fondo4.jpg');
+        opacity: 0;
+        transform: scale(1.06);
+    }
+    56%, 95% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.96);
+        background-image: url('fondo.jpg'); /* Cierra el ciclo limpio con la primera foto */
     }
 }
-
 
 <!-- BLOQUE_02_DE_20 -->
         header { 
@@ -239,7 +238,7 @@ body::after {
     width: 100vw !important;
     max-width: 100vw !important;
     overflow: hidden !important;
-    padding: 30px 0 !important; /* Más espacio vertical para lucir las fotos ampliadas */
+    padding: 25px 0 !important;
     left: 50% !important;
     transform: translateX(-50%) !important; /* Fuerza el centrado absoluto rompiendo contenedores padres */
     background: transparent !important;
@@ -254,21 +253,16 @@ body::after {
     animation: rotarCarruselInfinito 32s linear infinite !important;
 }
 
-/* FOTOS CUADRADAS AMPLIADAS FLUIDAS: Escala adaptada para lucir las pizzas más grandes */
+/* FOTOS TOTALMENTE FLUIDAS: Salen exactamente 4 por pantalla en cualquier monitor o laptop */
 .carrusel-img {
-    /* 📐 MÁS GRANDE EN PC: Sube a 32.5vw de ancho para destacar el producto */
-    width: 32.5vw !important; 
-    
-    /* CUADRADO PERFECTO AUTOMÁTICO */
-    aspect-ratio: 1 / 1 !important;
-    height: auto !important;
-    
+    width: 25vw !important; /* Cada foto mide exactamente un cuarto de la pantalla */
+    height: 200px !important;
     object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 12px !important; /* Separación simétrica tipo marco elegante */
+    padding: 0 10px !important; /* La separación es interna para mantener la simetría matemática */
     box-sizing: border-box !important;
-    border-radius: 28px !important; /* Bordes un poco más redondeados acordes al formato grande */
+    border-radius: 22px !important;
 }
 
 /* ANULACIÓN DE PAUSA: El carrusel se mantendrá rodando de forma fluida e imparable */
@@ -276,26 +270,25 @@ body::after {
     animation-play-state: running !important;
 }
 
-/* 📐 MATEMÁTICA EXACTA ANTI-SALTOS: Desplaza las 5 fotos originales (5 x 32.5vw = -162.5vw) */
+
+/* 📐 MATEMÁTICA EXACTA ANTI-SALTOS: Desplaza exactamente las 5 primeras fotos originales (5 x 25vw = -125vw) */
 @keyframes rotarCarruselInfinito {
     0% {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-162.5vw); /* Engancha con el clon al milímetro exacto */
+        transform: translateX(-125vw);
     }
 }
 
-/* 📱 ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (Fuerza a que salgan más grandes en tu teléfono) */
+/* 📱 ADAPTACIÓN AUTOMÁTICA PARA MÓVILES (Fuerza a que salgan exactamente 2 fotos por pantalla) */
 @media (max-width: 768px) {
     .carrusel-img {
-        /* 📐 MÁS GRANDE EN CELULAR: Sube al 75vw ocupando casi toda la pantalla horizontal */
-        width: 75vw !important; 
+        width: 50vw !important; /* Cada foto mide la mitad de la pantalla del celular */
     }
     @keyframes rotarCarruselInfinito {
         0% { transform: translateX(0); }
-        /* Ajuste matemático móvil exacto: 5 fotos originales x 75vw = -375vw */
-        100% { transform: translateX(-375vw); } 
+        100% { transform: translateX(-250vw); } /* Ajuste matemático móvil: 5 fotos originales x 50vw = -250vw */
     }
 }
 
@@ -397,7 +390,7 @@ body::after {
             
             <div class="grid-uzletek-top" style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1200px; margin: 0 auto;">
                 <div class="tarjeta-uzlet-top service-info" style="background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);"><h3>🕒 KISZÁLLÍTÁSI INFÓ</h3><p class="bold-p" style="margin-top: 8px; font-weight: 700;">Nyitvatartás: 18:00 - 04:00</p><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 4px;">Budapest VI, VII, VIII, IX. kerület</p></div>
-                <div class="tarjeta-uzlet-top service-delivery" id="card-delivery" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
+                <div class="tarjeta-uzlet-top service-delivero" id="card-delivero" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🛵 DELIVERY</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Házhozszállítás azonnal.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
                 <div class="tarjeta-uzlet-top service-pickup" id="card-pickup" style="cursor:pointer; background: #111; padding: 20px; border-radius: 12px; border: 1px solid rgba(214,175,55,0.3);"><h3>🏃 SZEMÉLYES ÁTVÉTEL</h3><p class="small-p" style="color: #aaa; font-size: 0.85rem; margin-top: 8px;">Válaszd ki a legközelebbi üzletet.</p><p class="action-p" style="color: #d6af37; font-weight: 700; margin-top: 4px;">Kattints a bejelentkezéshez &rarr;</p></div>
             </div>
             
@@ -420,7 +413,7 @@ body::after {
                     <img src="imagen/foto5.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján...');">
                 </div>
             </div>
-        
+        </div>
  <!-- SE INYECTA EL PIE DE PÁGINA ADAPTATIVO DENTRO DE LA PROTECCIÓN DEL VP -->
             <div class="footer-fila-perfecta" style="margin-top: 50px !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; padding-top: 30px !important; width: 100% !important;">
                 <div class="footer-columna-limpia"><span style="font-size: 1.5rem;">📍</span><strong>Címünk</strong>Budapest, Kőfaragó u. 15, 1085</div>
@@ -530,7 +523,7 @@ body::after {
             <div style="margin: 1.5rem 0 1rem 0; text-align: left;">
                 <label style="display:block; margin-bottom:8px; color:#fff; font-weight:700;">Átvétel módja (Kötelező):</label>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <button type="button" id="btnModoDelivery" onclick="definirEnvioFinal('delivery')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Delivery (Szállítás)</button>
+                    <button type="button" id="btnModoDelivery" onclick="definirEnvioFinal('delivery')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Délibáb (Szállítás)</button>
                     <button type="button" id="btnModoPickup" onclick="definirEnvioFinal('szemelyes')" style="padding:0.8rem; background:rgba(255,255,255,0.05); color:#fff; font-weight:700; border:1px solid rgba(214,175,55,0.4); border-radius:6px; cursor:pointer; text-transform:uppercase;">Személyes átvétel</button>
                 </div>
             </div>
@@ -821,7 +814,7 @@ body::after {
         document.querySelectorAll('.btn-nyito-extras-basilico').forEach(btn => {
             btn.innerText = "+"; 
             if (modoSoloVer) { 
-                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivery vagy Személyes átvétel opciót a főoldalon.'); }; 
+                btn.onclick = function(e) { e.preventDefault(); alert('Ez a felület jelenleg csak menükártya! Ha rendelni szeretne, kérjük válassza a Delivero vagy Személyes átvétel opciót a főoldalon.'); }; 
             } else { 
                 btn.onclick = function(e) { e.preventDefault(); const name = this.getAttribute('data-name'); const price = this.getAttribute('data-price'); inicializarVentanaExtras(name, price); }; 
             }
@@ -891,7 +884,7 @@ body::after {
 
 
     function ejecutarEnvioFinal() {
-        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Delivery vagy Személyes átvétel)!'); return; }
+        if (!tipoDeEnvioSeleccionadoCart) { alert('Kérjük, válassza ki az átvétel módját (Délibáb vagy Személyes átvétel)!'); return; }
         // VALIDACIÓN DE DIRECCIÓN ACTIVA
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
