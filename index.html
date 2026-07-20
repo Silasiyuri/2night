@@ -111,14 +111,7 @@ body::before, body::after {
 
 
 
-        /* 🎭 CAPA DELANTERA DINÁMICA (Aparece y desaparece encima con suavidad) */
-body::after {
-    z-index: -2 !important; /* Se coloca justo encima de la capa base */
-    background-image: url('imagen/fondo4.jpg') !important;
-    
-    /* ANIMACIÓN EXCLUSIVA DE TRANSICIÓN CONTINUA */
-    animation: fundidoCruzadoEterno 16s ease-in-out infinite !important;
-}
+     
 /* 🛋️ CAPA BASE TRASERA (Sostiene la Foto 1 fija eternamente detrás) */
 body::before {
     z-index: -3 !important; /* Se coloca al fondo del todo */
@@ -282,7 +275,7 @@ body::after {
 /* FOTOS TOTALMENTE FLUIDAS: Salen exactamente 4 por pantalla en cualquier monitor o laptop */
 .carrusel-img {
     width: 25vw !important; /* Cada foto mide exactamente un cuarto de la pantalla */
-    height: 200px !important;
+    height: 350px !important;
     object-fit: cover !important;
     flex-shrink: 0 !important;
     cursor: pointer !important;
