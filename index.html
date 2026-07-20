@@ -237,29 +237,32 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* FOTOS CUADRADAS GIGANTES DE MÁXIMA CALIDAD VISUAL */
-.carrusel-img {
-    width: 9.090909% !important; /* 100% dividido entre 11 fotos exactas */
-    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
-    height: auto !important;
-    
-    /* 📐 TAMAÑO AMPLIADO GOURMET: Escalado para ver las pizzas mucho más grandes */
-    max-width: 480px !important;
-    max-height: 480px !important;
-    margin: 0 auto !important; 
-    
-    object-fit: cover !important; /* Evita que la pizza se estire o pierda su proporción */
-    flex-shrink: 0 !important;
-    cursor: pointer !important;
-    
-    /* Reducimos el padding lateral para que la foto estire más de esquina a esquina */
-    padding: 0 8px !important; 
-    box-sizing: border-box !important;
-    border-radius: 44px !important; /* Esquinas redondeadas adaptadas al formato grande */
-    
-    /* ILUMINACIÓN CORPORATIVA */
-    box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.95), 0 0 25px rgba(214, 175, 55, 0.25) !important;
-    filter: brightness(0.95) contrast(1.02);
+/* ALINEACIÓN HORIZONTAL PREMIUM EN UNA SOLA LÍNEA */
+.fila-contacto-unica {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important; /* Si la pantalla del celular es muy pequeña, baja los elementos con suavidad sin romper el texto */
+    gap: 30px !important; /* Espacio de separación elegante entre cada dato */
+    width: 100% !important;
+    margin-top: 40px !important;
+    padding: 10px 20px !important;
+    background: transparent !important; /* Eliminamos por completo el cuadro de fondo */
+    border: none !important; /* Eliminamos bordes */
+}
+
+.item-contacto-inline {
+    display: inline-flex !important;
+    align-items: center !important;
+    color: #ffffff !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+.item-contacto-inline strong {
+    color: #FFD700 !important; /* Color dorado corporativo para los títulos */
+    margin-right: 6px !important;
 }
 
     </style>
@@ -386,19 +389,13 @@ body::before {
                 </div>
             </div>
 
-            <!-- TARJETA DE CONTACTO ESTILIZADA CON CRISTAL TRANSLÚCIDO (SÓLO PORTADA) -->
-            <div class="bloque-contacto-portada" style="margin-top: 40px; padding: 25px; background: rgba(15, 15, 15, 0.65) !important; backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important; border-radius: 16px; border: 1px solid rgba(214, 175, 55, 0.15); max-width: 420px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
-                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">📍 Címünk</p>
-                <p style="color: #f1f5f9; margin-bottom: 22px; font-size: 0.95rem; font-weight: 500;">Budapest, Kőfaragó u. 15, 1085</p>
-
-                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">📞 Telefon</p>
-                <p style="color: #f1f5f9; margin-bottom: 22px; font-size: 0.95rem; font-weight: 500;">(06 1) 781 0538</p>
-
-                <p style="color: #FFD700; font-weight: bold; margin-bottom: 6px; letter-spacing: 1px; font-size: 1.05rem;">🕒 Nyitvatartás</p>
-                <p style="color: #f1f5f9; margin-bottom: 0px; font-size: 0.95rem; font-weight: 500;">Hétfő - Szombat: 12:00 - 21:00</p>
+            <!-- DATOS DE CONTACTO DE CORRIDO EN UNA SOLA LÍNEA HORIZONTAL -->
+            <div class="fila-contacto-unica">
+                <span class="item-contacto-inline"><strong>📍 Címünk:</strong> Budapest, Kőfaragó u. 15, 1085</span>
+                <span class="item-contacto-inline"><strong>📞 Telefon:</strong> (06 1) 781 0538</span>
+                <span class="item-contacto-inline"><strong>🕒 Nyitvatartás:</strong> Hétfő - Szombat: 12:00 - 21:00</span>
             </div>
         </div>
-
 
 <!-- BLOQUE_12_DE_20 -->
        <div id="s-tienda" class="sc" style="display:none; max-width: 100%; margin: 20px 0; width: 100% !important;">
