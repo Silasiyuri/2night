@@ -237,7 +237,7 @@ body::before {
         .btn-nyito-extras-basilico:hover { background-color: #ffffff !important; transform: scale(1.1) !important; }
         .btn-torles-item { background: #e74c3c !important; color: #ffffff !important; border: none !important; padding: 5px 10px !important; font-weight: 700 !important; font-size: 0.85rem !important; border-radius: 4px !important; cursor: pointer !important; transition: background 0.2s !important; }
         .btn-torles-item:hover { background: #c0392b !important; }
-/* CONTENEDOR DE ESQUINA A ESQUINA REAL SIN LÍMITES DE ANCHO */
+/* CONTENEDOR SUPREMO: Toca los bordes físicos de la pantalla en cualquier dispositivo */
 .contenedor-carrusel {
     position: relative !important;
     width: 100vw !important;
@@ -250,56 +250,34 @@ body::before {
     box-sizing: border-box !important;
 }
 
-/* TIRA DE LOS 2 BLOQUES CON ANIMACIÓN LINEAL FLUIDA SIN PARADAS */
+/* TIRA HORIZONTAL EN LÍNEA DIRECTA FLUIDA */
 .wrapper-carrusel {
     display: flex !important;
     width: max-content !important;
     gap: 0px !important;
     margin: 0 !important;
     padding: 0 !important;
-    /* 🕒 MOVIMIENTO CONTINUO: Rueda sin detenerse nunca de forma lineal y fluida */
-    animation: rotarCarruselContinuoEterno 25s linear infinite !important;
+    will-change: transform !important;
 }
 
-/* FOTOS CUADRADAS RESPONSIVAS QUE SE ACOPLAN DE ESQUINA A ESQUINA */
+/* CADA FOTO SE ADAPTA AL 100% DE LA PANTALLA EN FORMATO CUADRADO PERFECTO */
 .carrusel-img {
-    width: 25vw !important; /* En computadoras salen exactamente 4 fotos por pantalla */
-    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO PERFECTO 1:1 */
+    width: 100vw !important; /* Fuerza a que se vea estrictamente una sola foto a la vez */
+    aspect-ratio: 1 / 1 !important; /* FORMATO CUADRADO ABSOLUTO 1:1 */
     height: auto !important;
+    
+    /* LIMITADORES DE SEGURIDAD: Evitan que el cuadrado sea gigante en monitores de PC */
+    max-width: 440px !important;
+    max-height: 440px !important;
+    margin: 0 auto !important; /* Centra el bloque de forma elegante en pantallas grandes */
+    
     object-fit: cover !important; /* Evita que la pizza se estire o pierda su proporción */
     flex-shrink: 0 !important;
     cursor: pointer !important;
-    padding: 0 12px !important; /* Separación estética interna tipo marco */
+    padding: 0 15px !important; /* Separación simétrica interna tipo marco */
     box-sizing: border-box !important;
-    border-radius: 32px !important; /* Bordes redondeados limpios */
+    border-radius: 36px !important; /* Bordes redondeados corporativos limpios */
     box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.9), 0 0 20px rgba(214, 175, 55, 0.25) !important;
-}
-
-/* ANULACIÓN DE PAUSA: El cursor o el dedo del cliente no detendrán la rotación continua */
-.wrapper-carrusel:hover {
-    animation-play-state: running !important;
-}
-
-/* 📐 MATEMÁTICA FLUIDA SIN CORTES NI SALTOS (5 fotos originales x 25vw = -125vw) */
-@keyframes rotarCarruselContinuoEterno {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        /* Desplaza el primer bloque completo para empalmar con el clon idéntico */
-        transform: translateX(-125vw);
-    }
-}
-
-/* 📱 ADAPTACIÓN AUTOMÁTICA EN TELÉFONOS (Salen exactamente 2 fotos cuadradas completas por pantalla) */
-@media (max-width: 768px) {
-    .carrusel-img {
-        width: 50vw !important; /* Cada foto mide la mitad de la pantalla del móvil */
-    }
-    @keyframes rotarCarruselContinuoEterno {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(-250vw); } /* Ajuste de móvil: 5 fotos originales x 50vw = -250vw */
-    }
 }
 
     </style>
@@ -406,20 +384,13 @@ body::before {
             <h2 class="title-uzletek" style="margin-top: 40px; color: #fff; font-size: 1.5rem; text-transform: uppercase; text-align: center !important; width: 100%;">Üzleteink</h2>
             
             <div class="contenedor-carrusel">
-                <div class="wrapper-carrusel">
-                    <!-- BLOQUE 1: GRUPO ORIGINAL (5 FOTOS CONFIGURADAS) -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
-                    
-                    <!-- BLOQUE 2: GRUPO CLONADO SIMÉTRICO (Mismas 5 fotos en el mismo orden para rotación infinita continua) -->
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk, ahol éjszakai kemencés különlegességeink készülnek prémium olasz alapanyagokból. Nyitva 04:00-ig.');">
-                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk, amely garantálja a VI, VII, VIII és IX. kerületek azonnali és forró pizzaellátását az éjszaka közepén.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát, san marzano paradicsomot és minőségi csípős diavola szalámit használunk kézműves ételeink készítéséhez.');">
-                    <img src="imagen/S.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú kelesztéssel készítjük, amitől rendkívül könnyű, ropogós és könnyen emészthető lesz a végeredmény.');">
-                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján készülő desszertjeink, mint a krémes házi Tiramisu vagy a friss erdei gyümölcsös Panna Cotta.');">
+                <div id="carruselEternoUnaEnUna" class="wrapper-carrusel">
+                    <!-- TUS 5 FOTOS EXCLUSIVAS SIN DUPLICADOS -->
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Budapest Belvárosi Üzlet', 'A kőfaragó utcai kézműves pizzázónk...');">
+                    <img src="imagen/Q.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Éjszakai Kiszállítási Központ', 'A belvárosi logisztikai bázisunk...');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Prémium Alapanyagaink', 'Kizárólag bivalymozzarellát...');">
+                    <img src="imagen/S.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'A Kézműves Pizza Tésztánk', 'Pizzatésztáinkat 48 órás lassú...');">
+                    <img src="imagen/foto.jpg" class="carrusel-img" onclick="if(typeof abrirFotoGrande==='function') abrirFotoGrande(this.src, 'Házi Desszert Kínálatunk', 'Eredeti olasz receptek alapján...');">
                 </div>
             </div>
         </div>
@@ -1029,6 +1000,50 @@ body::before {
         });
 
         activarBucleInterminable();
+    })();
+</script>
+<!-- MOTOR DE ROTACIÓN PANORÁMICO CONTINUO EN PIXELES -->
+<script>
+    (function() {
+        var posicionActualX = 0;
+        var velocidadDesplazamiento = 1.5; // Ajusta este número (1 = ultra lento y suave, 2.5 = más rápido)
+        var relojMovimientoEterno;
+
+        function ejecutarRotacionLineal() {
+            var elTira = document.getElementById('carruselEternoUnaEnUna');
+            if (!elTira) return;
+
+            // Calculamos los píxeles reales de la pantalla actual de forma exacta
+            var anchoPantallaFisico = elTira.firstElementChild.getBoundingClientRect().width;
+
+            // Movemos la tira de forma continua hacia la izquierda
+            posicionActualX -= velocidadDesplazamiento;
+            elTira.style.transform = "translateX(" + posicionActualX + "px)";
+
+            // En cuanto la foto actual sale por completo de la pantalla, la mandamos al final
+            if (Math.abs(posicionActualX) >= anchoPantallaFisico) {
+                var fotoCompletada = elTira.firstElementChild;
+                
+                // Cortamos y pegamos en secreto reseteando el contador a cero
+                elTira.appendChild(fotoCompletada);
+                posicionActualX = 0;
+                elTira.style.transform = "translateX(0px)";
+            }
+        }
+
+        function arrancarBucleEterno() {
+            clearInterval(relojMovimientoEterno);
+            // Ejecución ultra fluida a 60 fotogramas por segundo sincronizados
+            relojMovimientoEterno = setInterval(ejecutarRotacionLineal, 16);
+        }
+
+        // Control de ahorro de energía para evitar desfases en segundo plano
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) { arrancarBucleEterno(); } 
+            else { clearInterval(relojMovimientoEterno); }
+        });
+
+        arrancarBucleEterno();
     })();
 </script>
 
