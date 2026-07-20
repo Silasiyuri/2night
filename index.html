@@ -895,7 +895,6 @@ body::before {
         forzarCierreMenu(); 
         if (typeof configurarBotonesTienda === 'function') configurarBotonesTienda(); 
     }
-<!-- BLOQUE_20_PARTE_1_DE_2 -->
     function configurarBotonesTienda() {
         const btnFlotante = document.getElementById('btnIrAlCarrito');
         if(modoSoloVer) { 
@@ -947,9 +946,7 @@ body::before {
 
     function cerrarVentanaExtras() { 
         const modalExtras = document.getElementById('pestaModalExtrasIndependiente');
-        if (modalExtras) {
-            modalExtras.style.setProperty('display', 'none', 'important'); 
-        }
+        if (modalExtras) modalExtras.style.setProperty('display', 'none', 'important'); 
     }
 
     function operarExtra(idItem, c) {
@@ -965,7 +962,6 @@ body::before {
         document.getElementById('badge-nuevo-' + idItem).innerText = ing.quantity; 
         document.getElementById('badge-nuevo-' + idItem).style.display = ing.quantity > 0 ? "inline-block" : "none"; 
         document.getElementById('btn-restar-nuevo-' + idItem).disabled = ing.quantity === 0; 
-        
         if(document.getElementById('btn-sumar-nuevo-' + idItem)) { 
             document.getElementById('btn-sumar-nuevo-' + idItem).disabled = ing.quantity >= ing.max; 
         }
@@ -988,33 +984,21 @@ body::before {
         let finalName = OBJETO_PRODUCTO_ACTIVO.nombre; 
         if (ex.length > 0) finalName += ` (+Extra: ${ex.join(', ')})`;
         
-        // Estructura limpia compatible con tu función de mapeado para Supabase
+        // Estructura original nativa restaurada para que no se congele la pestaña
         carritoItems.push({ 
-            nombre: OBJETO_PRODUCTO_ACTIVO.nombre, 
-            cantidad: 1, 
-            extras: OBJETO_PRODUCTO_ACTIVO.extras,
+            nombre: finalName, 
             precio: OBJETO_PRODUCTO_ACTIVO.precioAcumulado 
         }); 
         
         cerrarVentanaExtras(); 
-        
-        if (typeof actualizarRenderCarrito === 'function') {
-            actualizarRenderCarrito();
-        } else if (typeof actualizarInterfazCarrito === 'function') {
-            actualizarInterfazCarrito();
-        }
+        actualizarRenderCarrito();
     }
 
     function eliminarDelCarrito(index) { 
         carritoItems.splice(index, 1); 
-        if (typeof actualizarRenderCarrito === 'function') {
-            actualizarRenderCarrito();
-        } else if (typeof actualizarInterfazCarrito === 'function') {
-            actualizarInterfazCarrito();
-        }
+        actualizarRenderCarrito();
     }
 
-<!-- BLOQUE_20_PARTE_2_DE_2 -->
     const bKupon = document.getElementById('btnAplicarKupon');
     if(bKupon) {
         bKupon.addEventListener('click', function(e) {
@@ -1052,9 +1036,6 @@ body::before {
         }
     }
 
-    // ==========================================================================
-    // 🚀 FUNCIÓN REAL DE ENVÍO CONECTADA A TU PROYECTO DE SUPABASE (REPARADA)
-    // ==========================================================================
     async function ejecutarEnvioFinal() {
         if (!supabase) {
             alert("Hiba: A Supabase kapcsolat nem épült fel.");
@@ -1066,7 +1047,6 @@ body::before {
             return; 
         }
         
-        // VALIDACIÓN DE DIRECCIÓN ACTIVA
         const inpCim = document.getElementById('inpCim');
         if (tipoDeEnvioSeleccionadoCart === 'delivery' && (!inpCim || inpCim.value.trim() === "")) {
             alert('Kérjük, adja meg a pontos szállítási címet!');
@@ -1074,7 +1054,6 @@ body::before {
             return;
         }
         
-        // VALIDACIÓN DE TELÉFONO REAL Y OBLIGATORIO
         const inpTel = document.getElementById('inpTel'); 
         if (!inpTel || inpTel.value.trim() === "") { 
             alert('Kérjük, adja meg a telefonszámát a rendelés elküldéséhez!'); 
@@ -1089,28 +1068,21 @@ body::before {
             return;
         }
 
-        // A. Formateamos el árbol de la matriz 'carritoItems' a cadena limpia para la columna 'items'
-        const textoItemsFormateado = carritoItems.map(item => {
-            return `${item.nombre} (${item.precio} Ft)`;
-        }).join("\n");
+        const textoItemsFormateado = carritoItems.map(item => `${item.nombre} (${item.precio} Ft)`).join("\n");
 
-        // B. Estructuramos el origen de localización y las notas húngaras
         const modoTexto = tipoDeEnvioSeleccionadoCart === 'delivery' ? 'Kiszállítás' : 'Személyes átvétel';
         const vAddress = `${modoTexto} - Cím: ${inpCim.value.trim()} - Tel: ${inpTel.value.trim()}`;
         
         const inpMegjegyzes = document.getElementById('inpMegjegyzes');
         const vNotes = inpMegjegyzes ? inpMegjegyzes.value.trim() : "";
 
-        // C. Extraemos el total calculado de la interfaz purgando caracteres no numéricos
         const totContenedor = document.getElementById('tp');
         const vTotalPrice = totContenedor ? parseFloat(totContenedor.innerText.replace(/[^0-9.]/g, '')) : 0;
 
-        // Deshabilitar botón visual de forma temporal
         const btnEnvio = document.querySelector('button[onclick*="ejecutarEnvioFinal"]');
         if(btnEnvio) btnEnvio.disabled = true;
 
         try {
-            // Invoca de forma asíncrona segura la pasarela remota de tu proyecto
             const { data, error } = await supabase.rpc('registrar_comanda_forzada', {
                 p_address: vAddress,
                 p_items: textoItemsFormateado,
@@ -1122,9 +1094,8 @@ body::before {
                 console.error("Supabase Error:", error);
                 alert("Hiba történt a Supabase küldés során: " + error.message);
             } else {
-                alert('Rendelés sikeresen elküldve a Supabase-be!\nMód: ' + modoTexto + '\nMegjegyzés: ' + vNotes);
+                alert('Rendelés sikeresen elküldve!\nMód: ' + modoTexto + '\nMegjegyzés: ' + vNotes);
                 
-                // Limpieza del estado y reset de variables nativas
                 carritoItems = []; 
                 descuentoAplicado = false; 
                 if(inpMegjegyzes) inpMegjegyzes.value = ""; 
@@ -1135,16 +1106,15 @@ body::before {
                 ocultarTodasLasSecciones(); 
                 
                 const vp = document.getElementById('vp'); 
-                if (vp) { vp.style.setProperty('display', 'flex', 'important'); }
+                if (vp) vp.style.setProperty('display', 'flex', 'important');
             }
         } catch (err) {
-            console.error("Exception caught:", err);
+            console.error(err);
             alert("Kritikus hálózati hiba lépett fel.");
         } finally {
             if(btnEnvio) btnEnvio.disabled = false;
         }
     }
-
     function cargarDatosEnCarrito() { 
         if(accessToken) { 
             const inpNev = document.getElementById('inpNev'); 
@@ -1212,6 +1182,7 @@ body::before {
         }
     }
 </script>
+
 
         <!-- MOTOR ROTATIVO DE FONDOS INMUNE A CONGELAMIENTOS Y PANTALLAS OSCURAS -->
 <script>
